@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.philliphsu.clock2.YouTubePlayer"
+    tools:layout_editor_absoluteY="25dp">
+
+    <com.google.android.youtube.player.YouTubePlayerView
+        android:id="@+id/youtube_Player_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/imageButtonLike"
+        android:layout_width="90dp"
+        android:layout_height="99dp"
+
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="212dp"
+        android:background="@null"
+        android:onClick="onLikeClick"
+        android:scaleType="fitCenter"
+        android:src="@drawable/like"
+        app:layout_constraintEnd_toStartOf="@+id/imageButtonUnlike"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/youtube_Player_view" />
+
+    <ImageButton
+        android:id="@+id/imageButtonUnlike"
+        android:layout_width="90dp"
+        android:layout_height="99dp"
+
+        android:layout_marginEnd="64dp"
+        android:layout_marginTop="212dp"
+        android:background="@null"
+        android:onClick="onUnlikeClick"
+        android:scaleType="fitCenter"
+        android:src="@drawable/unlike"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/youtube_Player_view" />
+
+</android.support.constraint.ConstraintLayout>

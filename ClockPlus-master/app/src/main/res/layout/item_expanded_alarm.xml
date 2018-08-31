@@ -111,6 +111,7 @@
                 android:layout_marginBottom="@dimen/item_margin_between_elements">
 
                 <Button
+                    android:visibility="invisible"
                     android:id="@+id/ringtone"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

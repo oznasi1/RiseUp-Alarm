@@ -76,6 +76,11 @@ public class MainActivity extends BaseActivity {
     TabLayout mTabLayout;
 
     @Override
+    public void onBackPressed(){ //disable going back to Auth(login)
+
+    }
+
+    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final View rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);

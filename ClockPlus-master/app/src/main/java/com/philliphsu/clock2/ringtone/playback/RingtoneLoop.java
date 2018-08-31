@@ -19,10 +19,14 @@
 
 package com.philliphsu.clock2.ringtone.playback;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+
+import com.philliphsu.clock2.YouTubePlayer;
 
 import java.io.IOException;
 
@@ -31,7 +35,7 @@ import java.io.IOException;
  *
  * A MediaPlayer configured to play a ringtone in a loop.
  */
-public final class RingtoneLoop {
+public final class RingtoneLoop extends  Activity {
 
     private final Context mContext;
     private final AudioManager mAudioManager;
@@ -44,25 +48,37 @@ public final class RingtoneLoop {
         mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         mUri = uri;
     }
+    private Class<? extends Activity> getActivityClass(String target) throws Exception {
+        ClassLoader classLoader = mContext.getClassLoader();
+
+        @SuppressWarnings("unchecked")
+        Class<? extends Activity> activityClass = (Class<? extends Activity>) classLoader.loadClass(target);
+
+        return activityClass;
+    }
 
     public void play() {
-        try {
-            mMediaPlayer = new MediaPlayer();
-            mMediaPlayer.setDataSource(mContext, mUri);
-            if (mAudioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                // "Must call this method before prepare() or prepareAsync() in order
-                // for the target stream type to become effective thereafter."
-                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-                mMediaPlayer.setLooping(true);
-                // There is prepare() and prepareAsync().
-                // "For files, it is OK to call prepare(), which blocks until
-                // MediaPlayer is ready for playback."
-                mMediaPlayer.prepare();
-                mMediaPlayer.start();
-            }
-        } catch (SecurityException | IOException e) {
-            destroyLocalPlayer();
-        }
+        Intent i = new Intent(mContext,YouTubePlayer.class);
+        mContext.startActivity(i);
+
+
+//        try {
+//            mMediaPlayer = new MediaPlayer();
+//            mMediaPlayer.setDataSource(mContext, mUri);
+//            if (mAudioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+//                // "Must call this method before prepare() or prepareAsync() in order
+//                // for the target stream type to become effective thereafter."
+//                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+//                mMediaPlayer.setLooping(true);
+//                // There is prepare() and prepareAsync().
+//                // "For files, it is OK to call prepare(), which blocks until
+//                // MediaPlayer is ready for playback."
+//                mMediaPlayer.prepare();
+//                mMediaPlayer.start();
+//            }
+//        } catch (SecurityException | IOException e) {
+//            destroyLocalPlayer();
+//        }
     }
 
     public void stop() {

@@ -8,22 +8,22 @@
     tools:layout_editor_absoluteY="25dp">
 
     <com.google.android.gms.common.SignInButton
+
         android:id="@+id/signInBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="37dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"></com.google.android.gms.common.SignInButton>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"></com.google.android.gms.common.SignInButton>
 
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginBottom="3dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/signInBtn"
+        android:layout_marginTop="27dp"
+        app:layout_constraintBottom_toTopOf="@+id/signInBtn"
         app:layout_constraintStart_toStartOf="@+id/signInBtn"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/clock" />
