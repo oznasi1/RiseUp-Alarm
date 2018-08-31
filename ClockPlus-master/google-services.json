@@ -1,0 +1,99 @@
+{
+  "project_info": {
+    "project_number": "726872539935",
+    "firebase_url": "https://alarmclock-22904.firebaseio.com",
+    "project_id": "alarmclock-22904",
+    "storage_bucket": "alarmclock-22904.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:726872539935:android:aeffd9aeb5582295",
+        "android_client_info": {
+          "package_name": "com.philliphsu.clock2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "726872539935-s6c8u9u0d0jpidrofki6qnn825mv956f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.philliphsu.clock2",
+            "certificate_hash": "f3b8eb1d25161813411bc48fab9e9a8529b9fbbd"
+          }
+        },
+        {
+          "client_id": "726872539935-bvoiki5rda8nvfj6bjbs0h6vfq07s9k9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBK0hAnOv37Sldf8r9bLhb934Snar2fHI4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "726872539935-bvoiki5rda8nvfj6bjbs0h6vfq07s9k9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:726872539935:android:a6f96e0fb80d1176",
+        "android_client_info": {
+          "package_name": "com.philliphsu.clock2.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "726872539935-2tmucgsokt6aiumbrpivp3pjfdjk34ju.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.philliphsu.clock2.debug",
+            "certificate_hash": "f3b8eb1d25161813411bc48fab9e9a8529b9fbbd"
+          }
+        },
+        {
+          "client_id": "726872539935-bvoiki5rda8nvfj6bjbs0h6vfq07s9k9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBK0hAnOv37Sldf8r9bLhb934Snar2fHI4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "726872539935-bvoiki5rda8nvfj6bjbs0h6vfq07s9k9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
