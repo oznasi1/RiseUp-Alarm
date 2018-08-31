@@ -35,7 +35,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,9 +44,7 @@ import com.philliphsu.clock2.alarms.ui.AlarmsFragment;
 import com.philliphsu.clock2.data.BaseItemCursor;
 import com.philliphsu.clock2.list.RecyclerViewFragment;
 import com.philliphsu.clock2.settings.SettingsActivity;
-import com.philliphsu.clock2.stopwatch.ui.StopwatchFragment;
 import com.philliphsu.clock2.timepickers.Utils;
-import com.philliphsu.clock2.timers.ui.TimersFragment;
 
 import butterknife.Bind;
 
@@ -293,9 +290,9 @@ public class MainActivity extends BaseActivity {
                 case PAGE_ALARMS:
                     return new AlarmsFragment();
                 case PAGE_TIMERS:
-                    return new TimersFragment();
+                    return null;//new TimersFragment();
                 case PAGE_STOPWATCH:
-                    return new StopwatchFragment();
+                    return null;//new StopwatchFragment();
                 default:
                     throw new IllegalStateException("No fragment can be instantiated for position " + position);
             }

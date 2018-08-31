@@ -134,8 +134,8 @@ public abstract class RingtoneActivity<T extends Parcelable> extends BaseActivit
         mAutoSilencedText.setText(getAutoSilencedText());
         mLeftButton.setText(getLeftButtonText());
         mRightButton.setText(getRightButtonText());
-        mLeftButton.setCompoundDrawablesWithIntrinsicBounds(0, getLeftButtonDrawable(), 0, 0);
-        mRightButton.setCompoundDrawablesWithIntrinsicBounds(0, getRightButtonDrawable(), 0, 0);
+        //mLeftButton.setCompoundDrawablesWithIntrinsicBounds(0, getLeftButtonDrawable(), 0, 0);
+        //mRightButton.setCompoundDrawablesWithIntrinsicBounds(0, getRightButtonDrawable(), 0, 0);
 
         Intent intent = new Intent(this, getRingtoneServiceClass())
                 .putExtra(EXTRA_RINGING_OBJECT, ParcelableUtil.marshall(mRingingObject));

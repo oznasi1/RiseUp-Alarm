@@ -18,26 +18,28 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical"
-             android:background="?attr/colorPrimary">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
+    android:orientation="vertical"
+    android:visibility="invisible">
 
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:visibility="invisible">
 
         <TextView
             android:id="@+id/title"
+            style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/item_margin_between_elements"
-            style="@style/TextAppearance.AppCompat.Title"/>
+            android:layout_marginBottom="@dimen/item_margin_between_elements" />
 
     </LinearLayout>
 
@@ -45,24 +47,24 @@
         android:id="@+id/auto_silenced_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:gravity="center"
+        android:orientation="vertical"
         android:visibility="gone">
 
         <TextView
             android:id="@+id/auto_silenced_text"
+            style="@style/TextAppearance.AppCompat.Large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="8dp"
-            style="@style/TextAppearance.AppCompat.Large"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp"
+            android:drawablePadding="8dp" />
 
         <Button
             android:id="@+id/ok"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@android:string/ok"
-            style="@style/Widget.AppCompat.Button.Colored"/>
+            android:text="@android:string/ok" />
 
     </LinearLayout>
 
@@ -78,16 +80,17 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="?selectableItemBackground">
+            android:background="?selectableItemBackground"
+            android:visibility="invisible">
 
             <TextView
                 android:id="@+id/btn_text_left"
+                style="@style/TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
                 android:drawablePadding="8dp"
-                style="@style/TextAppearance.AppCompat.Medium"/>
+                android:gravity="center" />
 
         </FrameLayout>
 
@@ -96,16 +99,17 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="?selectableItemBackground">
+            android:background="?selectableItemBackground"
+            android:visibility="invisible">
 
             <TextView
                 android:id="@+id/btn_text_right"
+                style="@style/TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
                 android:drawablePadding="8dp"
-                style="@style/TextAppearance.AppCompat.Medium"/>
+                android:gravity="center" />
 
         </FrameLayout>
 
