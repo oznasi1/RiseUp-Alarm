@@ -31,8 +31,7 @@
     <string name="grid_selector">Grid selector</string>
     <string-array name="array_time_picker_styles">
         <item>@string/system_default</item>
-        <item>@string/number_pad</item>
-        <item>@string/grid_selector</item>
+
     </string-array>
 
     <!-- Silence after -->

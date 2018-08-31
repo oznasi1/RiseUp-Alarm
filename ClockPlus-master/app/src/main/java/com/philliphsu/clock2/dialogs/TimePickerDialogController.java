@@ -56,12 +56,15 @@ public final class TimePickerDialogController extends DialogFragmentController<B
 
     public void show(int initialHourOfDay, int initialMinute, String tag) {
         BottomSheetTimePickerDialog dialog = null;
-        final String numpadStyle = mContext.getString(R.string.number_pad);
+        //final String numpadStyle = mContext.getString(R.string.number_pad);
+        final String numpadStyle = mContext.getString(R.string.system_default);
         final String gridStyle = mContext.getString(R.string.grid_selector);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         String prefTimePickerStyle = prefs.getString(mContext.getString(R.string.key_time_picker_style), numpadStyle);
-        boolean isNumpadStyle = prefTimePickerStyle.equals(numpadStyle);
-        boolean isGridStyle = prefTimePickerStyle.equals(gridStyle);
+//        boolean isNumpadStyle = prefTimePickerStyle.equals(numpadStyle);
+//        boolean isGridStyle = prefTimePickerStyle.equals(gridStyle);
+        boolean isNumpadStyle = false;
+        boolean isGridStyle = false;
         if (isNumpadStyle || isGridStyle) {
             final String themeLight = mContext.getString(R.string.theme_light);
             final String themeDark = mContext.getString(R.string.theme_dark);

@@ -100,9 +100,9 @@ public class Auth extends AppCompatActivity {
                             boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
                             if(isNew){ // for the first Time
                                 //push to dataBase
-                                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                DatabaseReference myRef = database.getReference("users");
-                                myRef.setValue(user);
+//                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+//                                DatabaseReference myRef = database.getReference("users");
+//                                myRef.setValue(user);
 
                                 updateUI(user);
                             }
