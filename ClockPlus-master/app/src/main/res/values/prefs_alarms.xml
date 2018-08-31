@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2017 Phillip Hsu
+  ~
+  ~ This file is part of ClockPlus.
+  ~
+  ~ ClockPlus is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ ClockPlus is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with ClockPlus.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <string name="title_category_alarms">Alarms</string>
+
+    <!-- Time picker style -->
+    <string name="key_time_picker_style">key_time_picker_style</string>
+    <string name="title_time_picker_style">Time picker style</string>
+    <string name="system_default">System default</string>
+    <!-- Internally, we refer to this picker as a numpad because it's concise.
+    However, "numeric keypad" is more descriptive when describing the style to users. -->
+    <string name="number_pad">Numeric keypad</string>
+    <string name="grid_selector">Grid selector</string>
+    <string-array name="array_time_picker_styles">
+        <item>@string/system_default</item>
+        <item>@string/number_pad</item>
+        <item>@string/grid_selector</item>
+    </string-array>
+
+    <!-- Silence after -->
+    <string name="key_silence_after">key_silence_after</string>
+    <string name="title_silence_after">Silence after</string>
+    <!-- Snooze duration -->
+    <string name="key_snooze_duration">key_snooze_duration</string>
+    <string name="title_snooze_duration">Snooze duration</string>
+    <!-- Durations for silence after & snooze duration -->
+    <string-array name="entries_duration">
+        <item>1 minute</item>
+        <item>5 minutes</item>
+        <item>10 minutes</item>
+        <item>15 minutes</item>
+        <item>20 minutes</item>
+        <item>25 minutes</item>
+        <item>30 minutes</item>
+    </string-array>
+    <string-array name="values_duration">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>25</item>
+        <item>30</item>
+    </string-array>
+
+    <!-- Alarm volume -->
+    <string name="key_alarm_volume">key_alarm_volume</string>
+    <string name="title_alarm_volume">Alarm volume</string>
+
+    <!-- Upcoming alarm threshold -->
+    <string name="key_notify_me_of_upcoming_alarms">key_notify_me_of_upcoming_alarms</string>
+    <string name="title_notify_me_of_upcoming_alarms">Notify me of upcoming alarms</string>
+    <string-array name="entries_notify_me_of_upcoming_alarms">
+        <item>Never</item>
+        <item>1 hour before</item>
+        <item>2 hours before</item>
+        <item>3 hours before</item>
+        <item>4 hours before</item>
+        <item>5 hours before</item>
+        <item>6 hours before</item>
+        <item>7 hours before</item>
+        <item>8 hours before</item>
+    </string-array>
+    <string-array name="values_notify_me_of_upcoming_alarms">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+
+    <!-- First day of week -->
+    <string name="key_first_day_of_week">key_first_day_of_week</string>
+    <string name="title_first_day_of_week">First day of week</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+    <string name="monday">Monday</string>
+    <string name="value_saturday">6</string>
+    <string name="value_sunday">0</string>
+    <string name="value_monday">1</string>
+    <string-array name="entries_first_day_of_week">
+        <item>@string/saturday</item>
+        <item>@string/sunday</item>
+        <item>@string/monday</item>
+    </string-array>
+    <string-array name="values_first_day_of_week">
+        <item>@string/value_saturday</item>
+        <item>@string/value_sunday</item>
+        <item>@string/value_monday</item>
+    </string-array>
+</resources>

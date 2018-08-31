@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2017 Phillip Hsu
+  ~
+  ~ This file is part of ClockPlus.
+  ~
+  ~ ClockPlus is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ ClockPlus is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with ClockPlus.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!--<PreferenceCategory android:title="@string/title_category_world_clock">
+        <ListPreference
+            android:key="@string/key_show_time_offsets_from"
+            android:title="@string/title_show_time_offsets_from"
+            android:dialogTitle="@string/title_show_time_offsets_from"
+            android:entries="@array/array_show_time_offsets_from"
+            android:entryValues="@array/array_show_time_offsets_from"
+            android:defaultValue="@string/local_time"
+            android:summary="%s"/>
+    </PreferenceCategory>-->
+    <PreferenceCategory android:title="@string/title_category_general">
+        <ListPreference
+            android:key="@string/key_theme"
+            android:title="@string/title_theme"
+            android:dialogTitle="@string/title_theme"
+            android:entries="@array/array_theme"
+            android:entryValues="@array/array_theme"
+            android:defaultValue="@string/theme_light"
+            android:summary="%s">
+        </ListPreference>
+        <Preference android:title="@string/title_system_date_time_settings">
+            <!-- https://developer.android.com/reference/android/provider/Settings.html -->
+            <intent android:action="android.settings.DATE_SETTINGS"/>
+        </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/title_category_alarms">
+        <ListPreference
+            android:key="@string/key_time_picker_style"
+            android:title="@string/title_time_picker_style"
+            android:dialogTitle="@string/title_time_picker_style"
+            android:entries="@array/array_time_picker_styles"
+            android:entryValues="@array/array_time_picker_styles"
+            android:defaultValue="@string/grid_selector"
+            android:summary="%s"/>
+        <ListPreference
+            android:key="@string/key_silence_after"
+            android:title="@string/title_silence_after"
+            android:dialogTitle="@string/title_silence_after"
+            android:entries="@array/entries_duration"
+            android:entryValues="@array/values_duration"
+            android:defaultValue="15"
+            android:summary="%s"/>
+        <ListPreference
+            android:key="@string/key_snooze_duration"
+            android:title="@string/title_snooze_duration"
+            android:dialogTitle="@string/title_snooze_duration"
+            android:entries="@array/entries_duration"
+            android:entryValues="@array/values_duration"
+            android:defaultValue="10"
+            android:summary="%s"/>
+        <Preference
+            android:key="@string/key_alarm_volume"
+            android:title="@string/title_alarm_volume"/>
+        <ListPreference
+            android:key="@string/key_notify_me_of_upcoming_alarms"
+            android:title="@string/title_notify_me_of_upcoming_alarms"
+            android:dialogTitle="@string/title_notify_me_of_upcoming_alarms"
+            android:entries="@array/entries_notify_me_of_upcoming_alarms"
+            android:entryValues="@array/values_notify_me_of_upcoming_alarms"
+            android:defaultValue="2"
+            android:summary="%s"/>
+        <ListPreference
+            android:key="@string/key_first_day_of_week"
+            android:title="@string/title_first_day_of_week"
+            android:dialogTitle="@string/title_first_day_of_week"
+            android:entries="@array/entries_first_day_of_week"
+            android:entryValues="@array/values_first_day_of_week"
+            android:defaultValue="@string/value_sunday"
+            android:summary="%s"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/title_category_timers">
+        <com.philliphsu.clock2.settings.ThemedRingtonePreference
+            android:key="@string/key_timer_ringtone"
+            android:title="@string/title_timer_ringtone"
+            android:ringtoneType="alarm"
+            android:defaultValue="content://settings/system/alarm_alert"/>
+        <ListPreference
+            android:key="@string/key_timer_silence_after"
+            android:title="@string/title_timer_silence_after"
+            android:dialogTitle="@string/title_timer_silence_after"
+            android:entries="@array/entries_duration"
+            android:entryValues="@array/values_duration"
+            android:defaultValue="15"
+            android:summary="%s"/>
+        <SwitchPreference
+            android:key="@string/key_timer_vibrate"
+            android:title="@string/title_timer_vibrate"
+            android:defaultValue="false"/>
+    </PreferenceCategory>
+</PreferenceScreen>

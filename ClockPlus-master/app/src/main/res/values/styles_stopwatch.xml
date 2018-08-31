@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2017 Phillip Hsu
+  ~
+  ~ This file is part of ClockPlus.
+  ~
+  ~ ClockPlus is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ ClockPlus is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with ClockPlus.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <style name="Stopwatch" parent="TextAppearance.AppCompat">
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">@dimen/text_size_display_3</item>
+    </style>
+    <style name="SideButton" parent="SelectableButton">
+        <item name="android:layout_width">@dimen/side_button_size</item>
+        <item name="android:layout_height">@dimen/side_button_size</item>
+        <item name="android:visibility">invisible</item>
+        <item name="layout_columnWeight">1</item>
+        <item name="layout_gravity">center</item>
+    </style>
+    <style name="AddLapButton" parent="SideButton">
+        <item name="android:src">@drawable/ic_add_lap_40dp</item>
+    </style>
+    <style name="StopButton" parent="SideButton">
+        <item name="android:src">@drawable/ic_stop_40dp</item>
+    </style>
+</resources>
