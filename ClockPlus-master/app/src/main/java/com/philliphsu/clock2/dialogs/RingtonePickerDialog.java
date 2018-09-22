@@ -20,6 +20,7 @@
 package com.philliphsu.clock2.dialogs;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -28,6 +29,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 
 import com.philliphsu.clock2.R;
+import com.philliphsu.clock2.YouTubePlayer;
 import com.philliphsu.clock2.ringtone.playback.RingtoneLoop;
 
 /**

@@ -83,9 +83,7 @@
                 android:value="com.philliphsu.clock2.MainActivity" />
         </activity>
 
-        <service
-            android:name=".timers.TimerNotificationService"
-            android:exported="false" />
+
 
         <activity
             android:name=".ringtone.AlarmActivity"
@@ -99,10 +97,7 @@
             android:name=".ringtone.playback.AlarmRingtoneService"
             android:enabled="true"
             android:exported="false" />
-        <service
-            android:name=".stopwatch.StopwatchNotificationService"
-            android:enabled="true"
-            android:exported="false" />
+
 
         <activity android:name=".MainActivity" />
         <activity android:name=".YouTubePlayer"></activity>

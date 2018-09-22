@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.common.api.Response;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,8 +24,13 @@ import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.FirebaseFunctionsException;
 import com.google.firebase.functions.HttpsCallableResult;
 import com.philliphsu.clock2.ringtone.playback.AlarmRingtoneService;
+import com.squareup.okhttp.Request;
 
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -37,7 +44,10 @@ public class YouTubePlayer extends YouTubeBaseActivity {
     YouTubePlayerView youtubePlayerView;
     ImageButton likeBtn;
     ImageButton unlikeBtn;
+    String mUrl;
     com.google.android.youtube.player.YouTubePlayer.OnInitializedListener onInitializeListener;
+    private com.google.android.youtube.player.YouTubePlayer mYoutubePlayer;
+
 
 //    android:layout_alignParentTop="true"
 //    android:layout_centerHorizonatal="true"
@@ -51,15 +61,50 @@ public class YouTubePlayer extends YouTubeBaseActivity {
 
         mFunctions = FirebaseFunctions.getInstance();
 
+        /*
+        mFunctions.getHttpsCallable("getSongUrl")// from dataBase/server
+                .call()
+                .addOnCompleteListener(new OnCompleteListener<HttpsCallableResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<HttpsCallableResult> task) {
+                        Log.d(TAG, "onCompleteGetSong:"+task.getResult().getData());
+                        mUrl = task.getResult().getData().toString().substring(5);
+                        mUrl = mUrl.substring(0,mUrl.length()-1);
+                        Log.d(TAG, "onCompleteGetSong: "+mUrl);
+                    }
+                });
+                */
+
+        mFunctions.getHttpsCallable("helloWorld")
+                .call()
+                .addOnCompleteListener(new OnCompleteListener<HttpsCallableResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<HttpsCallableResult> task) {
+                        Log.d(TAG, "onCompleteHello:"+task.getResult().getData());
+
+                    }
+                });
 
         onInitializeListener=new com.google.android.youtube.player.YouTubePlayer.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(com.google.android.youtube.player.YouTubePlayer.Provider provider, com.google.android.youtube.player.YouTubePlayer youTubePlayer, boolean b) {
-                //getSongUrl();// from dataBase/server
+                Log.d(TAG, "onComplete2:"+ mUrl);
+                //youTubePlayer.loadVideo(mUrl);
+                mYoutubePlayer = youTubePlayer;
 
-               //addMessage("hello");
+                mFunctions.getHttpsCallable("getSongUrl")// from dataBase/server
+                        .call()
+                        .addOnCompleteListener(new OnCompleteListener<HttpsCallableResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<HttpsCallableResult> task) {
+                                Log.d(TAG, "onCompleteGetSong:"+task.getResult().getData());
+                                mUrl = task.getResult().getData().toString().substring(5);
+                                mUrl = mUrl.substring(0,mUrl.length()-1);
+                                Log.d(TAG, "onCompleteGetSong: "+mUrl);
 
-                youTubePlayer.loadVideo("OfZUDlv6jno");
+                                mYoutubePlayer.loadVideo(mUrl);
+                            }
+                        });
             }
 
             @Override
@@ -76,51 +121,6 @@ public class YouTubePlayer extends YouTubeBaseActivity {
         }, 3000);
     }
 
-//    private Task<String> addMessage(String text) {
-//        // Create the arguments to the callable function.
-//        Map<String, Object> data = new HashMap<>();
-//        data.put("text", text);
-//        data.put("push", true);
-//
-//        return mFunctions
-//                .getHttpsCallable("helloWorld")
-//                .call(data)
-//                .continueWith(new Continuation<HttpsCallableResult, String>() {
-//                    @Override
-//                    public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
-//                        // This continuation runs on either success or failure, but if the task
-//                        // has failed then getResult() will throw an Exception which will be
-//                        // propagated down.
-//                        String result = (String) task.getResult().getData();
-//                        Log.d(TAG, "then: " + result);
-//                        return result;
-//                    }
-//                });
-//    }
-private Task<String> addMessage(String text) {
-    // Create the arguments to the callable function.
-    final Map<String, Object> data = new HashMap<>();
-    data.put("text", text);
-    data.put("push", true);
-
-    return mFunctions
-            .getHttpsCallable("addMessage")
-            .call(data)
-            .continueWith(new Continuation<HttpsCallableResult, String>() {
-                @Override
-                public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
-                    // This continuation runs on either success or failure, but if the task
-                    // has failed then getResult() will throw an Exception which will be
-                    // propagated down.
-
-                    String result = (String) task.getResult().getData();
-                    return result;
-                }
-            });
-}
-
-
-
 
     public void onLikeClick(View view){
         stopAndFinish();
@@ -130,8 +130,6 @@ private Task<String> addMessage(String text) {
     public void onUnlikeClick(View view){
         stopAndFinish();
         //connection to server / database
-        Toast.makeText(getApplicationContext(),"Thank you, have a nice day!",
-                Toast.LENGTH_SHORT).show();
     }
 
     protected final void stopAndFinish() {
