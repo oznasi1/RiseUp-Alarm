@@ -32,8 +32,10 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,12 +47,11 @@ public class YouTubePlayer extends YouTubeBaseActivity {
     ImageButton likeBtn;
     ImageButton unlikeBtn;
     String mUrl;
+    String mSongId;
+    Date mStartDate;
     com.google.android.youtube.player.YouTubePlayer.OnInitializedListener onInitializeListener;
     private com.google.android.youtube.player.YouTubePlayer mYoutubePlayer;
 
-
-//    android:layout_alignParentTop="true"
-//    android:layout_centerHorizonatal="true"
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,35 +62,10 @@ public class YouTubePlayer extends YouTubeBaseActivity {
 
         mFunctions = FirebaseFunctions.getInstance();
 
-        /*
-        mFunctions.getHttpsCallable("getSongUrl")// from dataBase/server
-                .call()
-                .addOnCompleteListener(new OnCompleteListener<HttpsCallableResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<HttpsCallableResult> task) {
-                        Log.d(TAG, "onCompleteGetSong:"+task.getResult().getData());
-                        mUrl = task.getResult().getData().toString().substring(5);
-                        mUrl = mUrl.substring(0,mUrl.length()-1);
-                        Log.d(TAG, "onCompleteGetSong: "+mUrl);
-                    }
-                });
-                */
-
-        mFunctions.getHttpsCallable("helloWorld")
-                .call()
-                .addOnCompleteListener(new OnCompleteListener<HttpsCallableResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<HttpsCallableResult> task) {
-                        Log.d(TAG, "onCompleteHello:"+task.getResult().getData());
-
-                    }
-                });
 
         onInitializeListener=new com.google.android.youtube.player.YouTubePlayer.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(com.google.android.youtube.player.YouTubePlayer.Provider provider, com.google.android.youtube.player.YouTubePlayer youTubePlayer, boolean b) {
-                Log.d(TAG, "onComplete2:"+ mUrl);
-                //youTubePlayer.loadVideo(mUrl);
                 mYoutubePlayer = youTubePlayer;
 
                 mFunctions.getHttpsCallable("getSongUrl")// from dataBase/server
@@ -97,12 +73,16 @@ public class YouTubePlayer extends YouTubeBaseActivity {
                         .addOnCompleteListener(new OnCompleteListener<HttpsCallableResult>() {
                             @Override
                             public void onComplete(@NonNull Task<HttpsCallableResult> task) {
-                                Log.d(TAG, "onCompleteGetSong:"+task.getResult().getData());
-                                mUrl = task.getResult().getData().toString().substring(5);
-                                mUrl = mUrl.substring(0,mUrl.length()-1);
-                                Log.d(TAG, "onCompleteGetSong: "+mUrl);
+                                HashMap<String, String> map = (HashMap<String, String>) task.getResult().getData();
+                                mUrl= map.get("url");
+                                mSongId = map.get("songId");
+                                Log.d(TAG, "onCompleteonLikeClick:"+ mUrl);
+
 
                                 mYoutubePlayer.loadVideo(mUrl);
+
+                                 mStartDate = new Date();
+
                             }
                         });
             }
@@ -123,13 +103,41 @@ public class YouTubePlayer extends YouTubeBaseActivity {
 
 
     public void onLikeClick(View view){
+        Date endDate = new Date();
+        int numSeconds = (int)((endDate.getTime() - mStartDate.getTime()) / 1000);
+
         stopAndFinish();
-        //connection to server / database
+        String secondsPlayed = Integer.toString(numSeconds);
+        String like ="1";
+        String played ="1";
+        Map<String, String> data = new HashMap<>();
+        data.put("sec", secondsPlayed);
+        data.put("isPlayed", played);
+        data.put("songId", mSongId);
+        data.put("isLiked",like);
+        mFunctions.getHttpsCallable("updateSongScore")
+                .call(data);
+        mFunctions.getHttpsCallable("updateUserSongHistory")
+                .call(data);
     }
 
     public void onUnlikeClick(View view){
+        Date endDate = new Date();
+        int numSeconds = (int)((endDate.getTime() - mStartDate.getTime()) / 1000);
+
         stopAndFinish();
-        //connection to server / database
+        String secondsPlayed = Integer.toString(numSeconds);
+
+        String like ="0";
+        String played ="1";
+        Map<String, String> data = new HashMap<>();
+        data.put("sec", secondsPlayed);
+        data.put("isPlayed", played);
+        data.put("songId", mSongId);
+        data.put("isLiked",like);
+
+        mFunctions.getHttpsCallable("updateUserSongHistory")
+                .call(data);
     }
 
     protected final void stopAndFinish() {

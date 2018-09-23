@@ -119,7 +119,9 @@ public class Auth extends AppCompatActivity {
                                 //push to dataBase
                                 mDatabase= FirebaseDatabase.getInstance();
                                 DatabaseReference myRef = mDatabase.getReference();
-                                myRef.child("users").push().setValue(newUser);
+                                myRef.child("users").child(user.getUid()).setValue(newUser);
+                                //myRef.child("users").setValue(user.getUid());
+
 
                                 updateUI(user);
                             }

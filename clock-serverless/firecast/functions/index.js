@@ -42,15 +42,15 @@ exports.getSongUrl = functions.https.onCall((data, context) => {
     var db = admin.database();
     var ref = db.ref("songs");
     var songUrl;
-
+    var randomNum;
     return ref.once("value", (songs) => {
         let count = 0;
-        var randomNum = getRandomInt(songs.val().length - 1);
+        randomNum = getRandomInt(songs.val().length - 1);
         songs.forEach((song) => {
             if (count === randomNum) {
                 //console.log(song.val()); // prints the first song
                 songUrl = song.val().url;
-                console.log("before"+songUrl);
+                //console.log("before"+songUrl);
                 // return songUrl;
                 //console.log(url); // prints the url of the first song
                 //console.log(song.val()['url']); // prints the url of the first song -- exact the same
@@ -60,18 +60,73 @@ exports.getSongUrl = functions.https.onCall((data, context) => {
         //console.log(snapshot.val()); -->all songs
         //console.log(snapshot.val().length); --> returns 138
     }).then(() => {
-        console.log("after"+songUrl);
+        //console.log("after"+songUrl);
+        console.log(randomNum);
+        var randomNumS = randomNum.toString();
         return (
             {
-                
-                    "url": songUrl,
-                
+                "url": songUrl,
+                "songId": randomNumS,
             }
         );
     });
 });
 
 
+exports.updateSongScore = functions.https.onCall((data, context) => {
+    const songId = data.songId;
+
+    var db = admin.database();
+    var ref = db.ref("songs");
+    //ref.orderByKey().equalTo(songId).once("value",(song)=>{
+    //ref.child(songId).once("value",(song)=>{
+
+    ref.once("value", (songs) => {
+        var oldScore;
+        var newScore;
+        songs.forEach((song) => {
+            if (song.key === songId) {
+                //console.log(song);
+                oldScore = song.val().score;
+                //console.log("old score: " + oldScore);
+                newScore = parseInt(oldScore);
+                newScore++;
+                //console.log("new score: " + newScore);
+                song.ref.child("score").set(newScore); // update the rellevant song score
+                //ref.child(songId).child("score").set(newScore);
+            }
+        })
+    })
+});
+
+
+
+
+exports.updateUserSongHistory = functions.https.onCall((data, context) => {
+    const uid = context.auth.uid;
+    const secondsPlayed = data.sec;
+    const isPlayed = data.isPlayed;
+    const songId = data.songId;
+    const isLiked = data.isLiked;
+
+    var db = admin.database();
+
+    var ref = db.ref("users");
+    ref.once("value", (users) => {
+        users.forEach((user) => {
+            if (user.key === uid) {// we found the rellevant user 
+                var songDetails = {
+                    songId: songId,
+                    secondsPlayed: secondsPlayed,
+                    isPlayed: isPlayed,
+                    isLiked: isLiked,
+                }
+                user.ref.child("history").push(songDetails);
+            }
+        })
+    })
+
+});
 
 
 
