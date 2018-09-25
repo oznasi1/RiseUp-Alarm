@@ -79,7 +79,8 @@ public class YouTubePlayer extends YouTubeBaseActivity {
                                 Log.d(TAG, "onCompleteonLikeClick:"+ mUrl);
 
 
-                                mYoutubePlayer.loadVideo(mUrl);
+                                mYoutubePlayer.loadVideo(mUrl,1);
+
 
                                  mStartDate = new Date();
 
@@ -93,12 +94,17 @@ public class YouTubePlayer extends YouTubeBaseActivity {
             }
         };
 
+        String key = getString(R.string.youtube_key);
+        youtubePlayerView.initialize(key,onInitializeListener);
+
+        /*
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
-                youtubePlayerView.initialize(PlayerConfig.API_KEY,onInitializeListener);
+                String key = getString(R.string.youtube_key);
+                youtubePlayerView.initialize(key,onInitializeListener);
             }
-        }, 3000);
+        }, 500);*/
     }
 
 
