@@ -187,6 +187,54 @@ exports.updateUserSongHistory = functions.https.onCall((data, context) => {
 
 });
 
+/*
+//TODO: need to add field ot song: num_of_uses, base on this we can get avg
+//TODO: decide when and how to update users/{ID}/history/{LogID}/score
+const getSongUrl = async (data, context) => {
+  let user = context.auth.uid;
+  let res = await getNewSongUrl(user);
+
+  return res;
+};
+
+const updateSongScore = async (data, context) => {
+  const songId = data.songId;
+
+  let currSongQuery = db.ref("songs/" + songId);
+  
+  let currSong = await getSong(songId);
+  let incScore = ++currSong.score;
+
+  let updateScoreQuery = await currSongQuery.update({score : incScore});
+};
+//***TEST
+var send = {
+  sec: "1",
+  isPlayed: "1",
+  songId: "15"
+};
+updateSongScore(send, null);
+//TEST***
+
+const updateUserSongHistory = async (data, context) => {
+  let uid = context.auth.uid;
+  const logDetails = {
+    secondsPlayed: data.sec,
+    isPlayed: data.isPlayed,
+    songId: data.songId,
+    isLiked: "0",
+    timestamp: Date.now()
+  };
+
+  var query = db.ref("users/" + uid).child("history");
+  try {
+    await query.push(logDetails);
+    console.log(logDetails);
+  } catch (err) {
+    console.error(err);
+  }
+};
+*/
 
 
 
