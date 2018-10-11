@@ -34,7 +34,6 @@ const rootGroupId = "-1";
 const db = admin.database();
 
 async function getNewSongUrl(user) {
-<<<<<<< HEAD
     let found = false;
     let lastSongIndex = 0;
     let size;
@@ -72,30 +71,12 @@ async function filterGroup(group, user) {
   }
 
   return group;
-=======
-  let lastLikedSong = await getLastLikedSong(user);
-  let nextGroup = await getNextGroup(lastLikedSong.songId);
-  let size = Object.keys(nextGroup).length;
-  let randomIndex = getRandomInt(size - 1);
-  let nextSongId = Object.keys(nextGroup)[randomIndex];
-  let nextSongUrl = nextGroup[nextSongId].url;//TODO: remove unliked songs
-
-  console.log(); //TEST
-  return {
-      url: nextSongUrl,
-      songId: nextSongId
-  }
->>>>>>> 4b0e9cae85bfa39df205cf2b1210502a29c6db0d
 }
 
 async function getNextGroup(lastSongId) {
   //first tries to get the group that the current song brought to the db
   //(song's children in tree). we assume it's not a leaf.
-<<<<<<< HEAD
   let nextGroupID = Number.parseInt(lastSongId);
-=======
-  let nextGroupID = lastSongId;
->>>>>>> 4b0e9cae85bfa39df205cf2b1210502a29c6db0d
   let matchGroupQuery = db
     .ref("songs")
     .orderByChild("groupId")
@@ -111,15 +92,9 @@ async function getNextGroup(lastSongId) {
       return arrGroup;
     }
   } catch (err) {
-<<<<<<< HEAD
     let prevGroup = await getSongGroupId(lastSongId);
     let res = await getNextGroup(prevGroup);
     return res;
-=======
-      let prevGroup = await getSongGroupId(lastSongId);
-      let res = await getNextGroup(prevGroup);
-      return res;
->>>>>>> 4b0e9cae85bfa39df205cf2b1210502a29c6db0d
   }
 }
 
@@ -135,57 +110,10 @@ async function getSong(songId) {
     res = snapshot.val()[songId];
 
     return res;
-<<<<<<< HEAD
-=======
-    
->>>>>>> 4b0e9cae85bfa39df205cf2b1210502a29c6db0d
   } catch (err) {
     console.error(err);
   }
 }
-<<<<<<< HEAD
-=======
-
-async function getSongGroupId(songId) {
-  let res = await getSong(songId);
-    return res.groupId;
-}
-
-async function getLastLikedSong(user) {
-  var likeSongsQuery = db
-    .ref("/users")
-    .child(user)
-    .child("history")
-    .orderByChild("isLiked")
-    .equalTo("1");
-  try {
-    let snapshot = await likeSongsQuery.once("value");
-    var history = Object.values(snapshot.val());
-    history
-      .sort(function(x, y) {
-        return x.timestamp - y.timestamp;
-      })
-      .reverse();
-
-    return history[0];
-  } catch (err) {
-    newGroupId = rootGroupId;
-    return newGroupId;
-  }
-}
-
-//getSong("12"); TEST
-//getNewSongUrl("iVUcaEHrdVW8iTfNmU4yGUvxbrm1"); TEST
-
-
-exports.getSongUrl = functions.https.onCall(async (data, context) => {
-    let user = context.auth.uid;
-    let res = await getNewSongUrl(user);
-    console.log(res);
-
-    return res;
-});
->>>>>>> 4b0e9cae85bfa39df205cf2b1210502a29c6db0d
 
 async function getSongGroupId(songId) {
   let res = await getSong(songId);
@@ -256,7 +184,6 @@ exports.updateSongScore = functions.https.onCall(async (data, context) => {
   }
 });
 
-<<<<<<< HEAD
 exports.updateUserSongHistory = functions.https.onCall(
   async (data, context) => {
     let uid = context.auth.uid;
@@ -278,56 +205,3 @@ exports.updateUserSongHistory = functions.https.onCall(
     }
   }
 );
-=======
-/*
-//TODO: need to add field ot song: num_of_uses, base on this we can get avg
-//TODO: decide when and how to update users/{ID}/history/{LogID}/score
-const getSongUrl = async (data, context) => {
-  let user = context.auth.uid;
-  let res = await getNewSongUrl(user);
-
-  return res;
-};
-
-const updateSongScore = async (data, context) => {
-  const songId = data.songId;
-
-  let currSongQuery = db.ref("songs/" + songId);
-  
-  let currSong = await getSong(songId);
-  let incScore = ++currSong.score;
-
-  let updateScoreQuery = await currSongQuery.update({score : incScore});
-};
-//***TEST
-var send = {
-  sec: "1",
-  isPlayed: "1",
-  songId: "15"
-};
-updateSongScore(send, null);
-//TEST***
-
-const updateUserSongHistory = async (data, context) => {
-  let uid = context.auth.uid;
-  const logDetails = {
-    secondsPlayed: data.sec,
-    isPlayed: data.isPlayed,
-    songId: data.songId,
-    isLiked: "0",
-    timestamp: Date.now()
-  };
-
-  var query = db.ref("users/" + uid).child("history");
-  try {
-    await query.push(logDetails);
-    console.log(logDetails);
-  } catch (err) {
-    console.error(err);
-  }
-};
-*/
-
-
-
->>>>>>> 4b0e9cae85bfa39df205cf2b1210502a29c6db0d
