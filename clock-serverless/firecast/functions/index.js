@@ -49,10 +49,12 @@ async function getNewSongUrl(user) {
   
     let randomIndex = getRandomInt(size - 1);
     let nextSongId = Object.keys(nextGroup)[randomIndex];
-    let nextSongUrl = nextGroup[nextSongId].url; //TODO: remove unliked songs
+    let nextSongUrl = nextGroup[nextSongId].url;
+    let nexSongTitle = nextGroup[nextSongId].title;
     return {
       url: nextSongUrl,
-      songId: nextSongId
+      songId: nextSongId,
+        title: nexSongTitle
     };
   }
 
