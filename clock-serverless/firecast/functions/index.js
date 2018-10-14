@@ -34,29 +34,29 @@ const rootGroupId = "-1";
 const db = admin.database();
 
 async function getNewSongUrl(user) {
-    let found = false;
-    let lastSongIndex = 0;
-    let size;
-    let nextGroup;
-    while (!found) {
-      let lastLikedSong = await getLastLikedSong(user, lastSongIndex++);
-      let currGroup = lastLikedSong == null ? rootGroupId : lastLikedSong.songId;
-      nextGroup = await getNextGroup(currGroup);
-      let filteredNextGroup = await filterGroup(nextGroup, user);
-      size = Object.keys(filteredNextGroup).length;
-      found = size > 0 ? true : false;
-    }
-  
-    let randomIndex = getRandomInt(size - 1);
-    let nextSongId = Object.keys(nextGroup)[randomIndex];
-    let nextSongUrl = nextGroup[nextSongId].url;
-    let nexSongTitle = nextGroup[nextSongId].title;
-    return {
+  let found = false;
+  let lastSongIndex = 0;
+  let size;
+  let nextGroup;
+  while (!found) {
+    let lastLikedSong = await getLastLikedSong(user, lastSongIndex++);
+    let currGroup = lastLikedSong == null ? rootGroupId : lastLikedSong.songId;
+    nextGroup = await getNextGroup(currGroup);
+    let filteredNextGroup = await filterGroup(nextGroup, user);
+    size = Object.keys(filteredNextGroup).length;
+    found = size > 0 ? true : false;
+  }
+
+  let randomIndex = getRandomInt(size - 1);
+  let nextSongId = Object.keys(nextGroup)[randomIndex];
+  let nextSongUrl = nextGroup[nextSongId].url;
+  let nexSongTitle = nextGroup[nextSongId].artist + " - " + nextGroup[nextSongId].name;
+  return {
       url: nextSongUrl,
       songId: nextSongId,
         title: nexSongTitle
     };
-  }
+}
 
 async function filterGroup(group, user) {
   let songHistoryQuery = db
@@ -68,7 +68,7 @@ async function filterGroup(group, user) {
 
   for (let song in historyGroup) {
     if (group[historyGroup[song].songId] != undefined) {
-      delete group[historyGroup[song].songId];
+       delete group[historyGroup[song].songId];
     }
   }
 
@@ -78,7 +78,7 @@ async function filterGroup(group, user) {
 async function getNextGroup(lastSongId) {
   //first tries to get the group that the current song brought to the db
   //(song's children in tree). we assume it's not a leaf.
-  let nextGroupID = Number.parseInt(lastSongId);
+  let nextGroupID = (lastSongId);
   let matchGroupQuery = db
     .ref("songs")
     .orderByChild("groupId")
@@ -87,6 +87,9 @@ async function getNextGroup(lastSongId) {
   try {
     let snapshot = await matchGroupQuery.once("value");
     let arrGroup = snapshot.val();
+    if(Array.isArray(arrGroup)){
+      arrGroup = Object.assign({}, arrGroup);
+    }
     //checkig if it's a leaf-no children
     if (arrGroup == null) {
       throw new Error("Leaf Exception");
@@ -146,6 +149,8 @@ async function getLastLikedSong(user, index) {
     return newGroupId;
   }
 }
+
+
 exports.getSongUrl = functions.https.onCall(async (data, context) => {
   let user = context.auth.uid;
   let res = await getNewSongUrl(user);
@@ -207,3 +212,5 @@ exports.updateUserSongHistory = functions.https.onCall(
     }
   }
 );
+
+
