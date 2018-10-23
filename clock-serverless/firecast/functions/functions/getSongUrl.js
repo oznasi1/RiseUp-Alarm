@@ -123,7 +123,7 @@ async function getLastLikedSongs(user) {
 }
 
 async function getSongUrl(data, context) {
-  var logMsg;
+  var logMsg = {};
   try {
     let user = context.auth.uid;
     let res = await getNewSongUrl(user);
@@ -134,8 +134,8 @@ async function getSongUrl(data, context) {
 
     return res;
   } catch (err) {
-    logMsg = err + " uid= " + context.auth.uid;
-    throw new functions.https.HttpsError("Failed to update song score", err);
+    logMsg["error"] = err + " uid= " + context.auth.uid;
+    throw new functions.https.HttpsError("Failed to retrive url, ", err);
   } finally {
     console.log(logMsg);
   }

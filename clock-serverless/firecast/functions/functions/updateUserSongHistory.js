@@ -17,7 +17,7 @@ async function updateUserSongHistory(data, context) {
     isLiked: "0",
     timestamp: Date.now()
   };
-  var logMsg;
+  var logMsg = {};
   const query = db.ref("users/" + uid).child("history");
   try {
     logMsg = update;
@@ -25,7 +25,7 @@ async function updateUserSongHistory(data, context) {
     await query.push(update);
   } catch (err) {
     logMsg["error"] = err +" uid= " + context.auth.uid;
-    throw new functions.https.HttpsError("", logMsg);
+    throw new functions.https.HttpsError("Failed to update history ", logMsg);
   } finally {
 
     console.log(logMsg);

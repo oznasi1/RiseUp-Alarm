@@ -1,0 +1,313 @@
+[debug] [2018-10-23T16:52:53.314Z] ----------------------------------------------------------------------
+[debug] [2018-10-23T16:52:53.320Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\alexp\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy --only functions
+[debug] [2018-10-23T16:52:53.320Z] CLI Version:   5.1.1
+[debug] [2018-10-23T16:52:53.321Z] Platform:      win32
+[debug] [2018-10-23T16:52:53.321Z] Node Version:  v10.11.0
+[debug] [2018-10-23T16:52:53.323Z] Time:          Tue Oct 23 2018 19:52:53 GMT+0300 (Israel Daylight Time)
+[debug] [2018-10-23T16:52:53.323Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-10-23T16:52:53.349Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-10-23T16:52:53.350Z] > authorizing via signed-in user
+[debug] [2018-10-23T16:52:53.350Z] [iam] checking project alarmclock-22904 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2018-10-23T16:52:53.354Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-10-23T16:52:53.355Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2018-10-23T16:52:53.841Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:52:53.858Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/alarmclock-22904:testIamPermissions  
+
+[debug] [2018-10-23T16:52:55.160Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'alarmclock-22904'...
+[info] 
+[info] i  deploying functions
+[info] +  functions: Finished running predeploy script.
+[debug] [2018-10-23T16:52:57.290Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "lint": "eslint .",
+    "serve": "firebase serve --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "dependencies": {
+    "firebase-admin": "~6.0.0",
+    "firebase-functions": "^2.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^4.12.0",
+    "eslint-plugin-promise": "^3.6.0"
+  },
+  "private": true
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[debug] [2018-10-23T16:52:57.293Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/cloudfunctions.googleapis.com/projectSettings/alarmclock-22904?view=CONSUMER_VIEW  
+ 
+[debug] [2018-10-23T16:52:57.294Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/runtimeconfig.googleapis.com/projectSettings/alarmclock-22904?view=CONSUMER_VIEW  
+ 
+[debug] [2018-10-23T16:52:58.716Z] <<< HTTP RESPONSE 200
+[info] +  functions: all necessary APIs are enabled
+[debug] [2018-10-23T16:52:59.154Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:52:59.155Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/alarmclock-22904  
+ 
+[debug] [2018-10-23T16:53:00.176Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:00.177Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/726872539935:getServerAppConfig  
+ 
+[debug] [2018-10-23T16:53:00.719Z] <<< HTTP RESPONSE 200
+[info] i  functions: preparing functions directory for uploading...
+[debug] [2018-10-23T16:53:00.726Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/alarmclock-22904/configs  
+ 
+[debug] [2018-10-23T16:53:01.408Z] <<< HTTP RESPONSE 200
+[info] i  functions: packaged functions (57.31 KB) for uploading
+[debug] [2018-10-23T16:53:02.163Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/alarmclock-22904/locations/us-central1/functions:generateUploadUrl  
+ 
+[debug] [2018-10-23T16:53:02.839Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:02.840Z] >>> HTTP REQUEST PUT https://storage.googleapis.com/gcf-upload-us-central1-e3e027e1-ddf0-435d-b604-48e84ae7647b/e27047f3-c2e0-457c-b963-638d975e7b9c.zip?GoogleAccessId=service-726872539935@gcf-admin-robot.iam.gserviceaccount.com&Expires=1540315452&Signature=iebgWw4NH4x5yxfHGmeIifPfP6AwIDTJC5pGAluhWtjTvkCtlvfahhxMZUs5ELYZwMVJZrFdzEdJrRoMSBsdrSwU9ijQQXGc3uOODuChadSHjUEZuTAOXzSSkd1IcR7PvwQ3Seib28ig5JPddhpoQ7b0sjiuptClX3fcb0r%2FlZ4R20cGSKZWULduQzuR6sbXACpnr5Bla8Qspd9fww%2FXR%2BcrDF%2Bu5j%2BubISdw7Xv2AyO25b7qRh%2Ffgj5lfncUq%2BOlXAVew7Vk6hym8s%2BDOGVtXCAxTaFsxp1d7DiZ1FJHGgqQS011pCVzypqsOdQ083xLpqdUyfG4Qjb%2FsungUlR7w%3D%3D  
+
+[debug] [2018-10-23T16:53:04.272Z] <<< HTTP RESPONSE 200
+[info] +  functions: functions folder uploaded successfully
+[debug] [2018-10-23T16:53:04.277Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/alarmclock-22904/locations/-/functions  
+ 
+[debug] [2018-10-23T16:53:04.879Z] <<< HTTP RESPONSE 200
+[info] i  functions: updating Node.js 8 function getSongUrl(us-central1)...
+[debug] [2018-10-23T16:53:04.886Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function updateSongScore(us-central1)...
+[debug] [2018-10-23T16:53:04.888Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function updateUserSongHistory(us-central1)...
+[debug] [2018-10-23T16:53:04.890Z] Trigger is:  {"httpsTrigger":{}}
+[debug] [2018-10-23T16:53:04.893Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/alarmclock-22904/locations/us-central1/functions/getSongUrl {"updateMask":"sourceUploadUrl,name,labels,httpsTrigger"} 
+
+[debug] [2018-10-23T16:53:04.896Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/alarmclock-22904/locations/us-central1/functions/updateSongScore {"updateMask":"sourceUploadUrl,name,labels,httpsTrigger"} 
+
+[debug] [2018-10-23T16:53:04.898Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/alarmclock-22904/locations/us-central1/functions/updateUserSongHistory {"updateMask":"sourceUploadUrl,name,labels,httpsTrigger"} 
+
+[debug] [2018-10-23T16:53:05.599Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:05.672Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:05.733Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:05.738Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/alarmclock-22904/locations/-/functions  
+ 
+[debug] [2018-10-23T16:53:06.531Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:06.533Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS9nZXRTb25nVXJsL09SS29KNFlGRUJr  
+ 
+[debug] [2018-10-23T16:53:06.534Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVTb25nU2NvcmUvV2k3QlBieVhHMGc  
+ 
+[debug] [2018-10-23T16:53:06.534Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVVc2VyU29uZ0hpc3RvcnkvMGFPMkxjNU1tWG8  
+ 
+[debug] [2018-10-23T16:53:06.941Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:06.951Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:06.971Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:08.947Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS9nZXRTb25nVXJsL09SS29KNFlGRUJr  
+ 
+[debug] [2018-10-23T16:53:08.954Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVVc2VyU29uZ0hpc3RvcnkvMGFPMkxjNU1tWG8  
+ 
+[debug] [2018-10-23T16:53:08.974Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVTb25nU2NvcmUvV2k3QlBieVhHMGc  
+ 
+[debug] [2018-10-23T16:53:09.355Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:09.364Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:09.373Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:11.362Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS9nZXRTb25nVXJsL09SS29KNFlGRUJr  
+ 
+[debug] [2018-10-23T16:53:11.369Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVVc2VyU29uZ0hpc3RvcnkvMGFPMkxjNU1tWG8  
+ 
+[debug] [2018-10-23T16:53:11.374Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVTb25nU2NvcmUvV2k3QlBieVhHMGc  
+ 
+[debug] [2018-10-23T16:53:11.856Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:11.857Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:11.860Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:13.858Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS9nZXRTb25nVXJsL09SS29KNFlGRUJr  
+ 
+[debug] [2018-10-23T16:53:13.859Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVVc2VyU29uZ0hpc3RvcnkvMGFPMkxjNU1tWG8  
+ 
+[debug] [2018-10-23T16:53:13.865Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVTb25nU2NvcmUvV2k3QlBieVhHMGc  
+ 
+[debug] [2018-10-23T16:53:14.256Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:14.264Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:14.267Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:16.257Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS9nZXRTb25nVXJsL09SS29KNFlGRUJr  
+ 
+[debug] [2018-10-23T16:53:16.264Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVTb25nU2NvcmUvV2k3QlBieVhHMGc  
+ 
+[debug] [2018-10-23T16:53:16.274Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVVc2VyU29uZ0hpc3RvcnkvMGFPMkxjNU1tWG8  
+ 
+[debug] [2018-10-23T16:53:16.663Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:16.680Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:16.697Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:18.666Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS9nZXRTb25nVXJsL09SS29KNFlGRUJr  
+ 
+[debug] [2018-10-23T16:53:18.687Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVVc2VyU29uZ0hpc3RvcnkvMGFPMkxjNU1tWG8  
+ 
+[debug] [2018-10-23T16:53:18.702Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVTb25nU2NvcmUvV2k3QlBieVhHMGc  
+ 
+[debug] [2018-10-23T16:53:19.124Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:19.126Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:19.127Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:21.127Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS9nZXRTb25nVXJsL09SS29KNFlGRUJr  
+ 
+[debug] [2018-10-23T16:53:21.135Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVVc2VyU29uZ0hpc3RvcnkvMGFPMkxjNU1tWG8  
+ 
+[debug] [2018-10-23T16:53:21.136Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVTb25nU2NvcmUvV2k3QlBieVhHMGc  
+ 
+[debug] [2018-10-23T16:53:21.536Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:21.543Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:21.553Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:23.542Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS9nZXRTb25nVXJsL09SS29KNFlGRUJr  
+ 
+[debug] [2018-10-23T16:53:23.546Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVVc2VyU29uZ0hpc3RvcnkvMGFPMkxjNU1tWG8  
+ 
+[debug] [2018-10-23T16:53:23.556Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVTb25nU2NvcmUvV2k3QlBieVhHMGc  
+ 
+[debug] [2018-10-23T16:53:24.031Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:24.032Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:24.034Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:26.035Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVVc2VyU29uZ0hpc3RvcnkvMGFPMkxjNU1tWG8  
+ 
+[debug] [2018-10-23T16:53:26.035Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS9nZXRTb25nVXJsL09SS29KNFlGRUJr  
+ 
+[debug] [2018-10-23T16:53:26.036Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVTb25nU2NvcmUvV2k3QlBieVhHMGc  
+ 
+[debug] [2018-10-23T16:53:26.425Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:26.437Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:26.444Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:28.428Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVTb25nU2NvcmUvV2k3QlBieVhHMGc  
+ 
+[debug] [2018-10-23T16:53:28.442Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVVc2VyU29uZ0hpc3RvcnkvMGFPMkxjNU1tWG8  
+ 
+[debug] [2018-10-23T16:53:28.446Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS9nZXRTb25nVXJsL09SS29KNFlGRUJr  
+ 
+[debug] [2018-10-23T16:53:28.829Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:28.836Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:28.864Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:30.834Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS9nZXRTb25nVXJsL09SS29KNFlGRUJr  
+ 
+[debug] [2018-10-23T16:53:30.840Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVTb25nU2NvcmUvV2k3QlBieVhHMGc  
+ 
+[debug] [2018-10-23T16:53:30.865Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVVc2VyU29uZ0hpc3RvcnkvMGFPMkxjNU1tWG8  
+ 
+[debug] [2018-10-23T16:53:31.211Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:31.218Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:31.273Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:33.216Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS9nZXRTb25nVXJsL09SS29KNFlGRUJr  
+ 
+[debug] [2018-10-23T16:53:33.223Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVTb25nU2NvcmUvV2k3QlBieVhHMGc  
+ 
+[debug] [2018-10-23T16:53:33.280Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVVc2VyU29uZ0hpc3RvcnkvMGFPMkxjNU1tWG8  
+ 
+[debug] [2018-10-23T16:53:33.634Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:33.663Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:33.710Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:35.637Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVTb25nU2NvcmUvV2k3QlBieVhHMGc  
+ 
+[debug] [2018-10-23T16:53:35.670Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS9nZXRTb25nVXJsL09SS29KNFlGRUJr  
+ 
+[debug] [2018-10-23T16:53:35.713Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVVc2VyU29uZ0hpc3RvcnkvMGFPMkxjNU1tWG8  
+ 
+[debug] [2018-10-23T16:53:36.046Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:36.069Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:53:36.127Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:54:23.003Z] ----------------------------------------------------------------------
+[debug] [2018-10-23T16:54:23.006Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\alexp\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy --only functions
+[debug] [2018-10-23T16:54:23.006Z] CLI Version:   5.1.1
+[debug] [2018-10-23T16:54:23.006Z] Platform:      win32
+[debug] [2018-10-23T16:54:23.006Z] Node Version:  v10.11.0
+[debug] [2018-10-23T16:54:23.008Z] Time:          Tue Oct 23 2018 19:54:23 GMT+0300 (Israel Daylight Time)
+[debug] [2018-10-23T16:54:23.008Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-10-23T16:54:23.019Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-10-23T16:54:23.020Z] > authorizing via signed-in user
+[debug] [2018-10-23T16:54:23.020Z] [iam] checking project alarmclock-22904 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2018-10-23T16:54:23.022Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/alarmclock-22904:testIamPermissions  
+
+[debug] [2018-10-23T16:54:24.144Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'alarmclock-22904'...
+[info] 
+[info] i  deploying functions
+[info] +  functions: Finished running predeploy script.
+[debug] [2018-10-23T16:54:26.278Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "lint": "eslint .",
+    "serve": "firebase serve --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "dependencies": {
+    "firebase-admin": "~6.0.0",
+    "firebase-functions": "^2.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^4.12.0",
+    "eslint-plugin-promise": "^3.6.0"
+  },
+  "private": true
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[debug] [2018-10-23T16:54:26.281Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/cloudfunctions.googleapis.com/projectSettings/alarmclock-22904?view=CONSUMER_VIEW  
+ 
+[debug] [2018-10-23T16:54:26.283Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/runtimeconfig.googleapis.com/projectSettings/alarmclock-22904?view=CONSUMER_VIEW  
+ 
+[debug] [2018-10-23T16:54:28.060Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:54:28.226Z] <<< HTTP RESPONSE 200
+[info] +  functions: all necessary APIs are enabled
+[debug] [2018-10-23T16:54:28.230Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/alarmclock-22904  
+ 
+[debug] [2018-10-23T16:54:29.268Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:54:29.269Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/726872539935:getServerAppConfig  
+ 
+[debug] [2018-10-23T16:54:29.714Z] <<< HTTP RESPONSE 200
+[info] i  functions: preparing functions directory for uploading...
+[debug] [2018-10-23T16:54:29.721Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/alarmclock-22904/configs  
+ 
+[debug] [2018-10-23T16:54:30.342Z] <<< HTTP RESPONSE 200
+[info] i  functions: packaged functions (57.32 KB) for uploading
+[debug] [2018-10-23T16:54:31.271Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/alarmclock-22904/locations/us-central1/functions:generateUploadUrl  
+ 
+[debug] [2018-10-23T16:54:31.828Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:54:31.829Z] >>> HTTP REQUEST PUT https://storage.googleapis.com/gcf-upload-us-central1-e3e027e1-ddf0-435d-b604-48e84ae7647b/97dffa21-4526-4404-b087-e0c96d42387a.zip?GoogleAccessId=service-726872539935@gcf-admin-robot.iam.gserviceaccount.com&Expires=1540315541&Signature=J5L6Ln5DvXu0KdVU50pNgm5Dsjp1P4J1E5P4%2BB3xSDZmq7DFTGB34lnOAg7V%2Bcpp5nLVVXCiBsDxXilzjvvHbcLAwa2trD5lXGC51IJLn3Fd%2F0GQ5moltnX7fKBFzTCkqcsIKCBIzHu7M624zhadyAksP8zcTl2TuSTjYr8MuleVD9T8RNKkA9oap6dXSaRBZqE779ttsg%2F2kgMU2QGa3h2Rfg8xsD6fIPw1zSQnsFYNrBStXsuIhY3KkQ%2FwlS5%2FlkizhNAYaE%2BRG%2F%2FASfTGIVSoQH6xnXyUJnpo%2BTqlqj42qAq1F%2FHzY5gZN7FNkYr1wAyZ77cBkm1UI%2BuhppE2KQ%3D%3D  
+
+[debug] [2018-10-23T16:54:32.749Z] <<< HTTP RESPONSE 200
+[info] +  functions: functions folder uploaded successfully
+[debug] [2018-10-23T16:54:32.754Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/alarmclock-22904/locations/-/functions  
+ 
+[debug] [2018-10-23T16:54:33.367Z] <<< HTTP RESPONSE 200
+[info] i  functions: updating Node.js 8 function getSongUrl(us-central1)...
+[debug] [2018-10-23T16:54:33.375Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function updateSongScore(us-central1)...
+[debug] [2018-10-23T16:54:33.377Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function updateUserSongHistory(us-central1)...
+[debug] [2018-10-23T16:54:33.379Z] Trigger is:  {"httpsTrigger":{}}
+[debug] [2018-10-23T16:54:33.383Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/alarmclock-22904/locations/us-central1/functions/getSongUrl {"updateMask":"sourceUploadUrl,name,labels,httpsTrigger"} 
+
+[debug] [2018-10-23T16:54:33.387Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/alarmclock-22904/locations/us-central1/functions/updateSongScore {"updateMask":"sourceUploadUrl,name,labels,httpsTrigger"} 
+
+[debug] [2018-10-23T16:54:33.389Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/alarmclock-22904/locations/us-central1/functions/updateUserSongHistory {"updateMask":"sourceUploadUrl,name,labels,httpsTrigger"} 
+
+[debug] [2018-10-23T16:54:33.979Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:54:34.020Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:54:34.023Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:54:34.028Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/alarmclock-22904/locations/-/functions  
+ 
+[debug] [2018-10-23T16:54:34.797Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:54:34.800Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS9nZXRTb25nVXJsL0JLajNXenJPSUhv  
+ 
+[debug] [2018-10-23T16:54:34.801Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVTb25nU2NvcmUvU21CWWJERWlKb1k  
+ 
+[debug] [2018-10-23T16:54:34.801Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVVc2VyU29uZ0hpc3Rvcnkva3lHek55TElKcVk  
+ 
+[debug] [2018-10-23T16:54:35.312Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:54:35.314Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:54:35.315Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:54:37.314Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVVc2VyU29uZ0hpc3Rvcnkva3lHek55TElKcVk  
+ 
+[debug] [2018-10-23T16:54:37.319Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS9nZXRTb25nVXJsL0JLajNXenJPSUhv  
+ 
+[debug] [2018-10-23T16:54:37.319Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YWxhcm1jbG9jay0yMjkwNC91cy1jZW50cmFsMS91cGRhdGVTb25nU2NvcmUvU21CWWJERWlKb1k  
+ 
+[debug] [2018-10-23T16:54:37.705Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:54:37.713Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-23T16:54:37.731Z] <<< HTTP RESPONSE 200
