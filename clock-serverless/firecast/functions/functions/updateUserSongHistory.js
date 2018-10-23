@@ -24,8 +24,8 @@ async function updateUserSongHistory(data, context) {
     logMsg["userId"] = uid;
     await query.push(update);
   } catch (err) {
-    logMsg = err +" uid= " + context.auth.uid;
-    throw new functions.https.HttpsError("", err);
+    logMsg["error"] = err +" uid= " + context.auth.uid;
+    throw new functions.https.HttpsError("", logMsg);
   } finally {
 
     console.log(logMsg);

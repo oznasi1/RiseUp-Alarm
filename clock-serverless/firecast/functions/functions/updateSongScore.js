@@ -38,16 +38,16 @@ async function updateSongScore(data, context) {
   var logMsg;
   try {
     let updates = {};
-    updates["songs/" + songId] = await updateSong(data, context);
+    updates["songs/" + data.songId] = await updateSong(data, context);
     //update user's history
     let {historySongLog,historySongId}= await updateUserLog(data, context);
-    updates["users/" + uid + "/history/" + historySongId] = historySongLog;
+    updates["users/" + context.auth.uid + "/history/" + historySongId] = historySongLog;
 
     await db.ref().update(updates);
     logMsg = updates;
   } catch (err) {
-    logMsg = err +" uid= " + context.auth.uid;
-    throw new functions.https.HttpsError("Failed to update song score", err);
+    logMsg["error"] = err +" uid= " + context.auth.uid;
+    throw new functions.https.HttpsError("Failed to update song score", logMsg);
   } finally {
     console.log(logMsg);
   }
