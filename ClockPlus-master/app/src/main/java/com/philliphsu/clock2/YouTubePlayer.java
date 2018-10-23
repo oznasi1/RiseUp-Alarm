@@ -207,7 +207,6 @@ public class YouTubePlayer extends YouTubeBaseActivity {
 
         String key = getString(R.string.youtube_key);
         youtubePlayerView.initialize(key, onInitializeListener);
-
     }
 
     private void setVolMax() {
@@ -230,9 +229,6 @@ public class YouTubePlayer extends YouTubeBaseActivity {
         Alarm alarm = (Alarm) ParcelableUtil.unmarshall(bytes, Alarm.CREATOR);
 
         mAlarmController.snoozeAlarm(alarm);
-//        int minutesToSnooze = AlarmPreferences.snoozeDuration(getApplicationContext());
-//        alarm.snooze(minutesToSnooze);
-//        getIntent().putExtra(AlarmActivity.EXTRA_RINGING_OBJECT, ParcelableUtil.marshall(alarm));
         ParcelableUtil.saveForSnooze(mSongName,mUrl,mSongId);
         Intent i = new Intent(this, AlarmRingtoneService.class);
         stopService(i);
