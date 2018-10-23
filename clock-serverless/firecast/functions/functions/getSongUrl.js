@@ -139,9 +139,10 @@ async function getSongUrl(data, context) {
 
     return res;
   } catch (err) {
-    logMsg = err;
+    logMsg = err +" uid= " + context.auth.uid;
     throw new functions.https.HttpsError("Failed to update song score", err);
   } finally {
+
     console.log(logMsg);
   }
 }

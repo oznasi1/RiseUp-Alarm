@@ -21,11 +21,13 @@ async function updateUserSongHistory(data, context) {
   const query = db.ref("users/" + uid).child("history");
   try {
     logMsg = update;
+    logMsg["userId"] = uid;
     await query.push(update);
   } catch (err) {
-    logMsg = err;
+    logMsg = err +" uid= " + context.auth.uid;
     throw new functions.https.HttpsError("", err);
   } finally {
+
     console.log(logMsg);
   }
 };

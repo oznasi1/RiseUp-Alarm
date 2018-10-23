@@ -46,7 +46,7 @@ async function updateSongScore(data, context) {
     await db.ref().update(updates);
     logMsg = updates;
   } catch (err) {
-    logMsg = err;
+    logMsg = err +" uid= " + context.auth.uid;
     throw new functions.https.HttpsError("Failed to update song score", err);
   } finally {
     console.log(logMsg);
