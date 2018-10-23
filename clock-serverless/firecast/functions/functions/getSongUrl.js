@@ -5,22 +5,20 @@ const chooseIndex = require("./Algorithms/Randomise");
 const rootGroupId = "-1";
 
 async function getNewSongUrl(user) {
-  let found = false;
   let lastSongIndex = 0;
   let size;
   let nextGroup;
   let filteredNextGroup;
   try {
-    while (!found) {
-      let lastLikedSong = await getLastLikedSong(user, lastSongIndex++);
-      let currGroup =
-        lastLikedSong == null ? rootGroupId : lastLikedSong.songId;
-      let lastChance = currGroup === rootGroupId;
-      let nextGroup = await getNextGroup(currGroup);
-      filteredNextGroup = await filterGroup(nextGroup, user, lastChance);
-      size = Object.keys(filteredNextGroup).length;
-      found = size > 0 ? true : false;
-    }
+    let lastLikedSongs = await getLastLikedSongs(user);
+    //let currGroup;//TODO
+    //lastLikedSongs == null ? rootGroupId : lastLikedSong.songId;
+    let nextGroup = await getNextGroup(lastLikedSongs);
+    let lastChance = Object.values(nextGroup).every(song => {
+      return song.groupId == rootGroupId;
+    });
+    filteredNextGroup = await filterGroup(nextGroup, user, lastChance);
+    size = Object.keys(filteredNextGroup).length;
 
     let nextSongId = chooseIndex(filteredNextGroup);
     let nextSongUrl = filteredNextGroup[nextSongId].url;
@@ -35,7 +33,7 @@ async function getNewSongUrl(user) {
     };
     return res;
   } catch (err) {
-    throw new Error(err);
+    throw new Error(err + "userId = " + user);
   }
 }
 
@@ -69,32 +67,36 @@ async function filterGroup(group, user, lastChance) {
   return group;
 }
 
-async function getNextGroup(lastSongId) {
-  //first tries to get the group that the current song brought to the db
-  //(song's children in tree). we assume it's not a leaf.
-  let nextGroupID = lastSongId;
+//returns an object of sons of last liked songs
+async function getNextGroup(lastSongs) {
+  try {
+    let res = {};
+    for (let i in lastSongs) {
+      let nextGroupId = lastSongs[i].songId;
+      res = Object.assign({}, res, await getGroup(nextGroupId));
+    }
+    if (lastSongs == null || Object.keys(res).length == 0) {
+      return getGroup(rootGroupId);
+    }
+    return res;
+  } catch (err) {
+    console.error(err);
+
+    return getGroup(rootGroupId);
+  }
+}
+
+async function getGroup(groupId) {
   let matchGroupQuery = db
     .ref("songs")
     .orderByChild("groupId")
-    .equalTo(nextGroupID);
-
-  try {
-    let snapshot = await matchGroupQuery.once("value");
-    let arrGroup = snapshot.val();
-    if (Array.isArray(arrGroup)) {
-      arrGroup = Object.assign({}, arrGroup);
-    }
-    //checkig if it's a leaf-no children
-    if (arrGroup == null) {
-      throw new Error("Leaf Exception");
-    } else {
-      return arrGroup;
-    }
-  } catch (err) {
-    let prevGroup = await getSongGroupId(lastSongId);
-    let res = await getNextGroup(prevGroup);
-    return res;
+    .equalTo(groupId);
+  let snapshot = await matchGroupQuery.once("value");
+  let arrGroup = snapshot.val();
+  if (Array.isArray(arrGroup)) {
+    arrGroup = Object.assign({}, arrGroup);
   }
+  return arrGroup;
 }
 
 async function getSongGroupId(songId) {
@@ -102,7 +104,7 @@ async function getSongGroupId(songId) {
   return res.groupId;
 }
 
-async function getLastLikedSong(user, index) {
+async function getLastLikedSongs(user) {
   var likeSongsQuery = db
     .ref("/users")
     .child(user)
@@ -112,15 +114,8 @@ async function getLastLikedSong(user, index) {
   try {
     let snapshot = await likeSongsQuery.once("value");
     var history = Object.values(snapshot.val());
-    history
-      .sort(function(x, y) {
-        return x.timestamp - y.timestamp;
-      })
-      .reverse();
-    if (index == history.length) {
-      throw new Error("No more history");
-    }
-    return history[index];
+
+    return history;
   } catch (err) {
     newGroupId = null;
     return newGroupId;
@@ -139,10 +134,9 @@ async function getSongUrl(data, context) {
 
     return res;
   } catch (err) {
-    logMsg = err +" uid= " + context.auth.uid;
+    logMsg = err + " uid= " + context.auth.uid;
     throw new functions.https.HttpsError("Failed to update song score", err);
   } finally {
-
     console.log(logMsg);
   }
 }
