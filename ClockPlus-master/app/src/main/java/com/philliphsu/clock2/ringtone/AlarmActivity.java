@@ -37,7 +37,7 @@ import com.philliphsu.clock2.util.TimeFormatUtils;
 public class AlarmActivity extends RingtoneActivity<Alarm> {
     private static final String TAG = "AlarmActivity";
 
-    private AlarmController mAlarmController;
+    public AlarmController mAlarmController;
     private NotificationManager mNotificationManager;
 
     @Override

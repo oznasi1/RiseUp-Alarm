@@ -46,7 +46,7 @@ android {
         }
     }
     compileSdkVersion 26
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.2'
     defaultConfig {
         applicationId 'com.philliphsu.clock2'
         minSdkVersion 19
@@ -64,6 +64,7 @@ android {
     }
     buildTypes {
         release {
+
             // https://developer.android.com/studio/build/shrink-code.html#shrink-code
             //
             // Proguard is disabled, because it seems like it is removing
@@ -81,6 +82,13 @@ android {
         }
     }
     productFlavors {
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
     }
 }
 

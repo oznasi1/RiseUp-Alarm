@@ -239,7 +239,7 @@ public abstract class RingtoneActivity<T extends Parcelable> extends BaseActivit
         finish();
     }
 
-    protected final T getRingingObject() {
+    public T getRingingObject() {
         return mRingingObject;
     }
 

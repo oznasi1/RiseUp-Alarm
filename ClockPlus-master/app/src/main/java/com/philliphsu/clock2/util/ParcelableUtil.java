@@ -26,6 +26,11 @@ import android.os.Parcelable;
  * Utilities to marshall and unmarshall a {@code Parcelable} to and from a byte array.
  */
 public final class ParcelableUtil {
+    static String  mSongName;
+    static String mUrl;
+    static String mSongId;
+    static boolean isSnooze = false;
+
     public static byte[] marshall(Parcelable parcelable) {
         Parcel parcel = Parcel.obtain();
         parcelable.writeToParcel(parcel, 0);
@@ -47,4 +52,31 @@ public final class ParcelableUtil {
         parcel.recycle();
         return result;
     }
+    public static void saveForSnooze(String songName, String songUrl, String songId){
+        isSnooze = true;
+        mSongName=songName;
+        mUrl = songUrl;
+        mSongId = songId;
+    }
+
+    public static boolean isSnooze(){
+        return isSnooze;
+    }
+    public static String getSongName(){
+        return mSongName;
+    }
+    public static String getSongUrl(){
+        return mUrl;
+    }
+    public static String getSongId(){
+        return mSongId;
+    }
+
+    public static void reset(){
+        mUrl = "";
+        mSongName = "";
+        mSongId="";
+        isSnooze = false;
+    }
+
 }

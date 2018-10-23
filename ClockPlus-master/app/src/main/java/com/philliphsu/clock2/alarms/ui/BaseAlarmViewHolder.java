@@ -19,6 +19,7 @@
 
 package com.philliphsu.clock2.alarms.ui;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IdRes;
@@ -36,6 +37,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.philliphsu.clock2.R;
+import com.philliphsu.clock2.YouTubePlayer;
 import com.philliphsu.clock2.alarms.Alarm;
 import com.philliphsu.clock2.alarms.misc.AlarmController;
 import com.philliphsu.clock2.alarms.misc.AlarmPreferences;
@@ -65,8 +67,8 @@ import static com.philliphsu.clock2.util.TimeFormatUtils.formatTime;
  */
 public abstract class BaseAlarmViewHolder extends BaseViewHolder<Alarm> {
     private static final String TAG = "BaseAlarmViewHolder";
-
-    private final AlarmController mAlarmController;
+    private YouTubePlayer youTube;
+    public AlarmController mAlarmController;
     private final AddLabelDialogController mAddLabelDialogController;
     private final TimePickerDialogController mTimePickerDialogController;
 
@@ -84,6 +86,7 @@ public abstract class BaseAlarmViewHolder extends BaseViewHolder<Alarm> {
     public BaseAlarmViewHolder(ViewGroup parent, @LayoutRes int layoutRes,
                                OnListItemInteractionListener<Alarm> listener,
                                AlarmController controller) {
+
         super(parent, layoutRes, listener);
         mAlarmController = controller;
         // Because of VH binding, setting drawable resources on views would be bad for performance.
@@ -129,6 +132,7 @@ public abstract class BaseAlarmViewHolder extends BaseViewHolder<Alarm> {
                 }
             }
         );
+
     }
 
     @Override

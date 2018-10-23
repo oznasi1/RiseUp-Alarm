@@ -27,6 +27,8 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 
 import com.philliphsu.clock2.YouTubePlayer;
+import com.philliphsu.clock2.alarms.Alarm;
+import com.philliphsu.clock2.ringtone.RingtoneActivity;
 
 import java.io.IOException;
 
@@ -58,27 +60,28 @@ public final class RingtoneLoop extends  Activity {
     }
 
     public void play() {
-        Intent i = new Intent(mContext,YouTubePlayer.class);
-        mContext.startActivity(i);
+//        Intent i = new Intent(mContext,YouTubePlayer.class);
+//        //i.putExtra("hour","16");
+//        mContext.startActivity(i);
 
 
-//        try {
-//            mMediaPlayer = new MediaPlayer();
-//            mMediaPlayer.setDataSource(mContext, mUri);
-//            if (mAudioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-//                // "Must call this method before prepare() or prepareAsync() in order
-//                // for the target stream type to become effective thereafter."
-//                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-//                mMediaPlayer.setLooping(true);
-//                // There is prepare() and prepareAsync().
-//                // "For files, it is OK to call prepare(), which blocks until
-//                // MediaPlayer is ready for playback."
-//                mMediaPlayer.prepare();
-//                mMediaPlayer.start();
-//            }
-//        } catch (SecurityException | IOException e) {
-//            destroyLocalPlayer();
-//        }
+        try {
+            mMediaPlayer = new MediaPlayer();
+            mMediaPlayer.setDataSource(mContext, mUri);
+            if (mAudioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+                // "Must call this method before prepare() or prepareAsync() in order
+                // for the target stream type to become effective thereafter."
+                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                mMediaPlayer.setLooping(true);
+                // There is prepare() and prepareAsync().
+                // "For files, it is OK to call prepare(), which blocks until
+                // MediaPlayer is ready for playback."
+                mMediaPlayer.prepare();
+                mMediaPlayer.start();
+            }
+        } catch (SecurityException | IOException e) {
+            destroyLocalPlayer();
+        }
     }
 
     public void stop() {

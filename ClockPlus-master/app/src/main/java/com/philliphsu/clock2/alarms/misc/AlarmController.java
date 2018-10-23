@@ -137,75 +137,77 @@ public final class AlarmController {
     public void cancelAlarm(Alarm alarm, boolean showSnackbar, boolean rescheduleIfRecurring) {
 
         Log.d(TAG, "Cancelling alarm " + alarm);
-        Intent i = new Intent(mAppContext,YouTubePlayer.class);
-        mAppContext.startActivity(i);
-//        AlarmManager am = (AlarmManager) mAppContext.getSystemService(Context.ALARM_SERVICE);
-//
-//        PendingIntent pi = alarmIntent(alarm, true);
-//        if (pi != null) {
-//            am.cancel(pi);
-//            pi.cancel();
-//            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-//                // Remove alarm in the status bar
-//                Intent alarmChanged = new Intent("android.intent.action.ALARM_CHANGED");
-//                alarmChanged.putExtra("alarmSet", false/*enabled*/);
-//                mAppContext.sendBroadcast(alarmChanged);
-//            }
-//        }
-//
-//        pi = notifyUpcomingAlarmIntent(alarm, true);
-//        if (pi != null) {
-//            am.cancel(pi);
-//            pi.cancel();
-//        }
-//
-//        // Does nothing if it's not posted.
-//        removeUpcomingAlarmNotification(alarm);
-//
-//        final int hoursToNotifyInAdvance = AlarmPreferences.hoursBeforeUpcoming(mAppContext);
-//        // ------------------------------------------------------------------------------------
-//        // TOneverDO: Place block after making value changes to the alarm.
-//        if ((hoursToNotifyInAdvance > 0 && showSnackbar
-//                // TODO: Consider showing the snackbar for non-upcoming alarms too;
-//                // then, we can remove these checks.
-//                && alarm.ringsWithinHours(hoursToNotifyInAdvance)) || alarm.isSnoozed()) {
-//            long time = alarm.isSnoozed() ? alarm.snoozingUntil() : alarm.ringsAt();
-//            String msg = mAppContext.getString(R.string.upcoming_alarm_dismissed,
-//                    formatTime(mAppContext, time));
-//            //showSnackbar(msg);
-//        }
-//        // ------------------------------------------------------------------------------------
-//
-//        if (alarm.isSnoozed()) {
-//            alarm.stopSnoozing();
-//        }
-//
-//        if (!alarm.hasRecurrence()) {
-//            alarm.setEnabled(false);
-//        } else if (alarm.isEnabled() && rescheduleIfRecurring) {
-//            if (alarm.ringsWithinHours(hoursToNotifyInAdvance)) {
-//                // Still upcoming today, so wait until the normal ring time
-//                // passes before rescheduling the alarm.
-//                alarm.ignoreUpcomingRingTime(true); // Useful only for VH binding
-//                Intent intent = new Intent(mAppContext, PendingAlarmScheduler.class)
-//                        .putExtra(PendingAlarmScheduler.EXTRA_ALARM_ID, alarm.getId());
-//                pi = PendingIntent.getBroadcast(mAppContext, alarm.getIntId(),
-//                        intent, FLAG_CANCEL_CURRENT);
-//                am.set(AlarmManager.RTC_WAKEUP, alarm.ringsAt(), pi);
-//            } else {
-//                scheduleAlarm(alarm, false);
-//            }
-//        }
-//
-//        save(alarm);
-//
-//        // If service is not running, nothing happens
-//        mAppContext.stopService(new Intent(mAppContext, AlarmRingtoneService.class));
+//        Intent i = new Intent(mAppContext,YouTubePlayer.class);
+//        mAppContext.startActivity(i);
+        AlarmManager am = (AlarmManager) mAppContext.getSystemService(Context.ALARM_SERVICE);
+
+        PendingIntent pi = alarmIntent(alarm, true);
+        if (pi != null) {
+            am.cancel(pi);
+            pi.cancel();
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                // Remove alarm in the status bar
+                Intent alarmChanged = new Intent("android.intent.action.ALARM_CHANGED");
+                alarmChanged.putExtra("alarmSet", false/*enabled*/);
+                mAppContext.sendBroadcast(alarmChanged);
+            }
+        }
+
+        pi = notifyUpcomingAlarmIntent(alarm, true);
+        if (pi != null) {
+            am.cancel(pi);
+            pi.cancel();
+        }
+
+        // Does nothing if it's not posted.
+        removeUpcomingAlarmNotification(alarm);
+
+        final int hoursToNotifyInAdvance = AlarmPreferences.hoursBeforeUpcoming(mAppContext);
+        // ------------------------------------------------------------------------------------
+        // TOneverDO: Place block after making value changes to the alarm.
+        if ((hoursToNotifyInAdvance > 0 && showSnackbar
+                // TODO: Consider showing the snackbar for non-upcoming alarms too;
+                // then, we can remove these checks.
+                && alarm.ringsWithinHours(hoursToNotifyInAdvance)) || alarm.isSnoozed()) {
+            long time = alarm.isSnoozed() ? alarm.snoozingUntil() : alarm.ringsAt();
+            String msg = mAppContext.getString(R.string.upcoming_alarm_dismissed,
+                    formatTime(mAppContext, time));
+            //showSnackbar(msg);
+        }
+        // ------------------------------------------------------------------------------------
+
+        if (alarm.isSnoozed()) {
+            alarm.stopSnoozing();
+        }
+
+        if (!alarm.hasRecurrence()) {
+            alarm.setEnabled(false);
+        } else if (alarm.isEnabled() && rescheduleIfRecurring) {
+            if (alarm.ringsWithinHours(hoursToNotifyInAdvance)) {
+                // Still upcoming today, so wait until the normal ring time
+                // passes before rescheduling the alarm.
+                alarm.ignoreUpcomingRingTime(true); // Useful only for VH binding
+                Intent intent = new Intent(mAppContext, PendingAlarmScheduler.class)
+                        .putExtra(PendingAlarmScheduler.EXTRA_ALARM_ID, alarm.getId());
+                pi = PendingIntent.getBroadcast(mAppContext, alarm.getIntId(),
+                        intent, FLAG_CANCEL_CURRENT);
+                am.set(AlarmManager.RTC_WAKEUP, alarm.ringsAt(), pi);
+            } else {
+                scheduleAlarm(alarm, false);
+            }
+        }
+
+        save(alarm);
+
+        // If service is not running, nothing happens
+        mAppContext.stopService(new Intent(mAppContext, AlarmRingtoneService.class));
     }
 
     public void snoozeAlarm(Alarm alarm) {
+
         int minutesToSnooze = AlarmPreferences.snoozeDuration(mAppContext);
         alarm.snooze(minutesToSnooze);
+
         scheduleAlarm(alarm, false);
         String message = mAppContext.getString(R.string.title_snoozing_until,
                 formatTime(mAppContext, alarm.snoozingUntil()));
@@ -236,7 +238,7 @@ public final class AlarmController {
     }
 
     private PendingIntent alarmIntent(Alarm alarm, boolean retrievePrevious) {
-        Intent intent = new Intent(mAppContext, AlarmActivity.class)
+        Intent intent = new Intent(mAppContext, YouTubePlayer.class)
                 .putExtra(AlarmActivity.EXTRA_RINGING_OBJECT, ParcelableUtil.marshall(alarm));
         int flag = retrievePrevious ? FLAG_NO_CREATE : FLAG_CANCEL_CURRENT;
         // Even when we try to retrieve a previous instance that actually did exist,
