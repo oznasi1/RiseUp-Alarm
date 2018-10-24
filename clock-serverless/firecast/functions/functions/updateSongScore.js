@@ -35,7 +35,11 @@ async function updateUserLog(data, context) {
 }
 
 async function updateSongScore(data, context) {
+<<<<<<< HEAD
   var logMsg = {};
+=======
+  var logMsg = {} ;
+>>>>>>> 4a569ba7451c1cd537263114aadd60abced5e06d
   try {
     let updates = {};
     updates["songs/" + data.songId] = await updateSong(data, context);
@@ -47,7 +51,7 @@ async function updateSongScore(data, context) {
     logMsg = updates;
   } catch (err) {
     logMsg["error"] = err +" uid= " + context.auth.uid;
-    throw new functions.https.HttpsError("Failed to update song score", logMsg);
+    throw new functions.https.HttpsError("Failed to update song score ", logMsg);
   } finally {
     console.log(logMsg);
   }
