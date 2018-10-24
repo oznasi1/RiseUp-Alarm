@@ -35,7 +35,7 @@ async function updateUserLog(data, context) {
 }
 
 async function updateSongScore(data, context) {
-  var logMsg;
+  var logMsg = {};
   try {
     let updates = {};
     updates["songs/" + data.songId] = await updateSong(data, context);
@@ -52,5 +52,7 @@ async function updateSongScore(data, context) {
     console.log(logMsg);
   }
 }
+
+
 
 module.exports = updateSongScore;
