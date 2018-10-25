@@ -35,11 +35,7 @@ async function updateUserLog(data, context) {
 }
 
 async function updateSongScore(data, context) {
-<<<<<<< HEAD
   var logMsg = {};
-=======
-  var logMsg = {} ;
->>>>>>> 4a569ba7451c1cd537263114aadd60abced5e06d
   try {
     let updates = {};
     updates["songs/" + data.songId] = await updateSong(data, context);
