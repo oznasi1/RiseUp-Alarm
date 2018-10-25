@@ -15,7 +15,7 @@ async function updateUserSongHistory(data, context) {
     isRanked: "0",
     songId: data.songId,
     isLiked: "0",
-    timestamp: context.timestamp
+    timestamp: Date.now()
   };
   var logMsg = {};
   const query = db.ref("users/" + uid).child("history");

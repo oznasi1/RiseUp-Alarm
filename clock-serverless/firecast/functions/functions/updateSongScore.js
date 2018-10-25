@@ -30,12 +30,12 @@ async function updateUserLog(data, context) {
   historySongLog.isRanked = "1";
   return { historySongLog, historySongId };
 }
-
+const delayParam = 50000;
 async function updateSongScore(data, context) {
   var logMsg = {};
   try {
     const sleep = m => new Promise(r => setTimeout(r, m))
-    await sleep(60000);
+    await sleep(delayParam);
 
     let updates = {};
     updates["songs/" + data.songId] = await updateSong(data, context);
