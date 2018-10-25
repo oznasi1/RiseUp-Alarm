@@ -5,4 +5,4 @@
 
 /clock-serverless/node_modules/*
 /clock-serverless/firecast/functions/node_modules/*
-
+!/clock-serverless/_TEST_
