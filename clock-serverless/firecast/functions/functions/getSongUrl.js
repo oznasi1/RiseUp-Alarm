@@ -5,9 +5,7 @@ const chooseIndex = require("./Algorithms/Randomise");
 const rootGroupId = "-1";
 
 async function getNewSongUrl(user) {
-  let lastSongIndex = 0;
   let size;
-  let nextGroup;
   let filteredNextGroup;
   try {
     let lastLikedSongs = await getLastLikedSongs(user);
@@ -19,13 +17,20 @@ async function getNewSongUrl(user) {
     });
     filteredNextGroup = await filterGroup(nextGroup, user, lastChance);
     size = Object.keys(filteredNextGroup).length;
-
+    if(size == 0){
+      nextGroup = await getNextGroup(null);
+      lastChance = Object.values(nextGroup).every(song => {
+        return song.groupId == rootGroupId;
+      });
+      filteredNextGroup = await filterGroup(nextGroup, user, lastChance);
+    }
     let nextSongId = chooseIndex(filteredNextGroup);
     let nextSongUrl = filteredNextGroup[nextSongId].url;
-    let nexSongTitle =
-      filteredNextGroup[nextSongId].artist +
-      " - " +
-      filteredNextGroup[nextSongId].name;
+    let nexSongTitle = (filteredNextGroup[nextSongId].title != undefined) ?  filteredNextGroup[nextSongId].title : 
+    filteredNextGroup[nextSongId].artist +
+    " - " +
+    filteredNextGroup[nextSongId].name;
+
     let res = {
       url: nextSongUrl,
       songId: nextSongId,

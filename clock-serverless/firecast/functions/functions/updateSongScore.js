@@ -4,10 +4,8 @@ const getSong = require("./Utils/getSong");
 
 async function updateSong(data, context) {
   const songId = data.songId;
-  let uid = context.auth.uid;
   let isLiked = data.isLiked;
   //update the song's data
-  let currSongQuery = db.ref("songs/" + songId);
   let currSong = await getSong(songId);
   let newScore = isLiked == 1 ? currSong.score + 1 : currSong.score;
   let incCount = ++currSong.count;
@@ -21,8 +19,7 @@ async function updateUserLog(data, context) {
   let uid = context.auth.uid;
   let isLiked = data.isLiked;
   const getSongHistoryIdQuery = db
-    .ref("users/" + uid)
-    .child("history")
+    .ref("users/" + uid + "/history")
     .orderByChild("songId")
     .equalTo(songId);
   let snapshot = await getSongHistoryIdQuery.once("value");
@@ -37,22 +34,29 @@ async function updateUserLog(data, context) {
 async function updateSongScore(data, context) {
   var logMsg = {};
   try {
+    const sleep = m => new Promise(r => setTimeout(r, m))
+    await sleep(60000);
+
     let updates = {};
     updates["songs/" + data.songId] = await updateSong(data, context);
     //update user's history
-    let {historySongLog,historySongId}= await updateUserLog(data, context);
-    updates["users/" + context.auth.uid + "/history/" + historySongId] = historySongLog;
+    let { historySongLog, historySongId } = await updateUserLog(data, context);
+    updates[
+      "users/" + context.auth.uid + "/history/" + historySongId
+    ] = historySongLog;
 
     await db.ref().update(updates);
     logMsg = updates;
   } catch (err) {
-    logMsg["error"] = err +" uid= " + context.auth.uid;
-    throw new functions.https.HttpsError("Failed to update song score ", logMsg);
+    logMsg["error"] = err + " uid= " + context.auth.uid;
+    logMsg["reqData"] = data;
+    throw new functions.https.HttpsError(
+      "Failed to update song score ",
+      logMsg
+    );
   } finally {
     console.log(logMsg);
   }
 }
-
-
 
 module.exports = updateSongScore;
