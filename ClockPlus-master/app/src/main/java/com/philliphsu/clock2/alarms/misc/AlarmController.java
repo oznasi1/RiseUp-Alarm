@@ -229,12 +229,14 @@ public final class AlarmController {
 
     public void save(final Alarm alarm) {
         // TODO: Will using the Runnable like this cause a memory leak?
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                mTableManager.updateItem(alarm.getId(), alarm);
-            }
-        }).start();
+        mTableManager.updateItem(alarm.getId(), alarm);
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                mTableManager.updateItem(alarm.getId(), alarm);
+//            }
+//        }).start();
     }
 
     private PendingIntent alarmIntent(Alarm alarm, boolean retrievePrevious) {

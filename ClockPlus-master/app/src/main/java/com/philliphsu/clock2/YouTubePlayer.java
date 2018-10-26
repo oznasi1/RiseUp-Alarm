@@ -1,11 +1,14 @@
 package com.philliphsu.clock2;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.view.ViewGroup;
 
@@ -73,12 +76,12 @@ import butterknife.OnCheckedChanged;
 
 import static android.support.constraint.Constraints.TAG;
 
-public class YouTubePlayer extends YouTubeBaseActivity {
+public class YouTubePlayer extends YouTubeBaseActivity implements com.google.android.youtube.player.YouTubePlayer.PlayerStateChangeListener {
     public static final String EXTRA_RINGING_OBJECT = "com.philliphsu.clock2.ringtone.extra.RINGING_OBJECT";
-
     private AlarmController mAlarmController;
     private AudioManager mAudioManager;
     private FirebaseFunctions mFunctions;
+    private RingtoneLoop mRingtoneLoop;
     YouTubePlayerView youtubePlayerView;
     ImageButton likeBtn;
     ImageButton unlikeBtn;
@@ -87,24 +90,25 @@ public class YouTubePlayer extends YouTubeBaseActivity {
     TextView listen;
     TextView songName;
     TextView rateSong;
-
     String mSongName;
     String mUrl;
     String mSongId;
     Date mStartDate;
     com.google.android.youtube.player.YouTubePlayer.OnInitializedListener onInitializeListener;
     private com.google.android.youtube.player.YouTubePlayer mYoutubePlayer;
-    private int mOrigionalVolume;
+    private int mOrigionalMediaVolume;
     private boolean isSnooze;
+    private boolean isErrorLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-
+        getWindow().addFlags(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         setVolMax();
 
         mAlarmController = new AlarmController(this, null);
@@ -112,18 +116,18 @@ public class YouTubePlayer extends YouTubeBaseActivity {
         rateSong = (TextView) findViewById(R.id.textViewRate);
         songName = (TextView) findViewById(R.id.textViewSongName);
         listen = (TextView) findViewById(R.id.textViewListen);
-        snooze = (Button)findViewById(R.id.buttonSnooze);
+        snooze = (Button) findViewById(R.id.buttonSnooze);
         dismiss = (Button) findViewById(R.id.buttonDismiss);
         likeBtn = (ImageButton) findViewById(R.id.imageButtonLike);
         unlikeBtn = (ImageButton) findViewById(R.id.imageButtonUnlike);
         youtubePlayerView = (YouTubePlayerView) findViewById(R.id.youtube_Player_view);
 
         mFunctions = FirebaseFunctions.getInstance();
-
         onInitializeListener = new com.google.android.youtube.player.YouTubePlayer.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(com.google.android.youtube.player.YouTubePlayer.Provider provider, com.google.android.youtube.player.YouTubePlayer youTubePlayer, boolean b) {
                 mYoutubePlayer = youTubePlayer;
+
                 mYoutubePlayer.setPlaybackEventListener(new com.google.android.youtube.player.YouTubePlayer.PlaybackEventListener() {
                     @Override
                     public void onPlaying() {
@@ -152,40 +156,12 @@ public class YouTubePlayer extends YouTubeBaseActivity {
 
                     }
                 });
+                if (!ParcelableUtil.isSnooze()) {
+                    getSongUrlFromServer();
 
-                byte[] bytes = getIntent().getByteArrayExtra(EXTRA_RINGING_OBJECT);
-                if (bytes == null) {
-                    throw new IllegalStateException("Cannot start RingtoneActivity without a ringing object");
-                }
-
-               Alarm a =(Alarm) ParcelableUtil.unmarshall(bytes, Alarm.CREATOR);
-
-
-                //if (!a.isSnoozed()){ // if not snoozing get song url from server
-                  if(!ParcelableUtil.isSnooze()){
-                    mFunctions.getHttpsCallable("getSongUrl")// from dataBase/server
-                            .call()
-                            .addOnCompleteListener(new OnCompleteListener<HttpsCallableResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<HttpsCallableResult> task) {
-                                    HashMap<String, String> map = (HashMap<String, String>) task.getResult().getData();
-                                    mUrl = map.get("url");
-                                    mSongName = map.get("title");
-                                    mSongId = map.get("songId");
-                                    songName.setText(mSongName);
-                                    Log.d(TAG, "onCompleteonLikeClick:" + mSongName);
-                                    listen.setVisibility(View.VISIBLE);
-                                    songName.setVisibility(View.VISIBLE);
-
-                                    mYoutubePlayer.loadVideo(mUrl, 1);
-                                    mYoutubePlayer.setPlayerStyle(com.google.android.youtube.player.YouTubePlayer.PlayerStyle.CHROMELESS);
-
-                                    mStartDate = new Date();
-                                }
-                            });
-                }else{
+                } else {
                     mSongName = ParcelableUtil.getSongName();
-                    mUrl=ParcelableUtil.getSongUrl();
+                    mUrl = ParcelableUtil.getSongUrl();
                     mSongId = ParcelableUtil.getSongId();
                     songName.setText(mSongName);
                     listen.setVisibility(View.VISIBLE);
@@ -194,112 +170,204 @@ public class YouTubePlayer extends YouTubeBaseActivity {
                     mYoutubePlayer.setPlayerStyle(com.google.android.youtube.player.YouTubePlayer.PlayerStyle.CHROMELESS);
                     mStartDate = new Date();
                 }
-
             }
 
             @Override
             public void onInitializationFailure(com.google.android.youtube.player.YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-
+                Log.e(TAG, "onInitializationFailure: ");
             }
 
         };
-
+        //updateUiAccordingToInternetConnecion();
 
         String key = getString(R.string.youtube_key);
         youtubePlayerView.initialize(key, onInitializeListener);
+
+
+    }
+
+    private void getSongUrlFromServer(){
+        mFunctions.getHttpsCallable("getSongUrl")// from dataBase/server
+                .call()
+                .addOnCompleteListener(new OnCompleteListener<HttpsCallableResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<HttpsCallableResult> task) {
+                        onCompleteUrlSong(task);
+                    }
+                });
+    }
+
+    @Override
+    public void onAdStarted() {
+    }
+
+    @Override
+    public void onLoaded(String videoId) {
+    }
+
+    @Override
+    public void onLoading() {
+    }
+
+    @Override
+    public void onVideoEnded() {
+    }
+
+    @Override
+    public void onVideoStarted() {
+    }
+    @Override
+    public void onError(com.google.android.youtube.player.YouTubePlayer.ErrorReason reason){
+        Log.e(TAG, "onError: ");
+        isErrorLoading = true;
+        updateUiAccordingToInternetConnecion();
+        mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
+        mRingtoneLoop.play();
+    }
+
+
+
+    private void onCompleteUrlSong( Task<HttpsCallableResult> task){
+        try {
+            HashMap<String, String> map = (HashMap<String, String>) task.getResult().getData();
+            mUrl = map.get("url");
+            mSongName = map.get("title");
+            mSongId = map.get("songId");
+            songName.setText(mSongName);
+            Log.d(TAG, "onCompleteonLikeClick:" + mSongName);
+            listen.setVisibility(View.VISIBLE);
+            songName.setVisibility(View.VISIBLE);
+
+            mYoutubePlayer.loadVideo(mUrl, 1);
+            //mYoutubePlayer.ErrorReason.NETWORK_ERROR
+            mYoutubePlayer.setPlayerStyle(com.google.android.youtube.player.YouTubePlayer.PlayerStyle.CHROMELESS);
+
+            mStartDate = new Date();
+        }
+        catch (Exception e){
+            //TODO: deal with map = null -> server error
+            Log.e(TAG, "onCompleteUrlSong: we catched"+ e.toString());
+            //run the intent ringtoneAlarm
+            isErrorLoading = true;
+            updateUiAccordingToInternetConnecion();
+            mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
+            mRingtoneLoop.play();
+        }
+    }
+
+    private void updateUiAccordingToInternetConnecion(){
+            youtubePlayerView.setVisibility(View.INVISIBLE);
+
     }
 
     private void setVolMax() {
-        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-        mOrigionalVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+//        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+//        mOrigionalVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+//
+//        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
 
-        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
+        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        mOrigionalMediaVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+
+        int volAlarm = mAudioManager.getStreamVolume(AudioManager.STREAM_ALARM);
+        if(volAlarm <= 3){
+            volAlarm = 7;
+        }
+
+        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volAlarm, 0);
+
 
     }
 
+
+
     private void setVolOriginal(){
-        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mOrigionalVolume, 0);
+        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mOrigionalMediaVolume, 0);
     }
 
     public void onSnoozeClick(View view){
+        Alarm alarm = getAlarm();
+        mAlarmController.snoozeAlarm(alarm);
+        if(!isErrorLoading){
+            ParcelableUtil.saveForSnooze(mSongName,mUrl,mSongId);
+        }
+        else{
+            mRingtoneLoop.stop();
+        }
+
+        Intent i = new Intent(this, AlarmRingtoneService.class);
+        stopService(i);
+        finish();
+    }
+
+    private  Alarm getAlarm(){
         byte[] bytes = getIntent().getByteArrayExtra(EXTRA_RINGING_OBJECT);
         if (bytes == null) {
             throw new IllegalStateException("Cannot start RingtoneActivity without a ringing object");
         }
         Alarm alarm = (Alarm) ParcelableUtil.unmarshall(bytes, Alarm.CREATOR);
 
-        mAlarmController.snoozeAlarm(alarm);
-        ParcelableUtil.saveForSnooze(mSongName,mUrl,mSongId);
-        Intent i = new Intent(this, AlarmRingtoneService.class);
-        stopService(i);
-        finish();
+        return alarm;
     }
 
     public void onDismissClick(View view) {
         ParcelableUtil.reset();
-        //mAlarmController.cancelAlarm(getRingingObject(), false, true);
+        if(!isErrorLoading){
+            mYoutubePlayer.pause();
+            dismiss.setVisibility(View.INVISIBLE);
+            snooze.setVisibility(View.INVISIBLE);
+            likeBtn.setVisibility(View.VISIBLE);
+            unlikeBtn.setVisibility(View.VISIBLE);
+            rateSong.setVisibility(View.VISIBLE);
+            stopService(new Intent(this, AlarmRingtoneService.class));
 
-        mYoutubePlayer.pause();
-        dismiss.setVisibility(View.INVISIBLE);
-        snooze.setVisibility(View.INVISIBLE);
-        likeBtn.setVisibility(View.VISIBLE);
-        unlikeBtn.setVisibility(View.VISIBLE);
-        rateSong.setVisibility(View.VISIBLE);
-        stopService(new Intent(this, AlarmRingtoneService.class));
+            Date endDate = new Date();
+            int numSeconds = (int) ((endDate.getTime() - mStartDate.getTime()) / 1000);
 
-        Date endDate = new Date();
-        int numSeconds = (int) ((endDate.getTime() - mStartDate.getTime()) / 1000);
+            String secondsPlayed = Integer.toString(numSeconds);
+            Map<String, String> data = new HashMap<String, String>();
+            data.put("sec", secondsPlayed);
+            data.put("songId", mSongId);
 
-        //stopAndFinish();
-        String secondsPlayed = Integer.toString(numSeconds);
+            mFunctions.getHttpsCallable("updateUserSongHistory")
+                    .call(data);
+        }
+        else{
+            mRingtoneLoop.stop();
+            stopAndFinish();
+        }
 
-        Map<String, String> data = new HashMap<String, String>();
-        data.put("sec", secondsPlayed);
+
+    }
+
+    private void updateScore(boolean isLike ){
+        stopAndFinish();
+        String isUserLiked = isLike ? "1" : "0";
+        final Map<String, String> data = new HashMap<String, String>();
         data.put("songId", mSongId);
-
-        mFunctions.getHttpsCallable("updateUserSongHistory")
-                .call(data);
+        data.put("isLiked", isUserLiked);
     }
 
     public void onLikeClick(View view) {
-        stopAndFinish();
-        String like = "1";
-        Map<String, String> data = new HashMap<String, String>();
-        data.put("songId", mSongId);
-        data.put("isLiked", like);
-        mFunctions.getHttpsCallable("updateSongScore")
-                .call(data);
-
+        updateScore(true);
     }
 
     public void onUnlikeClick(View view) {
-        stopAndFinish();
-        String like = "0";
-        Map<String, String> data = new HashMap<String, String>();
-        data.put("songId", mSongId);
-        data.put("isLiked", like);
-        mFunctions.getHttpsCallable("updateSongScore")
-                .call(data);
-
+        updateScore(false);
     }
 
     protected final void stopAndFinish() {
-
         Intent i = new Intent(this, AlarmRingtoneService.class);
         stopService(i);
         finish();
 
-
-         byte[] bytes = getIntent().getByteArrayExtra(EXTRA_RINGING_OBJECT);
-        if (bytes == null) {
-            throw new IllegalStateException("Cannot start RingtoneActivity without a ringing object");
-        }
+        Alarm alarm = getAlarm();
 
         setVolOriginal();
-        mAlarmController.cancelAlarm((Alarm) ParcelableUtil.unmarshall(bytes, Alarm.CREATOR), false, true);
+        mAlarmController.cancelAlarm(alarm, false, true);
         Toast.makeText(getApplicationContext(), "Thank you, have a nice day!",
                 Toast.LENGTH_SHORT).show();
-
     }
+
 }
 

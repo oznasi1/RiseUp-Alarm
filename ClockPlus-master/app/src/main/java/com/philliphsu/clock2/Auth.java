@@ -23,6 +23,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.ProviderQueryResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -55,6 +56,7 @@ public class Auth extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
 
         mAuth = FirebaseAuth.getInstance();
+
         if(mAuth.getCurrentUser()!= null)
             islogedIn=true;
 
@@ -74,11 +76,6 @@ public class Auth extends AppCompatActivity {
                 startActivityForResult(signInIntent,RC_SIGN_IN);
             }
         });
-    }
-
-    private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     @Override
@@ -115,12 +112,12 @@ public class Auth extends AppCompatActivity {
                             boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
                             if(isNew){ // for the first Time
 
-                                User newUser = new User(user.getEmail(),user.getDisplayName());
-                                //push to dataBase
-                                mDatabase= FirebaseDatabase.getInstance();
-                                DatabaseReference myRef = mDatabase.getReference();
-                                myRef.child("users").child(user.getUid()).setValue(newUser);
-                                //myRef.child("users").setValue(user.getUid());
+//                                User newUser = new User(user.getEmail(),user.getDisplayName());
+//                                //push to dataBase
+//                                mDatabase= FirebaseDatabase.getInstance();
+//                                DatabaseReference myRef = mDatabase.getReference();
+//                                myRef.child("users").child(user.getUid()).setValue(newUser);
+//                                //myRef.child("users").setValue(user.getUid());
 
 
                                 updateUI(user);

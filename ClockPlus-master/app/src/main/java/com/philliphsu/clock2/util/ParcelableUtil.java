@@ -19,6 +19,9 @@
 
 package com.philliphsu.clock2.util;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -26,7 +29,7 @@ import android.os.Parcelable;
  * Utilities to marshall and unmarshall a {@code Parcelable} to and from a byte array.
  */
 public final class ParcelableUtil {
-    static String  mSongName;
+    static String mSongName;
     static String mUrl;
     static String mSongId;
     static boolean isSnooze = false;
@@ -52,31 +55,52 @@ public final class ParcelableUtil {
         parcel.recycle();
         return result;
     }
-    public static void saveForSnooze(String songName, String songUrl, String songId){
+
+    public static void saveForSnooze(String songName, String songUrl, String songId) {
         isSnooze = true;
-        mSongName=songName;
+        mSongName = songName;
         mUrl = songUrl;
         mSongId = songId;
     }
 
-    public static boolean isSnooze(){
+    public static boolean isSnooze() {
         return isSnooze;
     }
-    public static String getSongName(){
+
+    public static String getSongName() {
         return mSongName;
     }
-    public static String getSongUrl(){
-        return mUrl;
-    }
-    public static String getSongId(){
+
+
+    public static String getSongId() {
         return mSongId;
     }
+    public static String getSongUrl() {
+        return mUrl;
+    }
 
-    public static void reset(){
+    public static void reset() {
         mUrl = "";
         mSongName = "";
-        mSongId="";
+        mSongId = "";
         isSnooze = false;
+    }
+
+    public static boolean haveNetworkConnection(Context context) {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
     }
 
 }

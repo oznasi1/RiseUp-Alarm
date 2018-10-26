@@ -40,8 +40,8 @@ public class RingtonePickerDialogController extends DialogFragmentController<Rin
     }
 
     public void show(Uri initialUri, String tag) {
-        RingtonePickerDialog dialog = RingtonePickerDialog.newInstance(mListener, initialUri);
-        show(dialog, tag);
+        //RingtonePickerDialog dialog = RingtonePickerDialog.newInstance(mListener, initialUri);
+        //show(dialog, tag);
     }
 
     @Override

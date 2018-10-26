@@ -73,7 +73,7 @@ public class AlarmRingtoneService extends RingtoneService<Alarm> {
     }
 
     @Override
-    protected Uri getRingtoneUri() {
+    public  Uri getRingtoneUri() {
         String ringtone = getRingingObject().ringtone();
         // can't be null...
         if (ringtone.isEmpty()) {
