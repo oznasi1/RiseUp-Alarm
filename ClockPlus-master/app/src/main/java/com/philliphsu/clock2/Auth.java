@@ -1,6 +1,7 @@
 package com.philliphsu.clock2;
 
 import android.content.Intent;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +46,9 @@ public class Auth extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        adjustColor();
+
         setContentView(R.layout.activity_auth);
 
 
@@ -57,14 +61,28 @@ public class Auth extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        if(mAuth.getCurrentUser()!= null)
-            islogedIn=true;
+        mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if(user!=null){
+                    islogedIn=true;
+                }
+                if(islogedIn){
+                    Intent i = new Intent(getApplicationContext(),MainActivity.class);
+                    startActivity(i);
+                }
+            }
+        });
 
-
-        if(islogedIn){
-            Intent i = new Intent(getApplicationContext(),MainActivity.class);
-            startActivity(i);
-        }
+//        if(mAuth.getCurrentUser()!= null)
+//            islogedIn=true;
+//
+//
+//        if(islogedIn){
+//            Intent i = new Intent(getApplicationContext(),MainActivity.class);
+//            startActivity(i);
+//        }
 
 
         signInButton = (SignInButton)findViewById(R.id.signInBtn);
@@ -94,6 +112,17 @@ public class Auth extends AppCompatActivity {
                 Log.w(TAG, "Google sign in failed", e);
                 // ...
             }
+        }
+    }
+    private void adjustColor(){
+        final String themeDark = getString(R.string.theme_dark);
+        final String themeBlack = getString(R.string.theme_black);
+        String theme = PreferenceManager.getDefaultSharedPreferences(this).getString(
+                getString(R.string.key_theme), null);
+        if (themeDark.equals(theme)) {
+            setTheme(R.style.AppTheme_Dark);
+        } else if (themeBlack.equals(theme)) {
+            setTheme(R.style.AppTheme_Black);
         }
     }
 

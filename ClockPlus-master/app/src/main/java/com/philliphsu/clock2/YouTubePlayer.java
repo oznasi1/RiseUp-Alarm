@@ -8,6 +8,7 @@ import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.view.ViewGroup;
@@ -94,22 +95,24 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
     String mUrl;
     String mSongId;
     Date mStartDate;
+    int numOfSecPlayed=0;
     com.google.android.youtube.player.YouTubePlayer.OnInitializedListener onInitializeListener;
     private com.google.android.youtube.player.YouTubePlayer mYoutubePlayer;
     private int mOrigionalMediaVolume;
-    private boolean isSnooze;
     private boolean isErrorLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        adjustColor();
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         getWindow().addFlags(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        setVolMax();
+        adjustVolume();
 
         mAlarmController = new AlarmController(this, null);
         setContentView(R.layout.activity_you_tube_player);
@@ -163,6 +166,7 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
                     mSongName = ParcelableUtil.getSongName();
                     mUrl = ParcelableUtil.getSongUrl();
                     mSongId = ParcelableUtil.getSongId();
+                    numOfSecPlayed = ParcelableUtil.getNumSec();
                     songName.setText(mSongName);
                     listen.setVisibility(View.VISIBLE);
                     songName.setVisibility(View.VISIBLE);
@@ -178,12 +182,9 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
             }
 
         };
-        //updateUiAccordingToInternetConnecion();
 
         String key = getString(R.string.youtube_key);
         youtubePlayerView.initialize(key, onInitializeListener);
-
-
     }
 
     private void getSongUrlFromServer(){
@@ -225,7 +226,19 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
         mRingtoneLoop.play();
     }
 
+    @Override
+    public void onPause(){
+        super.onPause();
+        Date endDate = new Date();
+        int numSeconds = (int) ((endDate.getTime() - mStartDate.getTime()) / 1000); // seconds played until now
+        numOfSecPlayed +=numSeconds;
+    }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        mStartDate = new Date();
+    }
 
     private void onCompleteUrlSong( Task<HttpsCallableResult> task){
         try {
@@ -239,7 +252,6 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
             songName.setVisibility(View.VISIBLE);
 
             mYoutubePlayer.loadVideo(mUrl, 1);
-            //mYoutubePlayer.ErrorReason.NETWORK_ERROR
             mYoutubePlayer.setPlayerStyle(com.google.android.youtube.player.YouTubePlayer.PlayerStyle.CHROMELESS);
 
             mStartDate = new Date();
@@ -247,7 +259,6 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
         catch (Exception e){
             //TODO: deal with map = null -> server error
             Log.e(TAG, "onCompleteUrlSong: we catched"+ e.toString());
-            //run the intent ringtoneAlarm
             isErrorLoading = true;
             updateUiAccordingToInternetConnecion();
             mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
@@ -257,15 +268,9 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
 
     private void updateUiAccordingToInternetConnecion(){
             youtubePlayerView.setVisibility(View.INVISIBLE);
-
     }
 
-    private void setVolMax() {
-//        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-//        mOrigionalVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-//
-//        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
-
+    private void adjustVolume() {
         mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         mOrigionalMediaVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
@@ -273,13 +278,8 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
         if(volAlarm <= 3){
             volAlarm = 7;
         }
-
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volAlarm, 0);
-
-
     }
-
-
 
     private void setVolOriginal(){
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mOrigionalMediaVolume, 0);
@@ -289,7 +289,10 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
         Alarm alarm = getAlarm();
         mAlarmController.snoozeAlarm(alarm);
         if(!isErrorLoading){
-            ParcelableUtil.saveForSnooze(mSongName,mUrl,mSongId);
+            Date endDate = new Date();
+            int numSeconds = (int) ((endDate.getTime() - mStartDate.getTime()) / 1000);
+            numOfSecPlayed +=numSeconds;
+            ParcelableUtil.saveForSnooze(mSongName,mUrl,mSongId,numOfSecPlayed);
         }
         else{
             mRingtoneLoop.stop();
@@ -300,7 +303,19 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
         finish();
     }
 
-    private  Alarm getAlarm(){
+    private void adjustColor(){
+        final String themeDark = getString(R.string.theme_dark);
+        final String themeBlack = getString(R.string.theme_black);
+        String theme = PreferenceManager.getDefaultSharedPreferences(this).getString(
+                getString(R.string.key_theme), null);
+        if (themeDark.equals(theme)) {
+            setTheme(R.style.AppTheme_Dark);
+        } else if (themeBlack.equals(theme)) {
+            setTheme(R.style.AppTheme_Black);
+        }
+    }
+
+    private Alarm getAlarm(){
         byte[] bytes = getIntent().getByteArrayExtra(EXTRA_RINGING_OBJECT);
         if (bytes == null) {
             throw new IllegalStateException("Cannot start RingtoneActivity without a ringing object");
@@ -323,8 +338,8 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
 
             Date endDate = new Date();
             int numSeconds = (int) ((endDate.getTime() - mStartDate.getTime()) / 1000);
-
-            String secondsPlayed = Integer.toString(numSeconds);
+            numOfSecPlayed +=numSeconds;
+            String secondsPlayed = Integer.toString(numOfSecPlayed);
             Map<String, String> data = new HashMap<String, String>();
             data.put("sec", secondsPlayed);
             data.put("songId", mSongId);
@@ -336,8 +351,6 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
             mRingtoneLoop.stop();
             stopAndFinish();
         }
-
-
     }
 
     private void updateScore(boolean isLike ){
@@ -346,6 +359,8 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
         final Map<String, String> data = new HashMap<String, String>();
         data.put("songId", mSongId);
         data.put("isLiked", isUserLiked);
+        mFunctions.getHttpsCallable("updateSongScore")
+                .call(data);
     }
 
     public void onLikeClick(View view) {
@@ -368,6 +383,5 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
         Toast.makeText(getApplicationContext(), "Thank you, have a nice day!",
                 Toast.LENGTH_SHORT).show();
     }
-
 }
 

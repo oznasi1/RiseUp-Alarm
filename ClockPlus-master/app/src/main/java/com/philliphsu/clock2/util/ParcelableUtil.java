@@ -33,6 +33,7 @@ public final class ParcelableUtil {
     static String mUrl;
     static String mSongId;
     static boolean isSnooze = false;
+    static int mNumSec ;
 
     public static byte[] marshall(Parcelable parcelable) {
         Parcel parcel = Parcel.obtain();
@@ -56,11 +57,12 @@ public final class ParcelableUtil {
         return result;
     }
 
-    public static void saveForSnooze(String songName, String songUrl, String songId) {
+    public static void saveForSnooze(String songName, String songUrl, String songId,int numSec) {
         isSnooze = true;
         mSongName = songName;
         mUrl = songUrl;
         mSongId = songId;
+        mNumSec = numSec;
     }
 
     public static boolean isSnooze() {
@@ -78,12 +80,16 @@ public final class ParcelableUtil {
     public static String getSongUrl() {
         return mUrl;
     }
+    public static int getNumSec() {
+        return mNumSec;
+    }
 
     public static void reset() {
         mUrl = "";
         mSongName = "";
         mSongId = "";
         isSnooze = false;
+        mNumSec = 0;
     }
 
     public static boolean haveNetworkConnection(Context context) {
@@ -102,5 +108,6 @@ public final class ParcelableUtil {
         }
         return haveConnectedWifi || haveConnectedMobile;
     }
+
 
 }
