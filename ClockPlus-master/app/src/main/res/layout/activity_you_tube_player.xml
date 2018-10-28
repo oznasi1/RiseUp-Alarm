@@ -23,7 +23,7 @@
         android:layout_height="99dp"
 
         android:layout_marginStart="64dp"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="180dp"
         android:background="@null"
         android:onClick="onLikeClick"
         android:scaleType="fitCenter"
@@ -38,7 +38,7 @@
         android:layout_height="99dp"
 
         android:layout_marginStart="72dp"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="180dp"
         android:background="@null"
         android:onClick="onUnlikeClick"
         android:scaleType="fitCenter"
@@ -46,32 +46,6 @@
         android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/imageButtonLike"
         app:layout_constraintTop_toBottomOf="@+id/youtube_Player_view" />
-
-    <Button
-        android:id="@+id/buttonDismiss"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="88dp"
-        android:layout_marginTop="2dp"
-        android:onClick="onDismissClick"
-        android:text="Dismiss"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButtonLike" />
-
-    <Button
-        android:id="@+id/buttonSnooze"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="88dp"
-        android:onClick="onSnoozeClick"
-        android:text="Snooze"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/buttonDismiss"
-        app:layout_constraintTop_toBottomOf="@+id/imageButtonUnlike" />
 
     <TextView
         android:id="@+id/textViewListen"
@@ -117,10 +91,41 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageViewSnooze"
+        android:layout_width="195dp"
+        android:layout_height="141dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="8dp"
+        android:onClick="onSnoozeClick"
+        android:src="@drawable/zzz"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSongName" />
+
+    <ImageView
+        android:id="@+id/imageViewDismiss"
+        android:layout_width="195dp"
+        android:layout_height="141dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:onClick="onDismissClick"
+        android:src="@drawable/dismiss"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSongName" /><![CDATA[
+
+
+
+
+
+
+
+
+
     />
 
 
-    <!--<Button-->
+    ]]><!--<Button-->
     <!--android:id="@+id/dismiss"-->
     <!--android:layout_width="wrap_content"-->
     <!--android:layout_height="wrap_content"-->

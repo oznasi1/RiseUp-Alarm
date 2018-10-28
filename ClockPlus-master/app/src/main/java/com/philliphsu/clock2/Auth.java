@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -31,6 +32,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Locale;
+
 
 public class Auth extends AppCompatActivity {
     private static final String TAG = "Auth";
@@ -41,6 +44,7 @@ public class Auth extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
     SignInButton signInButton;
     Button playSongBtn;
+    ImageView welcome;
     boolean islogedIn=false;
 
     @Override
@@ -48,9 +52,10 @@ public class Auth extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         adjustColor();
-
         setContentView(R.layout.activity_auth);
 
+        welcome = (ImageView) findViewById(R.id.imageViewWelcome);
+        adjustLocale();
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -74,15 +79,6 @@ public class Auth extends AppCompatActivity {
                 }
             }
         });
-
-//        if(mAuth.getCurrentUser()!= null)
-//            islogedIn=true;
-//
-//
-//        if(islogedIn){
-//            Intent i = new Intent(getApplicationContext(),MainActivity.class);
-//            startActivity(i);
-//        }
 
 
         signInButton = (SignInButton)findViewById(R.id.signInBtn);
@@ -114,6 +110,18 @@ public class Auth extends AppCompatActivity {
             }
         }
     }
+
+    private void adjustLocale(){
+        Locale current = getResources().getConfiguration().locale;
+        if(current.toString().contains("IL")){
+            welcome.setImageResource(R.drawable.clockheb);
+        }
+        else{
+            welcome.setImageResource(R.drawable.clockeng);
+        }
+    }
+
+
     private void adjustColor(){
         final String themeDark = getString(R.string.theme_dark);
         final String themeBlack = getString(R.string.theme_black);

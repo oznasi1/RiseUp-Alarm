@@ -45,7 +45,7 @@ public final class AlarmPreferences {
     }
 
     public static int minutesToSilenceAfter(Context c) {
-        return readPreference(c, R.string.key_silence_after, 15);
+        return readPreference(c, R.string.key_silence_after, 60);
     }
 
     public static int firstDayOfWeek(Context c) {

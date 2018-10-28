@@ -16,10 +16,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3"></com.google.android.gms.common.SignInButton>
+        app:layout_constraintTop_toBottomOf="@+id/imageViewWelcome"></com.google.android.gms.common.SignInButton>
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/imageViewWelcome"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="27dp"

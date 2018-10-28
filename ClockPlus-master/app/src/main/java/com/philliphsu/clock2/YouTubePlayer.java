@@ -35,6 +35,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,6 +71,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -86,11 +88,15 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
     YouTubePlayerView youtubePlayerView;
     ImageButton likeBtn;
     ImageButton unlikeBtn;
-    Button dismiss;
-    Button snooze;
+//    Button dismiss;
+//    Button snooze;
+    ImageView dismiss;
+    ImageView snooze;
     TextView listen;
     TextView songName;
     TextView rateSong;
+    TextView mTextViewDismiss;
+    TextView mTextViewSnooze;
     String mSongName;
     String mUrl;
     String mSongId;
@@ -116,14 +122,17 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
 
         mAlarmController = new AlarmController(this, null);
         setContentView(R.layout.activity_you_tube_player);
+
         rateSong = (TextView) findViewById(R.id.textViewRate);
         songName = (TextView) findViewById(R.id.textViewSongName);
         listen = (TextView) findViewById(R.id.textViewListen);
-        snooze = (Button) findViewById(R.id.buttonSnooze);
-        dismiss = (Button) findViewById(R.id.buttonDismiss);
+        snooze = (ImageView) findViewById(R.id.imageViewSnooze);
+        dismiss = (ImageView) findViewById(R.id.imageViewDismiss);
         likeBtn = (ImageButton) findViewById(R.id.imageButtonLike);
         unlikeBtn = (ImageButton) findViewById(R.id.imageButtonUnlike);
         youtubePlayerView = (YouTubePlayerView) findViewById(R.id.youtube_Player_view);
+
+        adjustLocale();
 
         mFunctions = FirebaseFunctions.getInstance();
         onInitializeListener = new com.google.android.youtube.player.YouTubePlayer.OnInitializedListener() {
@@ -159,6 +168,7 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
 
                     }
                 });
+
                 if (!ParcelableUtil.isSnooze()) {
                     getSongUrlFromServer();
 
@@ -315,6 +325,15 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
         }
     }
 
+    private void adjustLocale(){
+        Locale current = getResources().getConfiguration().locale;
+        if(current.toString().contains("IL")) {
+            listen.setText("אתה מאזין כעת ל:");
+
+            rateSong.setText("בבקשה דרג את השיר , על מנת שבפעם הבאה נתאים לך שירים שתאהב יותר");
+        }
+    }
+
     private Alarm getAlarm(){
         byte[] bytes = getIntent().getByteArrayExtra(EXTRA_RINGING_OBJECT);
         if (bytes == null) {
@@ -334,6 +353,7 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
             likeBtn.setVisibility(View.VISIBLE);
             unlikeBtn.setVisibility(View.VISIBLE);
             rateSong.setVisibility(View.VISIBLE);
+
             stopService(new Intent(this, AlarmRingtoneService.class));
 
             Date endDate = new Date();
