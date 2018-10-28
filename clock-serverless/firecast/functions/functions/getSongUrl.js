@@ -17,19 +17,22 @@ async function getNewSongUrl(user) {
     });
     filteredNextGroup = await filterGroup(nextGroup, user, lastChance);
     size = Object.keys(filteredNextGroup).length;
-    if(size == 0){
+    if (size == 0) {
       nextGroup = await getNextGroup(null);
       lastChance = Object.values(nextGroup).every(song => {
         return song.groupId == rootGroupId;
       });
       filteredNextGroup = await filterGroup(nextGroup, user, lastChance);
     }
+    filteredNextGroup = await tryAddBaseSongs(user, filteredNextGroup);
     let nextSongId = chooseIndex(filteredNextGroup);
     let nextSongUrl = filteredNextGroup[nextSongId].url;
-    let nexSongTitle = (filteredNextGroup[nextSongId].title != undefined) ?  filteredNextGroup[nextSongId].title : 
-    filteredNextGroup[nextSongId].artist +
-    " - " +
-    filteredNextGroup[nextSongId].name;
+    let nexSongTitle =
+      filteredNextGroup[nextSongId].title != undefined
+        ? filteredNextGroup[nextSongId].title
+        : filteredNextGroup[nextSongId].artist +
+          " - " +
+          filteredNextGroup[nextSongId].name;
 
     let res = {
       url: nextSongUrl,
@@ -49,13 +52,16 @@ async function filterGroup(group, user, lastChance) {
     .child("history");
   let snapshot = await songHistoryQuery.once("value");
   let historyGroup = snapshot.val();
-
+  //remove songs that already palayd
   let keeper1 = Object.assign({}, group);
   for (let song in historyGroup) {
     if (group[historyGroup[song].songId] != undefined) {
       delete group[historyGroup[song].songId];
     }
   }
+  //remove same artist from prev alert
+  group = await tryRemoveSameArtist(user, group);
+  //no songs left left get the last liked songs
   if (Object.keys(group).length === 0 && lastChance) {
     group = keeper1;
     let keeper2 = Object.assign({}, group);
@@ -64,12 +70,51 @@ async function filterGroup(group, user, lastChance) {
         delete group[historyGroup[song].songId];
       }
     }
+
     if (Object.keys(group).length === 0) {
       group = keeper2;
     }
   }
 
   return group;
+}
+//adds base song if there aren't any for diversity  
+async function tryAddBaseSongs(user, group) {
+  try {
+    let isBaseSongs = Object.keys(group).some((song)=> song.groupId == rootGroupId);
+    if(!isBaseSongs){
+    let nextGroup = await getNextGroup(null);
+    let baseSongsGroup = await filterGroup( nextGroup, user, false);
+    let nextSong = chooseIndex(baseSongsGroup);
+    group[nextSong] = baseSongsGroup[nextSong];
+    return group;
+  }
+  } catch (error) {
+
+    return group;
+  }
+}
+async function tryRemoveSameArtist(user, group) {
+  try {
+    const lastLikedSong = await getLastLikedSong(user);
+    var resGroup = Object.keys(group).reduce(function(r, e) {
+      if (!lastLikedSong.artist.includes(group[e].artist)) r[e] = group[e];
+      return r;
+    }, {});
+    return Object.keys(resGroup).length > 0 ? resGroup : group;
+  } catch (err) {
+    return group;
+  }
+}
+async function getLastLikedSong(user) {
+  try {
+    let historySongs = await getLastLikedSongs(user);
+    //historySongs.sort((a, b) => b.timestamp - a.timestamp);
+    let lastLiked = await getSong(historySongs[0].songId);
+    return lastLiked;
+  } catch (err) {
+    return null;
+  }
 }
 
 //returns an object of sons of last liked songs
@@ -119,6 +164,7 @@ async function getLastLikedSongs(user) {
   try {
     let snapshot = await likeSongsQuery.once("value");
     var history = Object.values(snapshot.val());
+    history.sort((a, b) => b.timestamp - a.timestamp);
 
     return history;
   } catch (err) {

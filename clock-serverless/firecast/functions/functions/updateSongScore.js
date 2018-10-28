@@ -1,6 +1,7 @@
 const db = require("./init");
 const functions = require("firebase-functions");
 const getSong = require("./Utils/getSong");
+const updateUserSongHistory = require("./updateUserSongHistory");
 
 async function updateSong(data, context) {
   const songId = data.songId;
@@ -30,21 +31,37 @@ async function updateUserLog(data, context) {
   historySongLog.isRanked = "1";
   return { historySongLog, historySongId };
 }
-const delayParam = 50000;
+
+const delayParam = 51 * 1000;
+
 async function updateSongScore(data, context) {
   var logMsg = {};
   try {
-    const sleep = m => new Promise(r => setTimeout(r, m))
-    await sleep(delayParam);
-
     let updates = {};
-    updates["songs/" + data.songId] = await updateSong(data, context);
-    //update user's history
-    let { historySongLog, historySongId } = await updateUserLog(data, context);
-    updates[
-      "users/" + context.auth.uid + "/history/" + historySongId
-    ] = historySongLog;
-
+    let update = async () => {
+      updates["songs/" + data.songId] = await updateSong(data, context);
+      //update user's history
+      let { historySongLog, historySongId } = await updateUserLog(
+        data,
+        context
+      );
+      updates[
+        "users/" + context.auth.uid + "/history/" + historySongId
+      ] = historySongLog;
+    };
+    try {
+      await update();
+    } catch (err) {
+      try {
+        const sleep = m => new Promise(r => setTimeout(r, m));
+        await sleep(delayParam);
+        await update();
+      } catch (err) {
+        data["sec"] = "10";
+        await updateUserSongHistory(data, context);
+        await update();
+      }
+    }
     await db.ref().update(updates);
     logMsg = updates;
   } catch (err) {
