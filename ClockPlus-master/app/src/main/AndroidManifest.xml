@@ -25,8 +25,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -85,9 +83,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.philliphsu.clock2.MainActivity" />
         </activity>
-
-
-
         <activity
             android:name=".ringtone.AlarmActivity"
             android:excludeFromRecents="true"
@@ -101,10 +96,11 @@
             android:enabled="true"
             android:exported="false" />
 
-
         <activity android:name=".MainActivity" />
-        <activity android:name=".YouTubePlayer"
-            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".YouTubePlayer"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Blank"></activity>
     </application>
 
 </manifest>

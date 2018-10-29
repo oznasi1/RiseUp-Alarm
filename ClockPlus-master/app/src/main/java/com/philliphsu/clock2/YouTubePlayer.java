@@ -3,18 +3,22 @@ package com.philliphsu.clock2;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.service.notification.NotificationListenerService;
 import android.support.v4.app.NotificationCompat;
 import android.view.ViewGroup;
 
 import com.philliphsu.clock2.R;
 import com.philliphsu.clock2.alarms.Alarm;
+import com.philliphsu.clock2.alarms.background.UpcomingAlarmReceiver;
 import com.philliphsu.clock2.alarms.misc.AlarmController;
 import com.philliphsu.clock2.alarms.misc.AlarmPreferences;
 import com.philliphsu.clock2.ringtone.AlarmActivity;
@@ -85,11 +89,13 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
     private AudioManager mAudioManager;
     private FirebaseFunctions mFunctions;
     private RingtoneLoop mRingtoneLoop;
+    private NotificationManager mNotificationManager ;
+    private Vibrator mVibrator;
+
+    ImageView noInternetConnection;
     YouTubePlayerView youtubePlayerView;
     ImageButton likeBtn;
     ImageButton unlikeBtn;
-//    Button dismiss;
-//    Button snooze;
     ImageView dismiss;
     ImageView snooze;
     TextView listen;
@@ -107,12 +113,14 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
     private int mOrigionalMediaVolume;
     private boolean isErrorLoading;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         adjustColor();
-
+        adjustVibrate();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
@@ -122,7 +130,9 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
 
         mAlarmController = new AlarmController(this, null);
         setContentView(R.layout.activity_you_tube_player);
-
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        //handleNotification();
+        noInternetConnection = (ImageView) findViewById(R.id.imageViewNoInternet);
         rateSong = (TextView) findViewById(R.id.textViewRate);
         songName = (TextView) findViewById(R.id.textViewSongName);
         listen = (TextView) findViewById(R.id.textViewListen);
@@ -139,6 +149,42 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
             @Override
             public void onInitializationSuccess(com.google.android.youtube.player.YouTubePlayer.Provider provider, com.google.android.youtube.player.YouTubePlayer youTubePlayer, boolean b) {
                 mYoutubePlayer = youTubePlayer;
+
+                mYoutubePlayer.setPlayerStateChangeListener(new com.google.android.youtube.player.YouTubePlayer.PlayerStateChangeListener() {
+                    @Override
+                    public void onLoading() {
+
+                    }
+
+                    @Override
+                    public void onLoaded(String s) {
+
+                    }
+
+                    @Override
+                    public void onAdStarted() {
+
+                    }
+
+                    @Override
+                    public void onVideoStarted() {
+
+                    }
+
+                    @Override
+                    public void onVideoEnded() {
+                        mYoutubePlayer.play();
+                    }
+
+                    @Override
+                    public void onError(com.google.android.youtube.player.YouTubePlayer.ErrorReason errorReason) {
+                        Log.e(TAG, "onError: ");
+                        isErrorLoading = true;
+                        updateUiAccordingToInternetConnecion();
+                        mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
+                        mRingtoneLoop.play();
+                    }
+                });
 
                 mYoutubePlayer.setPlaybackEventListener(new com.google.android.youtube.player.YouTubePlayer.PlaybackEventListener() {
                     @Override
@@ -167,6 +213,7 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
                     public void onSeekTo(int i) {
 
                     }
+
                 });
 
                 if (!ParcelableUtil.isSnooze()) {
@@ -180,6 +227,7 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
                     songName.setText(mSongName);
                     listen.setVisibility(View.VISIBLE);
                     songName.setVisibility(View.VISIBLE);
+
                     mYoutubePlayer.loadVideo(mUrl, 1);
                     mYoutubePlayer.setPlayerStyle(com.google.android.youtube.player.YouTubePlayer.PlayerStyle.CHROMELESS);
                     mStartDate = new Date();
@@ -189,9 +237,14 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
             @Override
             public void onInitializationFailure(com.google.android.youtube.player.YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
                 Log.e(TAG, "onInitializationFailure: ");
+
+
             }
 
         };
+
+
+
 
         String key = getString(R.string.youtube_key);
         youtubePlayerView.initialize(key, onInitializeListener);
@@ -209,26 +262,32 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
     }
 
     @Override
-    public void onAdStarted() {
-    }
-
-    @Override
-    public void onLoaded(String videoId) {
-    }
-
-    @Override
     public void onLoading() {
+
     }
 
     @Override
-    public void onVideoEnded() {
+    public void onLoaded(String s) {
+
+    }
+
+    @Override
+    public void onAdStarted() {
+
     }
 
     @Override
     public void onVideoStarted() {
+
     }
+
     @Override
-    public void onError(com.google.android.youtube.player.YouTubePlayer.ErrorReason reason){
+    public void onVideoEnded() {
+
+    }
+
+    @Override
+    public void onError(com.google.android.youtube.player.YouTubePlayer.ErrorReason errorReason) {
         Log.e(TAG, "onError: ");
         isErrorLoading = true;
         updateUiAccordingToInternetConnecion();
@@ -248,6 +307,17 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
     public void onResume(){
         super.onResume();
         mStartDate = new Date();
+    }
+    private void adjustVibrate(){
+        if (getAlarm().vibrates()) {
+            mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            mVibrator.vibrate(new long[] { // apply pattern
+                    0, // millis to wait before turning vibrator on
+                    500, // millis to keep vibrator on before turning off
+                    500, // millis to wait before turning back on
+                    500 // millis to keep on before turning off
+            }, 2 /* start repeating at this index of the array, after one cycle */);
+        }
     }
 
     private void onCompleteUrlSong( Task<HttpsCallableResult> task){
@@ -278,6 +348,9 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
 
     private void updateUiAccordingToInternetConnecion(){
             youtubePlayerView.setVisibility(View.INVISIBLE);
+            noInternetConnection.setVisibility(View.VISIBLE);
+            listen.setVisibility(View.INVISIBLE);
+            songName.setVisibility(View.INVISIBLE);
     }
 
     private void adjustVolume() {
@@ -291,12 +364,26 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volAlarm, 0);
     }
 
+    private void handleNotification(){
+        Intent intent = new Intent(getApplicationContext(), Blank.class);
+
+        this.mNotificationManager.notify(12321, new Notification.Builder(this)
+                .setContentTitle("").setContentText("")
+                .setSmallIcon(R.drawable.ic_add_24dp)
+                .setPriority(Notification.PRIORITY_DEFAULT)
+                .setFullScreenIntent(PendingIntent.getService(getApplicationContext(),12321,intent,PendingIntent.FLAG_NO_CREATE), true)
+                .setAutoCancel(true)
+                .build());
+    }
     private void setVolOriginal(){
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mOrigionalMediaVolume, 0);
     }
 
     public void onSnoozeClick(View view){
         Alarm alarm = getAlarm();
+        if(mVibrator!=null){
+            mVibrator.cancel();
+        }
         mAlarmController.snoozeAlarm(alarm);
         if(!isErrorLoading){
             Date endDate = new Date();
@@ -329,7 +416,8 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
         Locale current = getResources().getConfiguration().locale;
         if(current.toString().contains("IL")) {
             listen.setText("אתה מאזין כעת ל:");
-
+            snooze.setImageResource(R.drawable.snoozesubtitleheb);
+            dismiss.setImageResource(R.drawable.dismisssubtitleheb);
             rateSong.setText("בבקשה דרג את השיר , על מנת שבפעם הבאה נתאים לך שירים שתאהב יותר");
         }
     }
@@ -346,6 +434,9 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
 
     public void onDismissClick(View view) {
         ParcelableUtil.reset();
+        if(mVibrator!=null){
+            mVibrator.cancel();
+        }
         if(!isErrorLoading){
             mYoutubePlayer.pause();
             dismiss.setVisibility(View.INVISIBLE);

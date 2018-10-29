@@ -13,9 +13,12 @@
         android:layout_height="wrap_content"
 
         android:layout_marginTop="52dp"
+        android:layout_marginBottom="145dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageViewSnooze"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.04000002" />
 
     <ImageButton
         android:id="@+id/imageButtonLike"
@@ -90,29 +93,57 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewNoInternet" />
 
     <ImageView
         android:id="@+id/imageViewSnooze"
-        android:layout_width="195dp"
-        android:layout_height="141dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="8dp"
+        android:layout_width="117dp"
+        android:layout_height="125dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="190dp"
         android:onClick="onSnoozeClick"
-        android:src="@drawable/zzz"
+        android:src="@drawable/snoozesubtitleeng"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSongName" />
+        app:layout_constraintStart_toEndOf="@+id/imageViewDismiss"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewNoInternet"
+        app:layout_constraintVertical_bias="0.979" />
 
     <ImageView
         android:id="@+id/imageViewDismiss"
-        android:layout_width="195dp"
-        android:layout_height="141dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="40dp"
+        android:layout_width="162dp"
+        android:layout_height="94dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="58dp"
+        android:layout_marginEnd="29dp"
+        android:layout_marginBottom="58dp"
         android:onClick="onDismissClick"
-        android:src="@drawable/dismiss"
+        android:src="@drawable/dismisssubtitleeng"
+        app:layout_constraintBottom_toTopOf="@+id/textViewRate"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewSnooze"
+        app:layout_constraintHorizontal_bias="0.03"
+        app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSongName" /><![CDATA[
+        app:layout_constraintTop_toTopOf="@+id/imageViewSnooze"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/imageViewNoInternet"
+        android:layout_width="60dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="53dp"
+        android:layout_marginBottom="280dp"
+        android:src="@drawable/nowifi"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/textViewRate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" /><![CDATA[
+
+
+
+
 
 
 
