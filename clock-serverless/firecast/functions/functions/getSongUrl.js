@@ -55,10 +55,19 @@ async function filterGroup(group, user, lastChance) {
   //remove songs that already palayd
   let keeper1 = Object.assign({}, group);
   for (let song in historyGroup) {
-    if (group[historyGroup[song].songId] != undefined) {
-      delete group[historyGroup[song].songId];
+    let currHistorySongId = historyGroup[song].songId;
+    let currHistorySong = await getSong(currHistorySongId);
+    let timeNow = Date.now();
+    let timeToForget = 1000 * 60 * 60 *24 * 7 * 2;// second * 60sec * 60minutes* 24Hours * 7Days * 2Weeks
+    let isTimePassed = timeNow - historyGroup[song].timestamp > timeToForget;
+    for (let songInGroup in group) {
+      if (group[currHistorySongId] != undefined ||
+        (group[songInGroup].url === currHistorySong.url && !isTimePassed) ) {
+          delete group[currHistorySongId];
+        }
+      }
     }
-  }
+
   //remove same artist from prev alert
   group = await tryRemoveSameArtist(user, group);
   //no songs left left get the last liked songs
@@ -78,19 +87,20 @@ async function filterGroup(group, user, lastChance) {
 
   return group;
 }
-//adds base song if there aren't any for diversity  
+//adds base song if there aren't any for diversity
 async function tryAddBaseSongs(user, group) {
   try {
-    let isBaseSongs = Object.keys(group).some((song)=> song.groupId == rootGroupId);
-    if(!isBaseSongs){
-    let nextGroup = await getNextGroup(null);
-    let baseSongsGroup = await filterGroup( nextGroup, user, false);
-    let nextSong = chooseIndex(baseSongsGroup);
-    group[nextSong] = baseSongsGroup[nextSong];
-    return group;
-  }
+    let isBaseSongs = Object.keys(group).some(
+      song => song.groupId == rootGroupId
+    );
+    if (!isBaseSongs) {
+      let nextGroup = await getNextGroup(null);
+      let baseSongsGroup = await filterGroup(nextGroup, user, false);
+      let nextSong = chooseIndex(baseSongsGroup);
+      group[nextSong] = baseSongsGroup[nextSong];
+      return group;
+    }
   } catch (error) {
-
     return group;
   }
 }
@@ -193,3 +203,4 @@ async function getSongUrl(data, context) {
 }
 
 module.exports = getSongUrl;
+

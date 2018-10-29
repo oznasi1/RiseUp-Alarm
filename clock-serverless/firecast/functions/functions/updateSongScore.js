@@ -12,6 +12,7 @@ async function updateSong(data, context) {
   let incCount = ++currSong.count;
   currSong.score = newScore;
   currSong.count = incCount;
+
   return currSong;
 }
 
