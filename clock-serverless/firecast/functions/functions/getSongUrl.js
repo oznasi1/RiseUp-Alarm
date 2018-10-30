@@ -61,9 +61,12 @@ async function filterGroup(group, user, lastChance) {
     let timeToForget = 1000 * 60 * 60 *24 * 7 * 2;// second * 60sec * 60minutes* 24Hours * 7Days * 2Weeks
     let isTimePassed = timeNow - historyGroup[song].timestamp > timeToForget;
     for (let songInGroup in group) {
-      if (group[currHistorySongId] != undefined ||
-        (group[songInGroup].url === currHistorySong.url && !isTimePassed) ) {
-          delete group[currHistorySongId];
+      if (group[currHistorySongId] != undefined){
+        delete group[currHistorySongId];
+
+      }
+      else if(group[songInGroup].url === currHistorySong.url && !isTimePassed) {
+          delete group[songInGroup];
         }
       }
     }
