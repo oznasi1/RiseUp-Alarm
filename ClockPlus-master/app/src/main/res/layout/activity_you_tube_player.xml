@@ -12,56 +12,56 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
-        android:layout_marginTop="52dp"
-        android:layout_marginBottom="145dp"
-        app:layout_constraintBottom_toTopOf="@+id/imageViewSnooze"
+        android:layout_marginTop="36dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.04000002" />
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <ImageButton
         android:id="@+id/imageButtonLike"
         android:layout_width="90dp"
         android:layout_height="99dp"
 
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="180dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="96dp"
+        android:layout_marginEnd="88dp"
         android:background="@null"
         android:onClick="onLikeClick"
         android:scaleType="fitCenter"
         android:src="@drawable/like"
         android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/imageButtonUnlike"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/youtube_Player_view" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewSongName" />
 
     <ImageButton
         android:id="@+id/imageButtonUnlike"
         android:layout_width="87dp"
         android:layout_height="99dp"
 
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="180dp"
+        android:layout_marginTop="92dp"
+        android:layout_marginEnd="56dp"
         android:background="@null"
         android:onClick="onUnlikeClick"
         android:scaleType="fitCenter"
         android:src="@drawable/unlike"
         android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@+id/imageButtonLike"
-        app:layout_constraintTop_toBottomOf="@+id/youtube_Player_view" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSongName" />
 
     <TextView
         android:id="@+id/textViewListen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="128dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="44dp"
-        android:layout_marginEnd="128dp"
+        android:layout_marginEnd="8dp"
         android:text="You are listening to "
         android:textSize="18sp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/youtube_Player_view" />
 
@@ -85,61 +85,65 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="88dp"
+        android:layout_marginBottom="8dp"
         android:text="Please rate the song so that in the future we can match you better ones"
         android:textAlignment="center"
         android:textSize="18sp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewNoInternet" />
+        app:layout_constraintTop_toBottomOf="@+id/imageButtonLike"
+        app:layout_constraintVertical_bias="0.17" />
 
     <ImageView
         android:id="@+id/imageViewSnooze"
         android:layout_width="117dp"
         android:layout_height="125dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="190dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="36dp"
         android:onClick="onSnoozeClick"
         android:src="@drawable/snoozesubtitleeng"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageViewDismiss"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewNoInternet"
-        app:layout_constraintVertical_bias="0.979" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewSongName" />
 
     <ImageView
         android:id="@+id/imageViewDismiss"
         android:layout_width="162dp"
         android:layout_height="94dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="58dp"
-        android:layout_marginEnd="29dp"
-        android:layout_marginBottom="58dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="8dp"
         android:onClick="onDismissClick"
         android:src="@drawable/dismisssubtitleeng"
-        app:layout_constraintBottom_toTopOf="@+id/textViewRate"
         app:layout_constraintEnd_toStartOf="@+id/imageViewSnooze"
-        app:layout_constraintHorizontal_bias="0.03"
-        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageViewSnooze"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewSongName" />
 
     <ImageView
         android:id="@+id/imageViewNoInternet"
         android:layout_width="60dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="53dp"
-        android:layout_marginBottom="280dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:src="@drawable/nowifi"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/textViewRate"
+        app:layout_constraintBottom_toTopOf="@+id/textViewSongName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" /><![CDATA[
+        app:layout_constraintTop_toBottomOf="@+id/youtube_Player_view"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <WebView
+        android:layout_width="368dp"
+        android:layout_height="74dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="485dp" /><![CDATA[
 
 
 
