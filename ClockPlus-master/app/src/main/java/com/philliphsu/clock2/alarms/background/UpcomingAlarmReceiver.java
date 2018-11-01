@@ -69,8 +69,9 @@ public class UpcomingAlarmReceiver extends BroadcastReceiver {
             String title;
             String text;
             if (actionShowSnoozing) {
+                //TODO:check what it is
                 if (!alarm.isSnoozed()) {
-                    throw new IllegalStateException("Can't show snoozing notif. if alarm not snoozed!");
+                    //throw new IllegalStateException("Can't show snoozing notif. if alarm not snoozed!");
                 }
                 title = alarm.label().isEmpty() ? context.getString(R.string.alarm) : alarm.label();
                 text = context.getString(R.string.title_snoozing_until,

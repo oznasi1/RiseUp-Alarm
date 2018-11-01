@@ -1,5 +1,6 @@
 package com.philliphsu.clock2;
 
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -13,7 +14,9 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.service.notification.NotificationListenerService;
+import android.service.notification.StatusBarNotification;
 import android.support.v4.app.NotificationCompat;
+import android.view.KeyEvent;
 import android.view.ViewGroup;
 
 import com.philliphsu.clock2.R;
@@ -77,6 +80,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.OnCheckedChanged;
@@ -89,9 +94,8 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
     private AudioManager mAudioManager;
     private FirebaseFunctions mFunctions;
     private RingtoneLoop mRingtoneLoop;
-    private NotificationManager mNotificationManager ;
     private Vibrator mVibrator;
-
+    private NotificationManager mNotificationManager;
     ImageView noInternetConnection;
     YouTubePlayerView youtubePlayerView;
     ImageButton likeBtn;
@@ -101,153 +105,178 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
     TextView listen;
     TextView songName;
     TextView rateSong;
-    TextView mTextViewDismiss;
-    TextView mTextViewSnooze;
     String mSongName;
     String mUrl;
     String mSongId;
     Date mStartDate;
+    Boolean isFinish= false;
     int numOfSecPlayed=0;
+    private int count=0;
+    private Timer t;
+    private Handler h;
     com.google.android.youtube.player.YouTubePlayer.OnInitializedListener onInitializeListener;
     private com.google.android.youtube.player.YouTubePlayer mYoutubePlayer;
     private int mOrigionalMediaVolume;
     private boolean isErrorLoading;
+
+    Runnable runnable;
+    Handler handler;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adjustColor();
-        adjustVibrate();
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-        getWindow().addFlags(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        adjustVolume();
+        if(!ParcelableUtil.isPlaying()) {
 
-        mAlarmController = new AlarmController(this, null);
-        setContentView(R.layout.activity_you_tube_player);
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        //handleNotification();
-        noInternetConnection = (ImageView) findViewById(R.id.imageViewNoInternet);
-        rateSong = (TextView) findViewById(R.id.textViewRate);
-        songName = (TextView) findViewById(R.id.textViewSongName);
-        listen = (TextView) findViewById(R.id.textViewListen);
-        snooze = (ImageView) findViewById(R.id.imageViewSnooze);
-        dismiss = (ImageView) findViewById(R.id.imageViewDismiss);
-        likeBtn = (ImageButton) findViewById(R.id.imageButtonLike);
-        unlikeBtn = (ImageButton) findViewById(R.id.imageButtonUnlike);
-        youtubePlayerView = (YouTubePlayerView) findViewById(R.id.youtube_Player_view);
+            ParcelableUtil.setOnPlaying();
 
-        adjustLocale();
+            adjustColor();
+            adjustVibrate();
 
-        mFunctions = FirebaseFunctions.getInstance();
-        onInitializeListener = new com.google.android.youtube.player.YouTubePlayer.OnInitializedListener() {
-            @Override
-            public void onInitializationSuccess(com.google.android.youtube.player.YouTubePlayer.Provider provider, com.google.android.youtube.player.YouTubePlayer youTubePlayer, boolean b) {
-                mYoutubePlayer = youTubePlayer;
+            isFinish = ParcelableUtil.isFinished();
 
-                mYoutubePlayer.setPlayerStateChangeListener(new com.google.android.youtube.player.YouTubePlayer.PlayerStateChangeListener() {
-                    @Override
-                    public void onLoading() {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+            getWindow().addFlags(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+            adjustVolume();
 
+
+            mAlarmController = new AlarmController(this, null);
+            setContentView(R.layout.activity_you_tube_player);
+
+            mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+            noInternetConnection = (ImageView) findViewById(R.id.imageViewNoInternet);
+            rateSong = (TextView) findViewById(R.id.textViewRate);
+            songName = (TextView) findViewById(R.id.textViewSongName);
+            listen = (TextView) findViewById(R.id.textViewListen);
+            snooze = (ImageView) findViewById(R.id.imageViewSnooze);
+            dismiss = (ImageView) findViewById(R.id.imageViewDismiss);
+            likeBtn = (ImageButton) findViewById(R.id.imageButtonLike);
+            unlikeBtn = (ImageButton) findViewById(R.id.imageButtonUnlike);
+            youtubePlayerView = (YouTubePlayerView) findViewById(R.id.youtube_Player_view);
+
+
+            adjustLocale();
+
+            mFunctions = FirebaseFunctions.getInstance();
+            onInitializeListener = new com.google.android.youtube.player.YouTubePlayer.OnInitializedListener() {
+                @Override
+                public void onInitializationSuccess(com.google.android.youtube.player.YouTubePlayer.Provider provider, com.google.android.youtube.player.YouTubePlayer youTubePlayer, boolean b) {
+                    mYoutubePlayer = youTubePlayer;
+
+                    mYoutubePlayer.setPlayerStateChangeListener(new com.google.android.youtube.player.YouTubePlayer.PlayerStateChangeListener() {
+                        @Override
+                        public void onLoading() {
+
+                        }
+
+                        @Override
+                        public void onLoaded(String s) {
+
+                        }
+
+                        @Override
+                        public void onAdStarted() {
+
+                        }
+
+                        @Override
+                        public void onVideoStarted() {
+
+                        }
+
+                        @Override
+                        public void onVideoEnded() {
+                            mYoutubePlayer.play();
+                        }
+
+                        @Override
+                        public void onError(com.google.android.youtube.player.YouTubePlayer.ErrorReason errorReason) {
+                            Log.e(TAG, "onError: ");
+                            isErrorLoading = true;
+                            updateUiAccordingToInternetConnecion();
+                            mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
+                            mRingtoneLoop.play();
+                        }
+                    });
+
+                    mYoutubePlayer.setPlaybackEventListener(new com.google.android.youtube.player.YouTubePlayer.PlaybackEventListener() {
+                        @Override
+                        public void onPlaying() {
+
+                        }
+
+                        @Override
+                        public void onPaused() {
+                            Log.d(TAG, "onPaused:");
+
+                        }
+
+                        @Override
+                        public void onStopped() {
+                            Log.d(TAG, "onStopped:");
+                            mYoutubePlayer.play();
+
+                        }
+
+                        @Override
+                        public void onBuffering(boolean b) {
+
+                        }
+
+                        @Override
+                        public void onSeekTo(int i) {
+
+                        }
+
+                    });
+
+                    if (!ParcelableUtil.isSnooze()) {
+                        getSongUrlFromServer();
+
+                    } else {
+                        ParcelableUtil.setFinishOff();
+                        mSongName = ParcelableUtil.getSongName();
+                        mUrl = ParcelableUtil.getSongUrl();
+                        mSongId = ParcelableUtil.getSongId();
+                        numOfSecPlayed = ParcelableUtil.getNumSec();
+                        songName.setText(mSongName);
+                        listen.setVisibility(View.VISIBLE);
+                        songName.setVisibility(View.VISIBLE);
+                        if (mUrl == null) {
+                            getSongUrlFromServer();
+                        } else {
+                            mYoutubePlayer.loadVideo(mUrl, 1);
+                            mYoutubePlayer.setPlayerStyle(com.google.android.youtube.player.YouTubePlayer.PlayerStyle.CHROMELESS);
+
+                            mStartDate = new Date();
+                        }
+//                    mYoutubePlayer.loadVideo(mUrl, 1);
+//                    mYoutubePlayer.setPlayerStyle(com.google.android.youtube.player.YouTubePlayer.PlayerStyle.CHROMELESS);
+//
+//                    mStartDate = new Date();
                     }
-
-                    @Override
-                    public void onLoaded(String s) {
-
-                    }
-
-                    @Override
-                    public void onAdStarted() {
-
-                    }
-
-                    @Override
-                    public void onVideoStarted() {
-
-                    }
-
-                    @Override
-                    public void onVideoEnded() {
-                        mYoutubePlayer.play();
-                    }
-
-                    @Override
-                    public void onError(com.google.android.youtube.player.YouTubePlayer.ErrorReason errorReason) {
-                        Log.e(TAG, "onError: ");
-                        isErrorLoading = true;
-                        updateUiAccordingToInternetConnecion();
-                        mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
-                        mRingtoneLoop.play();
-                    }
-                });
-
-                mYoutubePlayer.setPlaybackEventListener(new com.google.android.youtube.player.YouTubePlayer.PlaybackEventListener() {
-                    @Override
-                    public void onPlaying() {
-
-                    }
-
-                    @Override
-                    public void onPaused() {
-                        Log.d(TAG, "onPaused:");
-
-                    }
-
-                    @Override
-                    public void onStopped() {
-                        Log.d(TAG, "onStopped:");
-                        mYoutubePlayer.play();
-                    }
-
-                    @Override
-                    public void onBuffering(boolean b) {
-
-                    }
-
-                    @Override
-                    public void onSeekTo(int i) {
-
-                    }
-
-                });
-
-                if (!ParcelableUtil.isSnooze()) {
-                    getSongUrlFromServer();
-
-                } else {
-                    mSongName = ParcelableUtil.getSongName();
-                    mUrl = ParcelableUtil.getSongUrl();
-                    mSongId = ParcelableUtil.getSongId();
-                    numOfSecPlayed = ParcelableUtil.getNumSec();
-                    songName.setText(mSongName);
-                    listen.setVisibility(View.VISIBLE);
-                    songName.setVisibility(View.VISIBLE);
-
-                    mYoutubePlayer.loadVideo(mUrl, 1);
-                    mYoutubePlayer.setPlayerStyle(com.google.android.youtube.player.YouTubePlayer.PlayerStyle.CHROMELESS);
-                    mStartDate = new Date();
                 }
-            }
 
-            @Override
-            public void onInitializationFailure(com.google.android.youtube.player.YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-                Log.e(TAG, "onInitializationFailure: ");
-
-
-            }
-
-        };
+                @Override
+                public void onInitializationFailure(com.google.android.youtube.player.YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+                    Log.e(TAG, "onInitializationFailure: ");
 
 
+                }
 
+            };
 
-        String key = getString(R.string.youtube_key);
-        youtubePlayerView.initialize(key, onInitializeListener);
+            String key = getString(R.string.youtube_key);
+            youtubePlayerView.initialize(key, onInitializeListener);
+        }else{
+            finish();
+        }
     }
 
     private void getSongUrlFromServer(){
@@ -287,6 +316,12 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
     }
 
     @Override
+    public void onBackPressed() {
+        // Capture the back press and return. We want to limit the user's options for leaving
+        // this activity as much as possible.
+    }
+
+    @Override
     public void onError(com.google.android.youtube.player.YouTubePlayer.ErrorReason errorReason) {
         Log.e(TAG, "onError: ");
         isErrorLoading = true;
@@ -296,18 +331,64 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         Date endDate = new Date();
         int numSeconds = (int) ((endDate.getTime() - mStartDate.getTime()) / 1000); // seconds played until now
-        numOfSecPlayed +=numSeconds;
+        numOfSecPlayed += numSeconds;
+
+        if (ParcelableUtil.isSnooze()) {
+            ParcelableUtil.setFinishOff();
+        }
+
+        //isFinish = ParcelableUtil.isFinished();
+        if(mVibrator!=null){
+            mVibrator.cancel();
+        }
+
+        if(count!=0&&!isFinish){
+
+            runnable = new Runnable() {
+                public void run() {
+                    Intent i = new Intent(getApplicationContext(),YouTubePlayer.class)
+                            .putExtra(AlarmActivity.EXTRA_RINGING_OBJECT, ParcelableUtil.marshall(getAlarm()));
+                    ParcelableUtil.saveForSnooze(mSongName,mUrl,mSongId,numOfSecPlayed);
+                    if(isErrorLoading){
+                        mRingtoneLoop.stop();
+                    }
+                    if(mVibrator!=null){
+                        mVibrator.cancel();
+                    }
+
+                    finish();
+                    ParcelableUtil.setOffOnPlaying();
+
+                    startActivity(i);
+                }
+            };
+
+            handler = new android.os.Handler();
+            handler.postDelayed(runnable, 7000);
+
+        }
+
+        count++;
+        ParcelableUtil.setFinishOff();
+
     }
 
     @Override
     public void onResume(){
         super.onResume();
+        if(handler!=null){
+            handler.removeCallbacks(runnable);
+        }
+        adjustVibrate();
         mStartDate = new Date();
     }
+
+
+
     private void adjustVibrate(){
         if (getAlarm().vibrates()) {
             mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
@@ -364,22 +445,15 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volAlarm, 0);
     }
 
-    private void handleNotification(){
-        Intent intent = new Intent(getApplicationContext(), Blank.class);
-
-        this.mNotificationManager.notify(12321, new Notification.Builder(this)
-                .setContentTitle("").setContentText("")
-                .setSmallIcon(R.drawable.ic_add_24dp)
-                .setPriority(Notification.PRIORITY_DEFAULT)
-                .setFullScreenIntent(PendingIntent.getService(getApplicationContext(),12321,intent,PendingIntent.FLAG_NO_CREATE), true)
-                .setAutoCancel(true)
-                .build());
-    }
     private void setVolOriginal(){
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mOrigionalMediaVolume, 0);
     }
 
     public void onSnoozeClick(View view){
+        ParcelableUtil.setOffOnPlaying();
+
+        ParcelableUtil.setFinishOn();
+        isFinish = true;
         Alarm alarm = getAlarm();
         if(mVibrator!=null){
             mVibrator.cancel();
@@ -433,6 +507,8 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
     }
 
     public void onDismissClick(View view) {
+        ParcelableUtil.setFinishOn();
+        isFinish=true;
         ParcelableUtil.reset();
         if(mVibrator!=null){
             mVibrator.cancel();
@@ -472,13 +548,16 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
         data.put("isLiked", isUserLiked);
         mFunctions.getHttpsCallable("updateSongScore")
                 .call(data);
+
     }
 
     public void onLikeClick(View view) {
+        isFinish = ParcelableUtil.isFinished();
         updateScore(true);
     }
 
     public void onUnlikeClick(View view) {
+        isFinish = ParcelableUtil.isFinished();
         updateScore(false);
     }
 
@@ -493,6 +572,9 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
         mAlarmController.cancelAlarm(alarm, false, true);
         Toast.makeText(getApplicationContext(), "Thank you, have a nice day!",
                 Toast.LENGTH_SHORT).show();
+
+        ParcelableUtil.setOffOnPlaying();
+
     }
 }
 

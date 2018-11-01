@@ -25,6 +25,8 @@ import android.net.NetworkInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Timer;
+
 /**
  * Utilities to marshall and unmarshall a {@code Parcelable} to and from a byte array.
  */
@@ -33,7 +35,10 @@ public final class ParcelableUtil {
     static String mUrl;
     static String mSongId;
     static boolean isSnooze = false;
-    static int mNumSec ;
+    static int mNumSec;
+    static Boolean mIsFinish = false;
+    static Timer t = new Timer();
+    static Boolean mIsPlaying = false;
 
     public static byte[] marshall(Parcelable parcelable) {
         Parcel parcel = Parcel.obtain();
@@ -57,7 +62,7 @@ public final class ParcelableUtil {
         return result;
     }
 
-    public static void saveForSnooze(String songName, String songUrl, String songId,int numSec) {
+    public static void saveForSnooze(String songName, String songUrl, String songId, int numSec) {
         isSnooze = true;
         mSongName = songName;
         mUrl = songUrl;
@@ -77,9 +82,11 @@ public final class ParcelableUtil {
     public static String getSongId() {
         return mSongId;
     }
+
     public static String getSongUrl() {
         return mUrl;
     }
+
     public static int getNumSec() {
         return mNumSec;
     }
@@ -109,5 +116,36 @@ public final class ParcelableUtil {
         return haveConnectedWifi || haveConnectedMobile;
     }
 
+    public static void setFinishOn() {
+        mIsFinish = true;
+    }
 
+    public static Boolean isFinished() {
+        return mIsFinish;
+    }
+
+    public static void setTimer(Timer x) {
+        t = x;
+    }
+
+    public static Timer getTimer() {
+        return t;
+    }
+
+
+    public static void setFinishOff() {
+        mIsFinish = false;
+    }
+
+    public static void setOffOnPlaying() {
+        mIsPlaying = false;
+    }
+
+    public static void setOnPlaying() {
+        mIsPlaying = true;
+    }
+
+    public static Boolean isPlaying() {
+        return mIsPlaying;
+    }
 }
