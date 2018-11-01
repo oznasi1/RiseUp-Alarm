@@ -200,8 +200,11 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
                             Log.e(TAG, "onError: ");
                             isErrorLoading = true;
                             updateUiAccordingToInternetConnecion();
-                            mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
-                            mRingtoneLoop.play();
+                            if(mRingtoneLoop==null){
+                                mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
+                                mRingtoneLoop.play();
+                            }
+
                         }
                     });
 
@@ -275,7 +278,14 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
             String key = getString(R.string.youtube_key);
             youtubePlayerView.initialize(key, onInitializeListener);
         }else{
+            mAlarmController = new AlarmController(this, null);
+
             finish();
+
+            Alarm alarm = getAlarm();
+
+            //setVolOriginal();
+            mAlarmController.cancelAlarm(alarm, false, true);
         }
     }
 
@@ -368,7 +378,7 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
             };
 
             handler = new android.os.Handler();
-            handler.postDelayed(runnable, 7000);
+            handler.postDelayed(runnable, 5000);
 
         }
 
