@@ -83,5 +83,12 @@
             android:defaultValue="@string/value_sunday"
             android:summary="%s"/>
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/title_category_about">
+        <Preference android:title="@string/title_alarm_version">
+            <!-- https://developer.android.com/reference/android/provider/Settings.html -->
+            <!--<intent android:action="android.settings.DATE_SETTINGS"/>-->
+        </Preference>
+    </PreferenceCategory>
+
 
 </PreferenceScreen>

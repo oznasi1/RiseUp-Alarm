@@ -40,11 +40,9 @@ import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,7 +88,7 @@ import butterknife.OnCheckedChanged;
 
 import static android.support.constraint.Constraints.TAG;
 
-public class YouTubePlayer extends YouTubeBaseActivity  {
+public class YouTubePlayer extends YouTubeBaseActivity implements com.google.android.youtube.player.YouTubePlayer.PlayerStateChangeListener {
     public static final String EXTRA_RINGING_OBJECT = "com.philliphsu.clock2.ringtone.extra.RINGING_OBJECT";
     private AlarmController mAlarmController;
     private AudioManager mAudioManager;
@@ -129,11 +127,7 @@ public class YouTubePlayer extends YouTubeBaseActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if(!ParcelableUtil.isPlaying()) {
-
-
-
 
             ParcelableUtil.setOnPlaying();
 
@@ -152,6 +146,7 @@ public class YouTubePlayer extends YouTubeBaseActivity  {
 
 
             mAlarmController = new AlarmController(this, null);
+            setContentView(R.layout.activity_you_tube_player);
 
             mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
@@ -305,6 +300,30 @@ public class YouTubePlayer extends YouTubeBaseActivity  {
                 });
     }
 
+    @Override
+    public void onLoading() {
+
+    }
+
+    @Override
+    public void onLoaded(String s) {
+
+    }
+
+    @Override
+    public void onAdStarted() {
+
+    }
+
+    @Override
+    public void onVideoStarted() {
+
+    }
+
+    @Override
+    public void onVideoEnded() {
+
+    }
 
     @Override
     public void onBackPressed() {
@@ -312,7 +331,14 @@ public class YouTubePlayer extends YouTubeBaseActivity  {
         // this activity as much as possible.
     }
 
-
+    @Override
+    public void onError(com.google.android.youtube.player.YouTubePlayer.ErrorReason errorReason) {
+        Log.e(TAG, "onError: ");
+        isErrorLoading = true;
+        updateUiAccordingToInternetConnecion();
+        mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
+        mRingtoneLoop.play();
+    }
 
     @Override
     public void onPause() {
