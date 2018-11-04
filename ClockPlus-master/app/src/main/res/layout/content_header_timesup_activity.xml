@@ -18,7 +18,7 @@
   ~ along with ClockPlus.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<com.philliphsu.clock2.timers.ui.CountdownChronometer
+<our.amazing.clock.timers.ui.CountdownChronometer
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

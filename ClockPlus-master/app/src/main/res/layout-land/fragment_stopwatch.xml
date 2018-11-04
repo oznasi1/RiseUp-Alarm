@@ -34,7 +34,7 @@
             android:orientation="horizontal"
             android:layout_above="@+id/mini_fab_layout">
 
-            <com.philliphsu.clock2.stopwatch.ui.ChronometerWithMillis
+            <our.amazing.clock.stopwatch.ui.ChronometerWithMillis
                 android:id="@+id/chronometer"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -77,7 +77,7 @@
 
     </RelativeLayout>
 
-    <com.philliphsu.clock2.UntouchableSeekBar
+    <our.amazing.clock.UntouchableSeekBar
         android:id="@+id/seek_bar"
         app:layout_anchor="@id/mini_fab_layout"
         app:layout_anchorGravity="top"

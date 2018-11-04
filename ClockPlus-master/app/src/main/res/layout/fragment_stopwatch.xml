@@ -29,7 +29,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.philliphsu.clock2.stopwatch.ui.ChronometerWithMillis
+        <our.amazing.clock.stopwatch.ui.ChronometerWithMillis
             android:id="@+id/chronometer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
 
     </LinearLayout>
 
-    <com.philliphsu.clock2.UntouchableSeekBar
+    <our.amazing.clock.UntouchableSeekBar
         android:id="@+id/seek_bar"
         app:layout_anchor="@id/chronometer"
         app:layout_anchorGravity="bottom"

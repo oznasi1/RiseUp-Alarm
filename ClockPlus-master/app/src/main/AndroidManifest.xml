@@ -17,7 +17,7 @@
   ~ along with ClockPlus.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.philliphsu.clock2">
+    package="our.amazing.clock">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -34,7 +34,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Auth"
+            android:name="our.amazing.clock.Auth"
             android:label="@string/app_name"
             android:launchMode="singleTask">
             <intent-filter>
@@ -45,25 +45,25 @@
         </activity>
 
         <receiver
-            android:name=".alarms.background.UpcomingAlarmReceiver"
+            android:name="our.amazing.clock.alarms.background.UpcomingAlarmReceiver"
             android:enabled="true"
             android:exported="false" />
 
         <activity
-            android:name=".settings.SettingsActivity"
+            android:name="our.amazing.clock.settings.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName="our.amazing.clock.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.philliphsu.clock2.MainActivity" />
+                android:value="our.amazing.clock.MainActivity" />
         </activity>
 
         <receiver
-            android:name=".alarms.background.PendingAlarmScheduler"
+            android:name="our.amazing.clock.alarms.background.PendingAlarmScheduler"
             android:enabled="true"
             android:exported="false" />
         <receiver
-            android:name=".alarms.background.OnBootUpReceiver"
+            android:name="our.amazing.clock.alarms.background.OnBootUpReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -72,37 +72,37 @@
         </receiver>
 
         <service
-            android:name=".alarms.background.OnBootUpAlarmScheduler"
+            android:name="our.amazing.clock.alarms.background.OnBootUpAlarmScheduler"
             android:enabled="true"
             android:exported="false" />
 
         <activity
             android:name=".timers.EditTimerActivity"
             android:label="@string/title_activity_create_timer"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="our.amazing.clock.MainActivity"
             android:windowSoftInputMode="adjustNothing">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.philliphsu.clock2.MainActivity" />
+                android:value="our.amazing.clock.MainActivity" />
         </activity>
         <activity
-            android:name=".ringtone.AlarmActivity"
+            android:name="our.amazing.clock.ringtone.AlarmActivity"
             android:excludeFromRecents="true"
             android:label="@string/title_activity_ringtone"
             android:launchMode="singleTask"
             android:screenOrientation="nosensor"
-            android:taskAffinity="com.philliphsu.clock2.RingtoneActivity" />
+            android:taskAffinity="our.amazing.clock.RingtoneActivity" />
 
         <service
-            android:name=".ringtone.playback.AlarmRingtoneService"
+            android:name="our.amazing.clock.ringtone.playback.AlarmRingtoneService"
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".MainActivity" />
+        <activity android:name="our.amazing.clock.MainActivity" />
         <activity
-            android:name=".YouTubePlayer"
+            android:name="our.amazing.clock.YouTubePlayer"
             android:screenOrientation="portrait" />
-        <activity android:name=".Blank"></activity>
+        <activity android:name="our.amazing.clock.Blank"></activity>
     </application>
 
 </manifest>

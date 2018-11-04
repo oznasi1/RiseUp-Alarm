@@ -4,6 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.philliphsu.clock2.Blank">
+    tools:context="our.amazing.clock.our.philliphsu.clock2.Blank">
 
 </android.support.constraint.ConstraintLayout>

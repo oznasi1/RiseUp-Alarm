@@ -18,7 +18,7 @@
   -->
 
 <fragment android:id="@+id/fragment"
-          android:name="com.philliphsu.clock2.settings.SettingsFragment"
+          android:name="our.amazing.clock.settings.SettingsFragment"
           xmlns:android="http://schemas.android.com/apk/res/android"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
