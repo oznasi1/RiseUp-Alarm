@@ -139,7 +139,8 @@ public abstract class RingtoneActivity<T extends Parcelable> extends BaseActivit
 
         Intent intent = new Intent(this, getRingtoneServiceClass())
                 .putExtra(EXTRA_RINGING_OBJECT, ParcelableUtil.marshall(mRingingObject));
-        startService(intent);
+        //startService(intent);
+        //startForegroundService(intent);
     }
 
     @Override

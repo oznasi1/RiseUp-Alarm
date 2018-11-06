@@ -28,6 +28,12 @@ public class OnBootUpReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         // Note that this will be called when the device boots up, not when the app first launches.
         // We may have a lot of alarms to reschedule, so do this in the background using an IntentService.
-        context.startService(new Intent(context, OnBootUpAlarmScheduler.class));
+        //context.startService(new Intent(context, OnBootUpAlarmScheduler.class));
+        if(android.os.Build.VERSION.SDK_INT >=26){
+            context.startForegroundService(new Intent(context, OnBootUpAlarmScheduler.class));
+        }
+        else{
+            context.startService(new Intent(context, OnBootUpAlarmScheduler.class));
+        }
     }
 }

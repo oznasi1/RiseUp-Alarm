@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="our.amazing.clock.our.philliphsu.clock2.YouTubePlayer"
+    tools:context="our.amazing.clock.YouTubePlayer"
     tools:layout_editor_absoluteY="25dp">
 
     <com.google.android.youtube.player.YouTubePlayerView

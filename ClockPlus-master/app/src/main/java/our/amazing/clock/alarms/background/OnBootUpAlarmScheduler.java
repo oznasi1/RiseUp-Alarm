@@ -58,7 +58,8 @@ public class OnBootUpAlarmScheduler extends IntentService {
         intent.setAction(ACTION_FOO);
         intent.putExtra(EXTRA_PARAM1, param1);
         intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
+        //context.startService(intent);
+        //context.startForegroundService(intent);
     }
 
     /**
@@ -73,7 +74,8 @@ public class OnBootUpAlarmScheduler extends IntentService {
         intent.setAction(ACTION_BAZ);
         intent.putExtra(EXTRA_PARAM1, param1);
         intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
+        //context.startService(intent);
+        //context.startForegroundService(intent);
     }
 
     @Override

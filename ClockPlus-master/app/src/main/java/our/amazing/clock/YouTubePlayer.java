@@ -36,6 +36,7 @@ import com.google.firebase.functions.HttpsCallableResult;
 import our.amazing.clock.ringtone.playback.RingtoneLoop;
 
 import java.util.Date;
+import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -83,6 +84,7 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(!ParcelableUtil.isPlaying()) {
+
 
             ParcelableUtil.setOnPlaying();
 

@@ -17,6 +17,7 @@
   ~ along with ClockPlus.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="our.amazing.clock">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -77,15 +78,6 @@
             android:exported="false" />
 
         <activity
-            android:name=".timers.EditTimerActivity"
-            android:label="@string/title_activity_create_timer"
-            android:parentActivityName="our.amazing.clock.MainActivity"
-            android:windowSoftInputMode="adjustNothing">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="our.amazing.clock.MainActivity" />
-        </activity>
-        <activity
             android:name="our.amazing.clock.ringtone.AlarmActivity"
             android:excludeFromRecents="true"
             android:label="@string/title_activity_ringtone"
@@ -102,7 +94,6 @@
         <activity
             android:name="our.amazing.clock.YouTubePlayer"
             android:screenOrientation="portrait" />
-        <activity android:name="our.amazing.clock.Blank"></activity>
     </application>
 
 </manifest>
