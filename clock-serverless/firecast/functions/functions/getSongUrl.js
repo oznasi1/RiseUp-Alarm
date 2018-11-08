@@ -9,8 +9,6 @@ async function getNewSongUrl(user) {
   let filteredNextGroup;
   try {
     let lastLikedSongs = await getLastLikedSongs(user);
-    //let currGroup;//TODO
-    //lastLikedSongs == null ? rootGroupId : lastLikedSong.songId;
     let nextGroup = await getNextGroup(lastLikedSongs);
     let lastChance = Object.values(nextGroup).every(song => {
       return song.groupId == rootGroupId;
@@ -52,7 +50,7 @@ async function filterGroup(group, user, lastChance) {
     .child("history");
   let snapshot = await songHistoryQuery.once("value");
   let historyGroup = snapshot.val();
-  //remove songs that already palayd
+  //remove songs that already played
   let keeper1 = Object.assign({}, group);
   for (let song in historyGroup) {
     let currHistorySongId = historyGroup[song].songId;
@@ -137,6 +135,7 @@ async function getNextGroup(lastSongs) {
     for (let i in lastSongs) {
       let nextGroupId = lastSongs[i].songId;
       res = Object.assign({}, res, await getGroup(nextGroupId));
+      //TODO: replace algorithm to dynamic program, save the next group once, and add/remove songs every time
     }
     if (lastSongs == null || Object.keys(res).length == 0) {
       return getGroup(rootGroupId);

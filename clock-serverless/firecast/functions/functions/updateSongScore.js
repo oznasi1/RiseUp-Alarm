@@ -38,6 +38,9 @@ const delayParam = 51 * 1000;
 async function updateSongScore(data, context) {
   var logMsg = {};
   try {
+    if(data.songId == null){
+      throw new Error("songId_NullException");
+    }
     let updates = {};
     let update = async () => {
       updates["songs/" + data.songId] = await updateSong(data, context);
@@ -66,7 +69,7 @@ async function updateSongScore(data, context) {
     await db.ref().update(updates);
     logMsg = updates;
   } catch (err) {
-    logMsg["error"] = err + " uid= " + context.auth.uid;
+    logMsg["error"] = err + " uid: " + context.auth.uid;
     logMsg["reqData"] = data;
     throw new functions.https.HttpsError(
       "Failed to update song score ",
