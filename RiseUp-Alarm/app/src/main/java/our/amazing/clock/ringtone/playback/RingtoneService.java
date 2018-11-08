@@ -35,6 +35,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import our.amazing.clock.R;
+import our.amazing.clock.alarms.background.OnBootUpAlarmScheduler;
 import our.amazing.clock.ringtone.RingtoneActivity;
 import our.amazing.clock.util.LocalBroadcastHelper;
 import our.amazing.clock.util.ParcelableUtil;
@@ -129,6 +130,7 @@ public abstract class RingtoneService<T extends Parcelable> extends Service {
         // Play ringtone, if not already playing
         if (mAudioManager == null && mRingtone == null) {
             // TOneverDO: Pass 0 as the first argument
+            getApplicationContext().stopService(new Intent(getApplicationContext(), OnBootUpAlarmScheduler.class));
             startForeground(R.id.ringtone_service_notification, getForegroundNotification());
 
             mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);

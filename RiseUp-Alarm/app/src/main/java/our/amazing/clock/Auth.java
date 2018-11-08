@@ -1,6 +1,7 @@
 package our.amazing.clock;
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -26,8 +27,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.FirebaseDatabase;
 import our.amazing.clock.R;
+import our.amazing.clock.alarms.Alarm;
+import our.amazing.clock.ringtone.AlarmActivity;
+import our.amazing.clock.util.ParcelableUtil;
 
 import java.util.Locale;
+
+import static our.amazing.clock.YouTubePlayer.EXTRA_RINGING_OBJECT;
 
 
 public class Auth extends AppCompatActivity {
@@ -75,6 +81,14 @@ public class Auth extends AppCompatActivity {
             }
         });
 
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user!=null){
+            islogedIn=true;
+        }
+        if(islogedIn){
+            Intent i = new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(i);
+        }
 
         signInButton = (SignInButton)findViewById(R.id.signInBtn);
 
@@ -85,6 +99,23 @@ public class Auth extends AppCompatActivity {
                 startActivityForResult(signInIntent,RC_SIGN_IN);
             }
         });
+    }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            islogedIn = true;
+        }
+        if (islogedIn) {
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(i);
+        }
+
     }
 
     @Override

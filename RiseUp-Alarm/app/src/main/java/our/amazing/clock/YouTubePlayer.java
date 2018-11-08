@@ -529,9 +529,11 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
     }
 
     protected final void stopAndFinish() {
-        Intent i = new Intent(this, AlarmRingtoneService.class);
-        stopService(i);
+        Intent ix = new Intent(this, AlarmRingtoneService.class);
+        stopService(ix);
         finish();
+
+
 
         Alarm alarm = getAlarm();
 
@@ -542,6 +544,8 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
 
         ParcelableUtil.setOffOnPlaying();
 
+        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(i);
     }
 }
 

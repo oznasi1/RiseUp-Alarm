@@ -20,12 +20,17 @@
 package our.amazing.clock.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.Timer;
+
+import our.amazing.clock.alarms.Alarm;
+
+import static our.amazing.clock.YouTubePlayer.EXTRA_RINGING_OBJECT;
 
 /**
  * Utilities to marshall and unmarshall a {@code Parcelable} to and from a byte array.
@@ -147,5 +152,15 @@ public final class ParcelableUtil {
 
     public static Boolean isPlaying() {
         return mIsPlaying;
+    }
+
+    public static Alarm getAlarm(Intent i){
+        byte[] bytes = i.getByteArrayExtra(EXTRA_RINGING_OBJECT);
+        if (bytes == null) {
+            throw new IllegalStateException("Cannot start RingtoneActivity without a ringing object");
+        }
+        Alarm alarm = (Alarm) ParcelableUtil.unmarshall(bytes, Alarm.CREATOR);
+
+        return alarm;
     }
 }
