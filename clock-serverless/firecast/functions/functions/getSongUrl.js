@@ -54,7 +54,7 @@ async function filterGroup(group, user, lastChance) {
   let keeper1 = Object.assign({}, group);
   for (let song in historyGroup) {
     let currHistorySongId = historyGroup[song].songId;
-    let currHistorySong = await getSong(currHistorySongId);
+    let currHistorySongUrl = (historyGroup[song].url != null) ? historyGroup[song].url : await getUrl(currHistorySongId);
     let timeNow = Date.now();
     let timeToForget = 1000 * 60 * 60 *24 * 7 * 2;// second * 60sec * 60minutes* 24Hours * 7Days * 2Weeks
     let isTimePassed = timeNow - historyGroup[song].timestamp > timeToForget;
@@ -63,12 +63,12 @@ async function filterGroup(group, user, lastChance) {
         delete group[currHistorySongId];
 
       }
-      else if(group[songInGroup].url === currHistorySong.url && !isTimePassed) {
+      else if(group[songInGroup].url === currHistorySongUrl && !isTimePassed) {
           delete group[songInGroup];
         }
       }
     }
-
+          ///TODO: each history log will contain the url
   //remove same artist from prev alert
   group = await tryRemoveSameArtist(user, group);
   //no songs left left get the last liked songs
@@ -161,9 +161,9 @@ async function getGroup(groupId) {
   return arrGroup;
 }
 
-async function getSongGroupId(songId) {
+async function getUrl(songId) {
   let res = await getSong(songId);
-  return res.groupId;
+  return res.url;
 }
 
 async function getLastLikedSongs(user) {
@@ -197,7 +197,7 @@ async function getSongUrl(data, context) {
 
     return res;
   } catch (err) {
-    logMsg["error"] = err + " uid= " + context.auth.uid;
+    logMsg["error"] = err;
     throw new functions.https.HttpsError("Failed to retrive url, ", err);
   } finally {
     console.log(logMsg);

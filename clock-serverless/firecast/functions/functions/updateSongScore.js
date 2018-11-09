@@ -27,9 +27,11 @@ async function updateUserLog(data, context) {
   let snapshot = await getSongHistoryIdQuery.once("value");
   let historySongLog = Object.values(snapshot.val())[0];
   let historySongId = Object.keys(snapshot.val())[0];
+  let song = await getSong(data.songId); 
 
   historySongLog.isLiked = isLiked;
   historySongLog.isRanked = "1";
+  historySongLog["url"] = song.url
   return { historySongLog, historySongId };
 }
 

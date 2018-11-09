@@ -24,7 +24,7 @@ async function updateUserSongHistory(data, context) {
     };
     const query = db.ref("users/" + uid).child("history");
 
-    logMsg = update;
+    logMsg["update"] = update;
     logMsg["userId"] = uid;
     await query.push(update);
   } catch (err) {
