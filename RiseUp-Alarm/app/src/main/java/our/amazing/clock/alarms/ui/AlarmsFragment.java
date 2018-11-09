@@ -133,6 +133,7 @@ public class AlarmsFragment extends RecyclerViewFragment<Alarm, BaseAlarmViewHol
     @Override
     public void onFabClick() {
         mTimePickerDialogController.show(0, 0, makeTimePickerDialogTag());
+
     }
 
     @Override

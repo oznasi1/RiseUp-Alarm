@@ -244,10 +244,7 @@ public class ExpandedAlarmViewHolder extends BaseAlarmViewHolder {
         // DEFAULT_RINGTONE_URI, DEFAULT_NOTIFICATION_URI, or DEFAULT_ALARM_ALERT_URI
         // depending on the type requested (i.e. what the docs calls "symbolic URI
         // which will resolved to the actual sound when played").
-        String ringtone = getAlarm().ringtone();
-        return ringtone.isEmpty() ?
-                RingtoneManager.getActualDefaultRingtoneUri(getContext(), RingtoneManager.TYPE_ALARM)
-                : Uri.parse(ringtone);
+        return Uri.parse("default");
     }
 
     private String makeTag(@IdRes int viewId) {

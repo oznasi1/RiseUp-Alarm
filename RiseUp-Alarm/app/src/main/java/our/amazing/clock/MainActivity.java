@@ -75,8 +75,11 @@ public class MainActivity extends BaseActivity {
     TabLayout mTabLayout;
 
     @Override
-    public void onBackPressed(){ //disable going back to Auth(login)
-
+    public void onBackPressed(){
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override
@@ -131,6 +134,7 @@ public class MainActivity extends BaseActivity {
         Drawable icon = Utils.getTintedDrawable(this, iconRes, color);
         DrawableCompat.setTintList(icon, color);
         tab.setIcon(icon);
+
     }
 
     @Override
