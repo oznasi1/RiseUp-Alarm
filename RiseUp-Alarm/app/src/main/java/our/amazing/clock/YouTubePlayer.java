@@ -3,6 +3,7 @@ package our.amazing.clock;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.net.sip.SipSession;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -17,6 +18,7 @@ import our.amazing.clock.util.ParcelableUtil;
 
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -161,14 +163,14 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
                                 mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
                                 mRingtoneLoop.play();
                             }
-
+                            addClickLisenersSnoozeAndDismiss();
                         }
                     });
 
                     mYoutubePlayer.setPlaybackEventListener(new com.google.android.youtube.player.YouTubePlayer.PlaybackEventListener() {
                         @Override
                         public void onPlaying() {
-
+                            addClickLisenersSnoozeAndDismiss();
                         }
 
                         @Override
@@ -232,6 +234,7 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
 
             };
 
+
             String key = getString(R.string.youtube_key);
             youtubePlayerView.initialize(key, onInitializeListener);
         }else{
@@ -244,6 +247,22 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
             //setVolOriginal();
             mAlarmController.cancelAlarm(alarm, false, true);
         }
+    }
+
+    private void addClickLisenersSnoozeAndDismiss(){
+        dismiss.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                dismissClick();
+            }
+        });
+
+        snooze.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                snoozeClick();
+            }
+        });
     }
 
     private void getSongUrlFromServer(){
@@ -295,6 +314,7 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
         updateUiAccordingToInternetConnecion();
         mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
         mRingtoneLoop.play();
+        addClickLisenersSnoozeAndDismiss();
     }
 
     @Override
@@ -416,7 +436,7 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mOrigionalMediaVolume, 0);
     }
 
-    public void onSnoozeClick(View view){
+    public void snoozeClick(){
         ParcelableUtil.setOffOnPlaying();
 
         ParcelableUtil.setFinishOn();
@@ -473,7 +493,7 @@ public class YouTubePlayer extends YouTubeBaseActivity implements com.google.and
         return alarm;
     }
 
-    public void onDismissClick(View view) {
+    public void dismissClick() {
         ParcelableUtil.setFinishOn();
         isFinish=true;
         ParcelableUtil.reset();

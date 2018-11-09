@@ -105,7 +105,6 @@
         android:layout_height="125dp"
         android:layout_marginTop="68dp"
         android:layout_marginEnd="36dp"
-        android:onClick="onSnoozeClick"
         android:src="@drawable/snoozesubtitleeng"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewSongName" />
@@ -117,7 +116,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="100dp"
         android:layout_marginEnd="8dp"
-        android:onClick="onDismissClick"
         android:src="@drawable/dismisssubtitleeng"
         app:layout_constraintEnd_toStartOf="@+id/imageViewSnooze"
         app:layout_constraintHorizontal_bias="0.0"
