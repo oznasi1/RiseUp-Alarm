@@ -130,7 +130,10 @@ public abstract class RingtoneService<T extends Parcelable> extends Service {
         // Play ringtone, if not already playing
         if (mAudioManager == null && mRingtone == null) {
             // TOneverDO: Pass 0 as the first argument
-            getApplicationContext().stopService(new Intent(getApplicationContext(), OnBootUpAlarmScheduler.class));
+
+            //added that in version code 120 - did not work
+            //getApplicationContext().stopService(new Intent(getApplicationContext(), OnBootUpAlarmScheduler.class));
+
             startForeground(R.id.ringtone_service_notification, getForegroundNotification());
 
             mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
