@@ -27,7 +27,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -35,7 +34,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="our.amazing.clock.Auth"
+            android:name=".Auth"
             android:label="@string/app_name"
             android:launchMode="singleTask">
             <intent-filter>
@@ -46,25 +45,25 @@
         </activity>
 
         <receiver
-            android:name="our.amazing.clock.alarms.background.UpcomingAlarmReceiver"
+            android:name=".alarms.background.UpcomingAlarmReceiver"
             android:enabled="true"
             android:exported="false" />
 
         <activity
-            android:name="our.amazing.clock.settings.SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName="our.amazing.clock.MainActivity">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="our.amazing.clock.MainActivity" />
         </activity>
 
         <receiver
-            android:name="our.amazing.clock.alarms.background.PendingAlarmScheduler"
+            android:name=".alarms.background.PendingAlarmScheduler"
             android:enabled="true"
             android:exported="false" />
         <receiver
-            android:name="our.amazing.clock.alarms.background.OnBootUpReceiver"
+            android:name=".alarms.background.OnBootUpReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -73,12 +72,12 @@
         </receiver>
 
         <service
-            android:name="our.amazing.clock.alarms.background.OnBootUpAlarmScheduler"
+            android:name=".alarms.background.OnBootUpAlarmScheduler"
             android:enabled="true"
             android:exported="false" />
 
         <activity
-            android:name="our.amazing.clock.ringtone.AlarmActivity"
+            android:name=".ringtone.AlarmActivity"
             android:excludeFromRecents="true"
             android:label="@string/title_activity_ringtone"
             android:launchMode="singleTask"
@@ -86,13 +85,13 @@
             android:taskAffinity="our.amazing.clock.RingtoneActivity" />
 
         <service
-            android:name="our.amazing.clock.ringtone.playback.AlarmRingtoneService"
+            android:name=".ringtone.playback.AlarmRingtoneService"
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name="our.amazing.clock.MainActivity" />
+        <activity android:name=".MainActivity" />
         <activity
-            android:name="our.amazing.clock.YouTubePlayer"
+            android:name=".playAlarmActivity"
             android:screenOrientation="portrait" />
     </application>
 

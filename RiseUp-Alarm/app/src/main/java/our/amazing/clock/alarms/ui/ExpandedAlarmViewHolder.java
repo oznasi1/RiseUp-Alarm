@@ -223,8 +223,9 @@ public class ExpandedAlarmViewHolder extends BaseAlarmViewHolder {
         DrawableCompat.setTint(ringtoneIcon, iconTint);
         mRingtone.setCompoundDrawablesRelativeWithIntrinsicBounds(ringtoneIcon, null, null, null);
 
-        String title = RingtoneManager.getRingtone(getContext(),
-                getSelectedRingtoneUri()).getTitle(getContext());
+        //String title = RingtoneManager.getRingtone(getContext(),
+               // getSelectedRingtoneUri()).getTitle(getContext());
+        String title = "default";
         mRingtone.setText(title);
     }
 

@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Parcelable;
@@ -134,7 +135,13 @@ public abstract class RingtoneService<T extends Parcelable> extends Service {
             //added that in version code 120 - did not work
             //getApplicationContext().stopService(new Intent(getApplicationContext(), OnBootUpAlarmScheduler.class));
 
-            startForeground(R.id.ringtone_service_notification, getForegroundNotification());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                startForeground(1, new Notification());
+
+            }else{
+                startForeground(R.id.ringtone_service_notification, getForegroundNotification());
+            }
+
 
             mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
             // Request audio focus first, so we don't play our ringtone on top of any

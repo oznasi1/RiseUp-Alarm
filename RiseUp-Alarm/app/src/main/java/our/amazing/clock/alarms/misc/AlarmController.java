@@ -35,6 +35,7 @@ import our.amazing.clock.alarms.Alarm;
 import our.amazing.clock.alarms.background.PendingAlarmScheduler;
 import our.amazing.clock.alarms.background.UpcomingAlarmReceiver;
 import our.amazing.clock.alarms.data.AlarmsTableManager;
+import our.amazing.clock.playAlarmActivity;
 import our.amazing.clock.ringtone.AlarmActivity;
 import our.amazing.clock.ringtone.playback.AlarmRingtoneService;
 import our.amazing.clock.util.ContentIntentUtils;
@@ -242,7 +243,7 @@ public final class AlarmController {
     }
 
     private PendingIntent alarmIntent(Alarm alarm, boolean retrievePrevious) {
-        Intent intent = new Intent(mAppContext, YouTubePlayer.class)
+        Intent intent = new Intent(mAppContext, playAlarmActivity.class)
                 .putExtra(AlarmActivity.EXTRA_RINGING_OBJECT, ParcelableUtil.marshall(alarm));
 
         int flag = retrievePrevious ? FLAG_NO_CREATE : FLAG_CANCEL_CURRENT;
