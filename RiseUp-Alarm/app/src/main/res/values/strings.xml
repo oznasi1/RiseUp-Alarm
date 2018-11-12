@@ -214,7 +214,7 @@
     <string name="alarm_auto_silenced_text">You missed your alarm.</string>
     <string name="timer_auto_silenced_text">Your timer expired.</string>
 
-    <string name="label">Label</string>
+    <string name="label">alarm name</string>
     <string name="ringtones">Ringtones</string>
 
     <string name="pause">Pause</string>

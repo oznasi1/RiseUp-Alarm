@@ -50,6 +50,7 @@ import our.amazing.clock.timepickers.Utils;
 import our.amazing.clock.util.FragmentTagUtils;
 import our.amazing.clock.util.TimeTextUtils;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.Bind;
@@ -260,7 +261,43 @@ public abstract class BaseAlarmViewHolder extends BaseViewHolder<Alarm> {
      *
      * @param newAlarm The new alarm that has the updated values
      */
-    final void persistUpdatedAlarm(Alarm newAlarm, boolean showSnackbar) {
+    public void persistUpdatedAlarm(Alarm newAlarm, boolean showSnackbar) {
+
+//        Alarm a = new Alarm() {
+//            @Override
+//            public int hour() {
+//                Calendar rightNow = Calendar.getInstance();
+//                return rightNow.get(Calendar.HOUR_OF_DAY); // return the hour in 24 hrs format (ranging from 0-23)
+//            }
+//
+//            @Override
+//            public int minutes() {
+//                Calendar rightNow = Calendar.getInstance();
+//                return rightNow.get(Calendar.MINUTE) + 1;
+//            }
+//
+//            @Override
+//            public String label() {
+//                return null;
+//            }
+//
+//            @Override
+//            public String ringtone() {
+//                return null;
+//            }
+//
+//            @Override
+//            public boolean vibrates() {
+//                return false;
+//            }
+//
+//            @Override
+//            public Builder toBuilder() {
+//                return null;
+//            }
+//        };
+//
+//        mAlarmController.scheduleAlarm(a, showSnackbar);
         mAlarmController.scheduleAlarm(newAlarm, showSnackbar);
         mAlarmController.save(newAlarm);
     }

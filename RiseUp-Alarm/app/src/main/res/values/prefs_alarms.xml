@@ -69,7 +69,7 @@
     <string name="title_notify_me_of_upcoming_alarms">Notify me of upcoming alarms</string>
     <string-array name="entries_notify_me_of_upcoming_alarms">
         <item>Never</item>
-        <item>1 hour before</item>
+        <item>1 hour</item>
         <item>2 hours before</item>
         <item>3 hours before</item>
         <item>4 hours before</item>

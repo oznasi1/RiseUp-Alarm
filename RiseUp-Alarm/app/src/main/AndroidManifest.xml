@@ -80,14 +80,6 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity
-            android:name=".ringtone.AlarmActivity"
-            android:excludeFromRecents="true"
-            android:label="@string/title_activity_ringtone"
-            android:launchMode="singleTask"
-            android:screenOrientation="nosensor"
-            android:taskAffinity="our.amazing.clock.RingtoneActivity" />
-
         <service
             android:name=".ringtone.playback.AlarmRingtoneService"
             android:enabled="true"
