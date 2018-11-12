@@ -26,7 +26,7 @@
         app:layout_constraintBottom_toTopOf="@+id/signInBtn"
         app:layout_constraintStart_toStartOf="@+id/signInBtn"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/clock" />
+         />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -112,18 +112,18 @@ tools:layout_editor_absoluteY="25dp">
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/textViewSongName" />
 
-<ImageView
-    android:id="@+id/imageViewDismiss"
-    android:layout_width="162dp"
-    android:layout_height="94dp"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="100dp"
-    android:layout_marginEnd="8dp"
-    android:src="@drawable/dismisssubtitleeng"
-    app:layout_constraintEnd_toStartOf="@+id/imageViewSnooze"
-    app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/textViewSongName" />
+    <ImageView
+        android:id="@+id/imageViewDismiss"
+        android:layout_width="162dp"
+        android:layout_height="94dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/dismisssubtitleeng"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewSnooze"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSongName" />
 
 <ImageView
     android:id="@+id/imageViewNoInternet"

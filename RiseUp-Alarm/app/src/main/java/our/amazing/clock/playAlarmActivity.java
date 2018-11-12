@@ -122,6 +122,7 @@ public class playAlarmActivity extends AppCompatActivity {
     private Handler handlerBuffer;
     private Runnable runnableStart;
     private Handler handlerStart;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,132 +156,133 @@ public class playAlarmActivity extends AppCompatActivity {
                     }
                 };
                 handlerStart = new android.os.Handler();
-                handlerStart.postDelayed(runnableStart, 15000);
+                handlerStart.postDelayed(runnableStart, 20000);
 
 
                 youtubePlayerView.initialize(new YouTubePlayerInitListener() {
                     @Override
                     public void onInitSuccess(@NonNull com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer youTubePlayer) {
-                        if(handlerStart!=null){
-                            handlerStart.removeCallbacks(runnableStart);
-                        }
-                        mYoutubePlayer = youTubePlayer;
-                        tracker = new YouTubePlayerTracker();
-                        mYoutubePlayer.addListener(tracker);
+                        if (!isErrorLoading) {
+                            if (handlerStart != null) {
+                                handlerStart.removeCallbacks(runnableStart);
+                            }
+                            mYoutubePlayer = youTubePlayer;
+                            tracker = new YouTubePlayerTracker();
+                            mYoutubePlayer.addListener(tracker);
 
-                        mYoutubePlayer.addListener(new AbstractYouTubePlayerListener() {
+                            mYoutubePlayer.addListener(new AbstractYouTubePlayerListener() {
 
 
-                            @Override
-                            public void onReady() {
+                                @Override
+                                public void onReady() {
 
-                                mYoutubePlayer.addListener(new YouTubePlayerListener() {
-                                    @Override
-                                    public void onReady() {
+                                    mYoutubePlayer.addListener(new YouTubePlayerListener() {
+                                        @Override
+                                        public void onReady() {
 
-                                    }
-
-                                    @Override
-                                    public void onStateChange(@NonNull PlayerConstants.PlayerState state) {
-                                        if (state == PlayerConstants.PlayerState.ENDED) {
-                                            mYoutubePlayer.play();
                                         }
-                                        if (state == PlayerConstants.PlayerState.PLAYING) {
+
+                                        @Override
+                                        public void onStateChange(@NonNull PlayerConstants.PlayerState state) {
+                                            if (state == PlayerConstants.PlayerState.ENDED) {
+                                                mYoutubePlayer.play();
+                                            }
+                                            if (state == PlayerConstants.PlayerState.PLAYING) {
+                                                addClickLisenersSnoozeAndDismiss();
+                                            }
+                                            if (state == PlayerConstants.PlayerState.BUFFERING || state == PlayerConstants.PlayerState.UNKNOWN || state == PlayerConstants.PlayerState.UNSTARTED) {
+                                                runnableBuffer = new Runnable() {
+                                                    public void run() {
+                                                        if (tracker.getState() == PlayerConstants.PlayerState.BUFFERING || tracker.getState() == PlayerConstants.PlayerState.UNKNOWN || tracker.getState() == PlayerConstants.PlayerState.UNSTARTED) {
+                                                            isErrorLoading = true;
+                                                            updateUiAccordingToInternetConnecion();
+                                                            if (mRingtoneLoop == null) {
+                                                                mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
+                                                                mRingtoneLoop.play();
+                                                            }
+                                                            addClickLisenersSnoozeAndDismiss();
+                                                        } else {
+                                                            if (handlerBuffer != null) {
+                                                                handlerBuffer.removeCallbacks(runnableBuffer);
+                                                            }
+                                                        }
+                                                    }
+                                                };
+
+                                                handlerBuffer = new android.os.Handler();
+                                                handlerBuffer.postDelayed(runnableBuffer, 15000);
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onPlaybackQualityChange(@NonNull PlayerConstants.PlaybackQuality playbackQuality) {
+                                        }
+
+                                        @Override
+                                        public void onPlaybackRateChange(@NonNull PlayerConstants.PlaybackRate playbackRate) {
+                                        }
+
+                                        @Override
+                                        public void onError(@NonNull PlayerConstants.PlayerError error) {
+                                            Log.e(TAG, "onError: " + error.toString());
+                                            isErrorLoading = true;
+                                            updateUiAccordingToInternetConnecion();
+                                            if (mRingtoneLoop == null) {
+                                                mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
+                                                mRingtoneLoop.play();
+                                            }
                                             addClickLisenersSnoozeAndDismiss();
                                         }
-                                        if(state==PlayerConstants.PlayerState.BUFFERING||state==PlayerConstants.PlayerState.UNKNOWN||state==PlayerConstants.PlayerState.UNSTARTED){
-                                            runnableBuffer = new Runnable() {
-                                                public void run() {
-                                                    if (tracker.getState()==PlayerConstants.PlayerState.BUFFERING||tracker.getState()==PlayerConstants.PlayerState.UNKNOWN||tracker.getState()==PlayerConstants.PlayerState.UNSTARTED){
-                                                        isErrorLoading = true;
-                                                        updateUiAccordingToInternetConnecion();
-                                                        if (mRingtoneLoop == null) {
-                                                            mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
-                                                            mRingtoneLoop.play();
-                                                        }
-                                                        addClickLisenersSnoozeAndDismiss();
-                                                    }
-                                                    else {
-                                                        if(handlerBuffer!=null){
-                                                            handlerBuffer.removeCallbacks(runnableBuffer);
-                                                        }
-                                                    }
-                                                }
-                                            };
 
-                                            handlerBuffer = new android.os.Handler();
-                                            handlerBuffer.postDelayed(runnableBuffer, 15000);
+                                        @Override
+                                        public void onApiChange() {
+
                                         }
 
-                                    }
+                                        @Override
+                                        public void onCurrentSecond(float second) {
 
-                                    @Override
-                                    public void onPlaybackQualityChange(@NonNull PlayerConstants.PlaybackQuality playbackQuality) {
-                                    }
-
-                                    @Override
-                                    public void onPlaybackRateChange(@NonNull PlayerConstants.PlaybackRate playbackRate) {
-                                    }
-
-                                    @Override
-                                    public void onError(@NonNull PlayerConstants.PlayerError error) {
-                                        Log.e(TAG, "onError: " + error.toString());
-                                        isErrorLoading = true;
-                                        updateUiAccordingToInternetConnecion();
-                                        if (mRingtoneLoop == null) {
-                                            mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
-                                            mRingtoneLoop.play();
                                         }
-                                        addClickLisenersSnoozeAndDismiss();
-                                    }
 
-                                    @Override
-                                    public void onApiChange() {
+                                        @Override
+                                        public void onVideoDuration(float duration) {
 
-                                    }
+                                        }
 
-                                    @Override
-                                    public void onCurrentSecond(float second) {
+                                        @Override
+                                        public void onVideoLoadedFraction(float loadedFraction) {
 
-                                    }
+                                        }
 
-                                    @Override
-                                    public void onVideoDuration(float duration) {
+                                        @Override
+                                        public void onVideoId(@NonNull String videoId) {
 
-                                    }
+                                        }
+                                    });
 
-                                    @Override
-                                    public void onVideoLoadedFraction(float loadedFraction) {
-
-                                    }
-
-                                    @Override
-                                    public void onVideoId(@NonNull String videoId) {
-
-                                    }
-                                });
-
-                                if (!ParcelableUtil.isSnooze()) {
-                                    getSongUrlFromServer();
-                                } else {
-                                    ParcelableUtil.setFinishOff();
-                                    mSongName = ParcelableUtil.getSongName();
-                                    mUrl = ParcelableUtil.getSongUrl();
-                                    mSongId = ParcelableUtil.getSongId();
-                                    numOfSecPlayed = ParcelableUtil.getNumSec();
-                                    songName.setText(mSongName);
-                                    listen.setVisibility(View.VISIBLE);
-                                    songName.setVisibility(View.VISIBLE);
-                                    if (mUrl == null) {
+                                    if (!ParcelableUtil.isSnooze()) {
                                         getSongUrlFromServer();
                                     } else {
-                                        mYoutubePlayer.loadVideo(mUrl, 1);
-                                        mStartDate = new Date();
+                                        ParcelableUtil.setFinishOff();
+                                        mSongName = ParcelableUtil.getSongName();
+                                        mUrl = ParcelableUtil.getSongUrl();
+                                        mSongId = ParcelableUtil.getSongId();
+                                        numOfSecPlayed = ParcelableUtil.getNumSec();
+                                        songName.setText(mSongName);
+                                        listen.setVisibility(View.VISIBLE);
+                                        songName.setVisibility(View.VISIBLE);
+                                        if (mUrl == null) {
+                                            getSongUrlFromServer();
+                                        } else {
+                                            mYoutubePlayer.loadVideo(mUrl, 1);
+                                            mStartDate = new Date();
+                                        }
                                     }
                                 }
-                            }
 
-                        });
+                            });
+                        }
                     }
 
                 }, true);
@@ -646,5 +648,6 @@ public class playAlarmActivity extends AppCompatActivity {
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(i);
     }
+
 }
 

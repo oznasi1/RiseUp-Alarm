@@ -5,3 +5,4 @@
 /clock-serverless/node_modules/*
 /clock-serverless/firecast/functions/node_modules/*
 
+/RiseUp-Alarm/app/keystore.properties
