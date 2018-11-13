@@ -33,8 +33,6 @@ import our.amazing.clock.util.ParcelableUtil;
 
 import java.util.Locale;
 
-import static our.amazing.clock.YouTubePlayer.EXTRA_RINGING_OBJECT;
-
 
 public class Auth extends AppCompatActivity {
     private static final String TAG = "Auth";

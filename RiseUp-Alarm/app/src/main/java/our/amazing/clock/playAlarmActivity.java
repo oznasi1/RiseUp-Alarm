@@ -1,42 +1,3 @@
-//package our.amazing.clock;
-//
-//import android.support.annotation.NonNull;
-//import android.support.v7.app.AppCompatActivity;
-//import android.os.Bundle;
-//
-//import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView;
-//import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener;
-//import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerInitListener;
-//
-//public class playAlarmActivity extends AppCompatActivity {
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_play_alarm);
-//
-//        YouTubePlayerView youtubePlayerView = findViewById(R.id.youtube_player_view);
-//        getLifecycle().addObserver(youtubePlayerView);
-//
-//        youtubePlayerView.initialize(new YouTubePlayerInitListener() {
-//            @Override
-//            public void onInitSuccess(@NonNull final com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer youTubePlayer) {
-//                youTubePlayer
-//                .addListener(new AbstractYouTubePlayerListener() {
-//                    @Override
-//                    public void onReady() {
-//                        String videoId = "6JYIGclVQdw";
-//                        youTubePlayer.loadVideo(videoId, 0);
-//                    }
-//                });
-//            }
-//        },true);
-//
-//
-//    }
-//}
-
-
 package our.amazing.clock;
 
 import android.content.Intent;
@@ -89,6 +50,7 @@ import java.util.Map;
 import java.util.Timer;
 
 import static android.support.constraint.Constraints.TAG;
+import static our.amazing.clock.util.DelayedSnackbarHandler.show;
 
 public class playAlarmActivity extends AppCompatActivity {
     public static final String EXTRA_RINGING_OBJECT = "our.amazing.clock.ringtone.extra.RINGING_OBJECT";
@@ -114,7 +76,6 @@ public class playAlarmActivity extends AppCompatActivity {
     private Boolean isFinish= false;
     private int numOfSecPlayed=0;
     private int count=0;
-    private com.google.android.youtube.player.YouTubePlayer.OnInitializedListener onInitializeListener;
     private com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer mYoutubePlayer;
     private int mOrigionalMediaVolume;
     private boolean isErrorLoading;
@@ -646,7 +607,7 @@ public class playAlarmActivity extends AppCompatActivity {
 
         setVolOriginal();
         mAlarmController.cancelAlarm(alarm, false, true);
-        Toast.makeText(getApplicationContext(), "Thank you, have a nice day!",
+        Toast.makeText(getApplicationContext(), R.string.have_nice_day,
                 Toast.LENGTH_SHORT).show();
 
         ParcelableUtil.setOffOnPlaying();

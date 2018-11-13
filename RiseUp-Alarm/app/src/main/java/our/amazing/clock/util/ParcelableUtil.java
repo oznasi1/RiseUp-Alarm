@@ -30,7 +30,7 @@ import java.util.Timer;
 
 import our.amazing.clock.alarms.Alarm;
 
-import static our.amazing.clock.YouTubePlayer.EXTRA_RINGING_OBJECT;
+import static our.amazing.clock.playAlarmActivity.EXTRA_RINGING_OBJECT;
 
 /**
  * Utilities to marshall and unmarshall a {@code Parcelable} to and from a byte array.

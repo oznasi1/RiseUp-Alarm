@@ -69,6 +69,7 @@
     <string name="minute">1 minute</string>
     <string name="minutes">%3$d minutes</string>
     <string name="less_than_one_minute">less than 1 minute</string>
+    <string name="have_nice_day">"Thank you, have a nice day!"</string>
 
     <string name="abbrev_days_hours_and_minutes">%1$dd %2$dh %3$dm</string>
     <string name="abbrev_days_and_hours">%1$dd %2$dh</string>

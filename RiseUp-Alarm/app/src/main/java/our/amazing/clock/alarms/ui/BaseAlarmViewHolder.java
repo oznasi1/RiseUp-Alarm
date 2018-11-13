@@ -36,7 +36,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import our.amazing.clock.R;
-import our.amazing.clock.YouTubePlayer;
 import our.amazing.clock.alarms.Alarm;
 import our.amazing.clock.alarms.misc.AlarmController;
 import our.amazing.clock.alarms.misc.AlarmPreferences;
@@ -68,7 +67,6 @@ import static our.amazing.clock.util.TimeFormatUtils.formatTime;
  */
 public abstract class BaseAlarmViewHolder extends BaseViewHolder<Alarm> {
     private static final String TAG = "BaseAlarmViewHolder";
-    private YouTubePlayer youTube;
     public AlarmController mAlarmController;
     private final AddLabelDialogController mAddLabelDialogController;
     private final TimePickerDialogController mTimePickerDialogController;

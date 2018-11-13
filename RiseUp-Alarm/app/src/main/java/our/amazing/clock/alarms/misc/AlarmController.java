@@ -30,7 +30,6 @@ import android.view.View;
 
 import our.amazing.clock.MainActivity;
 import our.amazing.clock.R;
-import our.amazing.clock.YouTubePlayer;
 import our.amazing.clock.alarms.Alarm;
 import our.amazing.clock.alarms.background.PendingAlarmScheduler;
 import our.amazing.clock.alarms.background.UpcomingAlarmReceiver;

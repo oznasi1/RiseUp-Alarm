@@ -135,12 +135,8 @@ public abstract class RingtoneService<T extends Parcelable> extends Service {
             //added that in version code 120 - did not work
             //getApplicationContext().stopService(new Intent(getApplicationContext(), OnBootUpAlarmScheduler.class));
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                startForeground(1, new Notification());
+            startForeground(R.id.ringtone_service_notification, getForegroundNotification());
 
-            }else{
-                startForeground(R.id.ringtone_service_notification, getForegroundNotification());
-            }
 
 
             mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);

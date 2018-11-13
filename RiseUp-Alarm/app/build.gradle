@@ -57,8 +57,8 @@ android {
         applicationId 'our.amazing.clock'
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 125
-        versionName "1.0.14"
+        versionCode 126
+        versionName "1.0.15"
         javaCompileOptions {
             annotationProcessorOptions {
                 includeCompileClasspath true
