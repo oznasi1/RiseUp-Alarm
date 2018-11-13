@@ -42,13 +42,13 @@
     <string name="title_snooze_duration">Snooze duration</string>
     <!-- Durations for silence after & snooze duration -->
     <string-array name="entries_duration">
-        <item>1 minute</item>
-        <item>5 minutes</item>
-        <item>10 minutes</item>
-        <item>15 minutes</item>
-        <item>20 minutes</item>
-        <item>25 minutes</item>
-        <item>30 minutes</item>
+        <item>@string/title_1_minutes</item>
+        <item>@string/title_5_minutes</item>
+        <item>@string/title_10_minutes</item>
+        <item>@string/title_15_minutes</item>
+        <item>@string/title_20_minutes</item>
+        <item>@string/title_25_minutes</item>
+        <item>@string/title_30_minutes</item>
     </string-array>
     <string-array name="values_duration">
         <item>1</item>
@@ -64,19 +64,23 @@
     <string name="key_alarm_volume">key_alarm_volume</string>
     <string name="title_alarm_volume">Alarm volume</string>
 
+    <!---->
+
+
+
     <!-- Upcoming alarm threshold -->
     <string name="key_notify_me_of_upcoming_alarms">key_notify_me_of_upcoming_alarms</string>
     <string name="title_notify_me_of_upcoming_alarms">Notify me of upcoming alarms</string>
     <string-array name="entries_notify_me_of_upcoming_alarms">
-        <item>Never</item>
-        <item>1 hour</item>
-        <item>2 hours before</item>
-        <item>3 hours before</item>
-        <item>4 hours before</item>
-        <item>5 hours before</item>
-        <item>6 hours before</item>
-        <item>7 hours before</item>
-        <item>8 hours before</item>
+        <item>@string/title_never_before</item>
+        <item>@string/title_1_before</item>
+        <item>@string/title_2_before</item>
+        <item>@string/title_3_before</item>
+        <item>@string/title_4_before</item>
+        <item>@string/title_5_before</item>
+        <item>@string/title_6_before</item>
+        <item>@string/title_7_before</item>
+        <item>@string/title_8_before</item>
     </string-array>
     <string-array name="values_notify_me_of_upcoming_alarms">
         <item>0</item>

@@ -38,6 +38,7 @@
     <string name="snooze"></string>
     <string name="done_snoozing">Done snoozing</string>
     <string name="alarm_set_for">Alarm set for %1$s from now.</string>
+    <string name="you_are_listening_to">You are listening to:</string>
     <!-- ======================================================================================= -->
 
     <!-- ==================================== TOASTS ==================================== -->
@@ -79,9 +80,27 @@
     <string name="abbrev_less_than_one_minute">&lt;1m</string>
 
     <string name="upcoming_alarm_dismissed">%1$s alarm dismissed.</string>
-    <!-- ======================================================================================= -->
+
+    <!-- ================================SNOOZE DURATION======================================== -->
+    <string name="title_1_minutes">1 minute</string>
+    <string name="title_5_minutes">5 minutes</string>
+    <string name="title_10_minutes">10 minutes</string>
+    <string name="title_15_minutes">15 minutes</string>
+    <string name="title_20_minutes">20 minutes</string>
+    <string name="title_25_minutes">25 minutes</string>
+    <string name="title_30_minutes">30 minutes</string>
 
     <!-- ==================================== NOTIFICATIONS ==================================== -->
+    <string name="title_never_before">never</string>
+    <string name="title_1_before">1 hour before</string>
+    <string name="title_2_before">2 hour before</string>
+    <string name="title_3_before">3 hour before</string>
+    <string name="title_4_before">4 hour before</string>
+    <string name="title_5_before">5 hour before</string>
+    <string name="title_6_before">6 hour before</string>
+    <string name="title_7_before">7 hour before</string>
+    <string name="title_8_before">8 hour before</string>
+
     <string name="upcoming_alarm">Upcoming alarm</string>
     <string name="alarm">Alarm</string>
     <string name="missed_alarm">Missed alarm</string>
@@ -231,4 +250,5 @@
     <!-- https://android.googlesource.com/platform/frameworks/base/+/master/core/res/res/values/strings.xml -->
     <!-- The representation of a time duration when negative. An example is -1:14. This can be used with a countdown timer for example.-->
     <string name="negative_duration">\u2212<xliff:g example="1:14" id="time">%1$s</xliff:g></string>
+
 </resources>

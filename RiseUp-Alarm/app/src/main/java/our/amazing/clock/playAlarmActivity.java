@@ -80,6 +80,8 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.utils.YouTubePlayerTracke
 
 import our.amazing.clock.ringtone.playback.RingtoneLoop;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -104,7 +106,7 @@ public class playAlarmActivity extends AppCompatActivity {
     private ImageView snooze;
     private TextView listen;
     private TextView songName;
-    private TextView rateSong;
+    private TextView timeDisplay;
     private String mSongName;
     private String mUrl;
     private String mSongId;
@@ -316,18 +318,7 @@ public class playAlarmActivity extends AppCompatActivity {
     }
 
     private void hideYoutubeUiControllers(PlayerUIController uiController) {
-        uiController.showVideoTitle(false);
-        uiController.showYouTubeButton(false);
-
-//                uiController.showBufferingProgress(false);
-//                uiController.showCurrentTime(false);
-//                uiController.showDuration(false);
-//                uiController.showFullscreenButton(false);
-//                uiController.showPlayPauseButton(false);
-        uiController.showMenuButton(false);
-//                uiController.showSeekBar(false);
         uiController.showUI(false);
-
     }
 
     private void adjustments() {
@@ -335,11 +326,25 @@ public class playAlarmActivity extends AppCompatActivity {
         adjustVibrate();
         adjustVolume();
         adjustLocale();
+        adjustTimeDisplay();
+    }
+
+    private void adjustTimeDisplay(){
+//        Alarm a = getAlarm();
+//        String hour  = Integer.toString(a.hour());
+//        String minute = Integer.toString(a.minutes());
+//
+//        timeDisplay.setText(hour+" : "+minute);
+
+        DateFormat df = new SimpleDateFormat("HH:mm");
+        Date dateobj = new Date();
+        timeDisplay.setText(df.format(dateobj));
+
     }
 
     private void bindViewsById() {
         noInternetConnection = (ImageView) findViewById(R.id.imageViewNoInternet);
-        rateSong = (TextView) findViewById(R.id.textViewRate);
+        timeDisplay = (TextView) findViewById(R.id.textViewTimeDisplay);
         songName = (TextView) findViewById(R.id.textViewSongName);
         listen = (TextView) findViewById(R.id.textViewListen);
         snooze = (ImageView) findViewById(R.id.imageViewSnooze);
@@ -530,12 +535,13 @@ public class playAlarmActivity extends AppCompatActivity {
     }
 
     private void adjustLocale(){
+
         Locale current = getResources().getConfiguration().locale;
         if(current.toString().contains("IL")) {
-            listen.setText("אתה מאזין כעת ל:");
             snooze.setImageResource(R.drawable.snoozesubtitleheb);
             dismiss.setImageResource(R.drawable.dismisssubtitleheb);
-            rateSong.setText("בבקשה דרג את השיר , על מנת שבפעם הבאה נתאים לך שירים שתאהב יותר");
+            //rateSong.setText("בבקשה דרג את השיר , על מנת שבפעם הבאה נתאים לך שירים שתאהב יותר");
+
         }
     }
 
@@ -589,7 +595,7 @@ public class playAlarmActivity extends AppCompatActivity {
             snooze.setVisibility(View.INVISIBLE);
             likeBtn.setVisibility(View.VISIBLE);
             unlikeBtn.setVisibility(View.VISIBLE);
-            rateSong.setVisibility(View.VISIBLE);
+            //rateSong.setVisibility(View.VISIBLE);
 
             stopService(new Intent(this, AlarmRingtoneService.class));
 
