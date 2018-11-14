@@ -35,10 +35,27 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 import our.amazing.clock.R;
 
@@ -55,16 +72,23 @@ import static our.amazing.clock.list.RecyclerViewFragment.EXTRA_SCROLL_TO_STABLE
 
 public class MainActivity extends BaseActivity {
     private static final String TAG = "MainActivity";
+    private static final int RC_SIGN_IN = 123;
 
     public static final int    PAGE_ALARMS          = 0;
     public static final int    PAGE_TIMERS          = 1;
     public static final int    PAGE_STOPWATCH       = 2;
     public static final int    REQUEST_THEME_CHANGE = 5;
     public static final String EXTRA_SHOW_PAGE      = "our.amazing.clock.extra.SHOW_PAGE";
-
+    FirebaseAuth mAuth;
+    GoogleSignInClient mGoogleSignInClient;
+    SignInButton signInButton;
+    ImageView welcome;
+    boolean islogedIn=false;
+    boolean wasInit = false;
+    boolean isLoginStarted = false;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private Drawable             mAddItemDrawable;
-
+    FirebaseAuth.AuthStateListener mAuthStateListener;
     @Bind(R.id.container)
     ViewPager mViewPager;
 
@@ -85,48 +109,115 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final View rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
-        // http://stackoverflow.com/a/24035591/5055032
-        // http://stackoverflow.com/a/3948036/5055032
-        // The views in our layout have begun drawing.
-        // There is no lifecycle callback that tells us when our layout finishes drawing;
-        // in my own test, drawing still isn't finished by onResume().
-        // Post a message in the UI events queue to be executed after drawing is complete,
-        // so that we may get their dimensions.
-        rootView.post(new Runnable() {
+
+        initActivity();
+
+
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
+
+
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
-            public void run() {
-                if (mViewPager.getCurrentItem() == mSectionsPagerAdapter.getCount() ) {
-                    // Restore the FAB's translationX from a previous configuration.
-                    mFab.setTranslationX(mViewPager.getWidth() / -2f + getFabPixelOffsetForXTranslation());
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                mAuth  = firebaseAuth;
+                FirebaseUser user = mAuth.getCurrentUser();
+                if(user!=null){
+                    islogedIn=true;
+                } else{
+                    if (!isLoginStarted) {
+                        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                        startActivityForResult(signInIntent, RC_SIGN_IN);
+                    }
                 }
             }
-        });
+        };
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-
-        ColorStateList tabIconColor = ContextCompat.getColorStateList(this, R.color.tab_icon_color);
-        setTabIcon(PAGE_ALARMS, R.drawable.ic_alarm_24dp, tabIconColor);
+        mAuth.addAuthStateListener(mAuthStateListener);
 
 
-        // TODO: @OnCLick instead.
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment f = mSectionsPagerAdapter.getFragment(mViewPager.getCurrentItem());
-                if (f instanceof RecyclerViewFragment) {
-                    ((RecyclerViewFragment) f).onFabClick();
-                }
+
+//
+//        FirebaseUser user = mAuth.getCurrentUser();
+//        if(user!=null){
+//            islogedIn=true;
+//        } else {
+//            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+//            startActivityForResult(signInIntent,RC_SIGN_IN);
+//        }
+
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            islogedIn = true;
+        } else {
+            //open pop up google
+            if (!isLoginStarted) {
+                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                startActivityForResult(signInIntent, RC_SIGN_IN);
             }
-        });
+        }
 
-        mAddItemDrawable = ContextCompat.getDrawable(this, R.drawable.ic_add_24dp);
-        handleActionScrollToStableId(getIntent(), false);
+    }
+
+    private void initActivity() {
+        if (!wasInit) {
+            wasInit = true;
+            final View rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
+            // http://stackoverflow.com/a/24035591/5055032
+            // http://stackoverflow.com/a/3948036/5055032
+            // The views in our layout have begun drawing.
+            // There is no lifecycle callback that tells us when our layout finishes drawing;
+            // in my own test, drawing still isn't finished by onResume().
+            // Post a message in the UI events queue to be executed after drawing is complete,
+            // so that we may get their dimensions.
+            rootView.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (mViewPager.getCurrentItem() == mSectionsPagerAdapter.getCount()) {
+                        // Restore the FAB's translationX from a previous configuration.
+                        mFab.setTranslationX(mViewPager.getWidth() / -2f + getFabPixelOffsetForXTranslation());
+                    }
+                }
+            });
+
+            mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+            mViewPager.setAdapter(mSectionsPagerAdapter);
+
+
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+            tabLayout.setupWithViewPager(mViewPager);
+
+            ColorStateList tabIconColor = ContextCompat.getColorStateList(this, R.color.tab_icon_color);
+            setTabIcon(PAGE_ALARMS, R.drawable.ic_alarm_24dp, tabIconColor);
+
+
+            // TODO: @OnCLick instead.
+            mFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Fragment f = mSectionsPagerAdapter.getFragment(mViewPager.getCurrentItem());
+                    if (f instanceof RecyclerViewFragment) {
+                        ((RecyclerViewFragment) f).onFabClick();
+                    }
+                }
+            });
+
+            mAddItemDrawable = ContextCompat.getDrawable(this, R.drawable.ic_add_24dp);
+            handleActionScrollToStableId(getIntent(), false);
+        }
     }
 
     private void setTabIcon(int index, @DrawableRes int iconRes, @NonNull final ColorStateList color) {
@@ -232,7 +323,59 @@ public class MainActivity extends BaseActivity {
                     recreate();
                 }
                 break;
+            case RC_SIGN_IN:
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                try {
+                    // Google Sign In was successful, authenticate with Firebase
+                    isLoginStarted=true;
+                    GoogleSignInAccount account = task.getResult(ApiException.class);
+                        firebaseAuthWithGoogle(account);
+
+                } catch (ApiException e) {
+                    // Google Sign In failed, update UI appropriately
+                    Log.w(TAG, "Google sign in failed", e);
+                    // ...
+                }
         }
+    }
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.e(TAG, "succes");
+                                FirebaseUser user = task.getResult().getUser();
+                                        Toast.makeText(getApplicationContext(),   R.string.login_success, Toast.LENGTH_SHORT).show();
+                                boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
+                                if (isNew) { // for the first Time
+
+//                                User newUser = new User(user.getEmail(),user.getDisplayName());
+//                                //push to dataBase
+//                                mDatabase= FirebaseDatabase.getInstance();
+//                                DatabaseReference myRef = mDatabase.getReference();
+//                                myRef.child("users").child(user.getUid()).setValue(newUser);
+//                                //myRef.child("users").setValue(user.getUid());
+
+                                } else {
+                                }
+
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Toast.makeText(getApplicationContext(), "failed", Toast.LENGTH_LONG);
+                            }
+
+                            // ...
+                        }
+
+
+
+                });
     }
 
     @Override

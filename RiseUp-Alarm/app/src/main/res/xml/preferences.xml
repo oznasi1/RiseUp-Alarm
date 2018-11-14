@@ -37,7 +37,7 @@
             android:dialogTitle="@string/title_theme"
             android:entries="@array/array_theme"
             android:entryValues="@array/array_theme"
-            android:defaultValue="@string/theme_light"
+            android:defaultValue="@string/theme_dark"
             android:summary="%s">
         </ListPreference>
         <Preference android:title="@string/title_system_date_time_settings">
@@ -46,14 +46,6 @@
         </Preference>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_category_alarms">
-        <ListPreference
-            android:key="@string/key_time_picker_style"
-            android:title="@string/title_time_picker_style"
-            android:dialogTitle="@string/title_time_picker_style"
-            android:entries="@array/array_time_picker_styles"
-            android:entryValues="@array/array_time_picker_styles"
-            android:defaultValue="@string/grid_selector"
-            android:summary="%s"/>
 
         <ListPreference
             android:key="@string/key_snooze_duration"

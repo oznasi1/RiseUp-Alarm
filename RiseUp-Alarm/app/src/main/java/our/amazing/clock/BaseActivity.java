@@ -19,6 +19,7 @@
 
 package our.amazing.clock;
 
+import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -35,6 +36,9 @@ import our.amazing.clock.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import our.amazing.clock.settings.SettingsActivity;
+
+import static our.amazing.clock.MainActivity.REQUEST_THEME_CHANGE;
 
 /**
  * Created by Phillip Hsu on 5/31/2016.
@@ -94,6 +98,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         return super.onCreateOptionsMenu(menu);
     }
+
 
     @Nullable
     public final Menu getMenu() {

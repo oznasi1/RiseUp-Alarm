@@ -327,6 +327,8 @@ public class playAlarmActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
+
+
         Date endDate = new Date();
         int numSeconds = (int) ((endDate.getTime() - mStartDate.getTime()) / 1000); // seconds played until now
         numOfSecPlayed += numSeconds;

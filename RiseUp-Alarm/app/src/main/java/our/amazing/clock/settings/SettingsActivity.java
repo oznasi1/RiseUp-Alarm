@@ -24,10 +24,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MenuItem;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 
 import our.amazing.clock.BaseActivity;
 import our.amazing.clock.R;
+
+import static our.amazing.clock.MainActivity.REQUEST_THEME_CHANGE;
 
 /**
  * Created by Phillip Hsu on 6/6/2016.
@@ -86,4 +94,6 @@ public class SettingsActivity extends BaseActivity {
         result.putExtra(EXTRA_THEME_CHANGED, !selectedTheme.equals(mInitialTheme));
         setResult(Activity.RESULT_OK, result);
     }
+
+
 }

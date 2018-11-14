@@ -38,7 +38,7 @@
         >
 
         <activity
-            android:name=".Auth"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask">
             <intent-filter>
@@ -85,7 +85,6 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".MainActivity" />
         <activity
             android:name=".playAlarmActivity"
             android:screenOrientation="portrait" />

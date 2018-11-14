@@ -12,7 +12,7 @@
     <string name="sunday">ראשון</string>
     <string name="monday">שני</string>
     <string name="title_category_about">אודות</string>
-    <string name="title_alarm_version">Rise up alarm - version 1.0.14</string>
+    <string name="title_alarm_version">"Rise up alarm -  version 1.0.15 "</string>
     <string name="title_timer_vibrate">רטט</string>
     <string name="title_system_date_time_settings">תאריך שעה</string>
     <string name="theme_light">בהיר</string>
@@ -62,4 +62,6 @@
     <string name="title_25_minutes">25 דקות</string>
     <string name="title_30_minutes">30 דקות</string>
     <string name="have_nice_day">תודה רבה, המשך יום נעים !</string>
+    <string name="snackbar_item_deleted">%1$s נמחקה</string>
+    <string name="login_success">אתה מחובר כעת</string>
 </resources>
