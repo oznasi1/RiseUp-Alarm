@@ -62,13 +62,12 @@ async function filterGroup(group, user, lastChance) {
       if (group[currHistorySongId] != undefined){
         delete group[currHistorySongId];
 
-      }
+      }//TODO: change filterin Line 63 by adding check if LIKE and time is not passsed
       else if(group[songInGroup].url === currHistorySongUrl && !isTimePassed) {
           delete group[songInGroup];
         }
       }
     }
-          ///TODO: each history log will contain the url
   //remove same artist from prev alert
   group = await tryRemoveSameArtist(user, group);
   //no songs left left get the last liked songs
