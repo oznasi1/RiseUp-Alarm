@@ -20,13 +20,24 @@
 package our.amazing.clock.alarms.background;
 
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 
+import our.amazing.clock.R;
 import our.amazing.clock.alarms.Alarm;
 import our.amazing.clock.alarms.data.AlarmCursor;
 import our.amazing.clock.alarms.data.AlarmsTableManager;
 import our.amazing.clock.alarms.misc.AlarmController;
+import our.amazing.clock.ringtone.playback.AlarmRingtoneService;
+import our.amazing.clock.util.TimeFormatUtils;
+
+import static android.view.accessibility.AccessibilityNodeInfo.ACTION_DISMISS;
+import static our.amazing.clock.util.ParcelableUtil.getRingingObject;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -44,7 +55,41 @@ public class OnBootUpAlarmScheduler extends IntentService {
 
     public OnBootUpAlarmScheduler() {
         super("OnBootUpAlarmScheduler");
+            //startForeground(R.id.ringtone_service_notification, getForegroundNotification());
+
     }
+
+    private  Notification getForegroundNotification() {
+         String ACTION_SNOOZE = "our.amazing.clock.ringtone.action.SNOOZE";
+         String ACTION_DISMISS = "our.amazing.clock.ringtone.action.DISMISS";
+
+        String title = getRingingObject().label().isEmpty()
+                ? getString(R.string.alarm)
+                : getRingingObject().label();
+        return new NotificationCompat.Builder(this)
+                // Required contents
+                .setSmallIcon(R.drawable.ic_alarm_24dp)
+                .setContentTitle(title)
+                .setContentText(TimeFormatUtils.formatTime(this, System.currentTimeMillis()))
+                .addAction(R.drawable.ic_snooze_24dp,
+                        getString(R.string.snooze),
+                        getPendingIntent(ACTION_SNOOZE, getRingingObject().getIntId()))
+                .addAction(R.drawable.ic_dismiss_alarm_24dp,
+                        getString(R.string.dismiss),
+                        getPendingIntent(ACTION_DISMISS, getRingingObject().getIntId()))
+                .build();
+    }
+
+    protected final PendingIntent getPendingIntent(@NonNull String action, int requestCode) {
+        Intent intent = new Intent(this, getClass())
+                .setAction(action);
+        return PendingIntent.getService(
+                this,
+                requestCode,
+                intent,
+                PendingIntent.FLAG_ONE_SHOT);
+    }
+
 
     /**
      * Starts this service to perform action Foo with the given parameters. If

@@ -1,5 +1,6 @@
 package our.amazing.clock;
 
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.net.sip.SipSession;
@@ -53,8 +54,9 @@ import static android.support.constraint.Constraints.TAG;
 import static our.amazing.clock.util.DelayedSnackbarHandler.show;
 
 public class playAlarmActivity extends AppCompatActivity {
+    private static final String TAG = "playAlarmActivity";
     public static final String EXTRA_RINGING_OBJECT = "our.amazing.clock.ringtone.extra.RINGING_OBJECT";
-    private AlarmController mAlarmController;
+    public AlarmController mAlarmController;
     private AudioManager mAudioManager;
     private FirebaseFunctions mFunctions;
     private RingtoneLoop mRingtoneLoop;
@@ -85,6 +87,7 @@ public class playAlarmActivity extends AppCompatActivity {
     private Handler handlerBuffer;
     private Runnable runnableStart;
     private Handler handlerStart;
+    private NotificationManager mNotificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

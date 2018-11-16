@@ -44,6 +44,7 @@ public final class ParcelableUtil {
     static Boolean mIsFinish = false;
     static Timer t = new Timer();
     static Boolean mIsPlaying = false;
+    static Alarm mRingingObject ;
 
     public static byte[] marshall(Parcelable parcelable) {
         Parcel parcel = Parcel.obtain();
@@ -162,5 +163,13 @@ public final class ParcelableUtil {
         Alarm alarm = (Alarm) ParcelableUtil.unmarshall(bytes, Alarm.CREATOR);
 
         return alarm;
+    }
+
+    public static void saveRingingObject(Alarm ringingObject){
+        mRingingObject = ringingObject;
+    }
+
+    public static Alarm getRingingObject(){
+        return mRingingObject;
     }
 }

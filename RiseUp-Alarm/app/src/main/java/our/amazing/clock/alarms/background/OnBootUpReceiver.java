@@ -23,6 +23,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
+
+import static com.crashlytics.android.beta.Beta.TAG;
 
 public class OnBootUpReceiver extends BroadcastReceiver {
     @Override
@@ -30,11 +33,17 @@ public class OnBootUpReceiver extends BroadcastReceiver {
         // Note that this will be called when the device boots up, not when the app first launches.
         // We may have a lot of alarms to reschedule, so do this in the background using an IntentService.
         //context.startService(new Intent(context, OnBootUpAlarmScheduler.class));
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            context.startForegroundService(new Intent(context, OnBootUpAlarmScheduler.class));
-        }
-        else{
-            context.startService(new Intent(context, OnBootUpAlarmScheduler.class));
-        }
+//        Log.i(TAG, "onReceive: OnBootUpReceiver >>");
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+//            context.startForegroundService(new Intent(context, OnBootUpAlarmScheduler.class));
+//        }
+//        else{
+//            context.startService(new Intent(context, OnBootUpAlarmScheduler.class));
+//        }
+//        Log.i(TAG, "onReceive: OnBootUpReceiver <<");
+
+        context.startService(new Intent(context, OnBootUpAlarmScheduler.class));
+
+
     }
 }

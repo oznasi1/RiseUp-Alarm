@@ -36,6 +36,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import our.amazing.clock.R;
+import our.amazing.clock.alarms.Alarm;
 import our.amazing.clock.alarms.background.OnBootUpAlarmScheduler;
 import our.amazing.clock.ringtone.RingtoneActivity;
 import our.amazing.clock.util.LocalBroadcastHelper;
@@ -127,6 +128,8 @@ public abstract class RingtoneService<T extends Parcelable> extends Service {
                 throw new IllegalStateException("Cannot start RingtoneService without a ringing object");
             }
             mRingingObject = ParcelableUtil.unmarshall(bytes, getParcelableCreator());
+            ParcelableUtil.saveRingingObject((Alarm) mRingingObject);
+
         }
         // Play ringtone, if not already playing
         if (mAudioManager == null && mRingtone == null) {
@@ -135,8 +138,12 @@ public abstract class RingtoneService<T extends Parcelable> extends Service {
             //added that in version code 120 - did not work
             //getApplicationContext().stopService(new Intent(getApplicationContext(), OnBootUpAlarmScheduler.class));
 
-            startForeground(R.id.ringtone_service_notification, getForegroundNotification());
 
+//            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O){
+//                startForeground(R.id.ringtone_service_notification, getForegroundNotification());
+//            }
+//
+            startForeground(R.id.ringtone_service_notification, getForegroundNotification());
 
 
             mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
@@ -212,7 +219,7 @@ public abstract class RingtoneService<T extends Parcelable> extends Service {
         LocalBroadcastHelper.sendBroadcast(this, RingtoneActivity.ACTION_FINISH);
     }
 
-    /**
+     /*
      * Exposed so subclasses can create their notification actions.
      */
     protected final PendingIntent getPendingIntent(@NonNull String action, int requestCode) {
