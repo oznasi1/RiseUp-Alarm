@@ -34,16 +34,22 @@ public class OnBootUpReceiver extends BroadcastReceiver {
         // We may have a lot of alarms to reschedule, so do this in the background using an IntentService.
         //context.startService(new Intent(context, OnBootUpAlarmScheduler.class));
 //        Log.i(TAG, "onReceive: OnBootUpReceiver >>");
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 //            context.startForegroundService(new Intent(context, OnBootUpAlarmScheduler.class));
-//        }
-//        else{
+//            //context.startService(new Intent(context, OnBootUpAlarmScheduler.class));
+//        } else {
 //            context.startService(new Intent(context, OnBootUpAlarmScheduler.class));
 //        }
+
 //        Log.i(TAG, "onReceive: OnBootUpReceiver <<");
 
-        context.startService(new Intent(context, OnBootUpAlarmScheduler.class));
-
+       // context.startService(new Intent(context, OnBootUpAlarmScheduler.class));
+        if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
+            //OnBootUpAlarmScheduler.enqueueWork(context, new Intent(context,OnBootUpAlarmScheduler.class));
+            //OnBootUpAlarmScheduler.enqueueWork(context,OnBootUpAlarmScheduler.class,OnBootUpAlarmScheduler.JOB_ID,intent);
+            OnBootUpAlarmScheduler.schedule(context);
+        }
 
     }
 }

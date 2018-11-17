@@ -22,6 +22,7 @@ package our.amazing.clock.alarms.background;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import our.amazing.clock.alarms.Alarm;
 import our.amazing.clock.alarms.data.AlarmCursor;
@@ -29,6 +30,7 @@ import our.amazing.clock.alarms.data.AlarmsTableManager;
 import our.amazing.clock.alarms.misc.AlarmController;
 
 import our.amazing.clock.util.Preconditions;
+
 
 /**
  * Used to reschedule recurring alarms that were dismissed in their upcoming state, so {@link Alarm#ringsAt()}
@@ -41,9 +43,11 @@ public class PendingAlarmScheduler extends BroadcastReceiver {
     // We include the class name in the string to distinguish this constant from the one defined
     // in UpcomingAlarmReceiver.
     public static final String EXTRA_ALARM_ID = "PendingAlarmScheduler.extra.ALARM_ID";
+    private static final String TAG = "PendingAlarmScheduler";
 
     @Override
     public void onReceive(final Context context, Intent intent) {
+        Log.i(TAG, "onReceive: >>");
         final long id = intent.getLongExtra(EXTRA_ALARM_ID, -1);
         if (id < 0) {
             throw new IllegalStateException("No alarm id received");
@@ -74,5 +78,9 @@ public class PendingAlarmScheduler extends BroadcastReceiver {
                 controller.save(alarm);
             }
         }).start();
+        Log.i(TAG, "onReceive: <<");
+
     }
+
+
 }

@@ -35,6 +35,7 @@ import android.widget.TextView;
 
 import our.amazing.clock.BaseActivity;
 import our.amazing.clock.R;
+import our.amazing.clock.alarms.Alarm;
 import our.amazing.clock.ringtone.playback.RingtoneService;
 import our.amazing.clock.util.LocalBroadcastHelper;
 import our.amazing.clock.util.ParcelableUtil;
@@ -121,6 +122,8 @@ public abstract class RingtoneActivity<T extends Parcelable> extends BaseActivit
             throw new IllegalStateException("Cannot start RingtoneActivity without a ringing object");
         }
         mRingingObject = ParcelableUtil.unmarshall(bytes, getParcelableCreator());
+        ParcelableUtil.saveRingingObject((Alarm) mRingingObject);
+
         sIsAlive = true;
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
@@ -134,12 +137,12 @@ public abstract class RingtoneActivity<T extends Parcelable> extends BaseActivit
         mAutoSilencedText.setText(getAutoSilencedText());
         mLeftButton.setText(getLeftButtonText());
         mRightButton.setText(getRightButtonText());
-        //mLeftButton.setCompoundDrawablesWithIntrinsicBounds(0, getLeftButtonDrawable(), 0, 0);
-        //mRightButton.setCompoundDrawablesWithIntrinsicBounds(0, getRightButtonDrawable(), 0, 0);
+        mLeftButton.setCompoundDrawablesWithIntrinsicBounds(0, getLeftButtonDrawable(), 0, 0);
+        mRightButton.setCompoundDrawablesWithIntrinsicBounds(0, getRightButtonDrawable(), 0, 0);
 
         Intent intent = new Intent(this, getRingtoneServiceClass())
                 .putExtra(EXTRA_RINGING_OBJECT, ParcelableUtil.marshall(mRingingObject));
-        //startService(intent);
+        startService(intent);
         //startForegroundService(intent);
     }
 

@@ -139,11 +139,11 @@ public abstract class RingtoneService<T extends Parcelable> extends Service {
             //getApplicationContext().stopService(new Intent(getApplicationContext(), OnBootUpAlarmScheduler.class));
 
 
-//            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O){
-//                startForeground(R.id.ringtone_service_notification, getForegroundNotification());
-//            }
-//
-            startForeground(R.id.ringtone_service_notification, getForegroundNotification());
+            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O){
+                startForeground(R.id.ringtone_service_notification, getForegroundNotification());
+            }
+
+            //startForeground(R.id.ringtone_service_notification, getForegroundNotification());
 
 
             mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
@@ -180,6 +180,10 @@ public abstract class RingtoneService<T extends Parcelable> extends Service {
         super.onCreate();
         // Pretty sure this won't ever get called anymore... b/c EditAlarmActivity, the only component
         // that sends such a broadcast, is deprecated.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(R.id.ringtone_service_notification, getForegroundNotification());
+            //context.startService(new Intent(context, OnBootUpAlarmScheduler.class));
+        }
         LocalBroadcastHelper.registerReceiver(this, mNotifyMissedReceiver, ACTION_NOTIFY_MISSED);
     }
 

@@ -69,7 +69,7 @@ public class AlarmActivity extends RingtoneActivity<Alarm> {
         // Even though the base implementation calls finish() on this instance and starts a new
         // instance, this instance will still be alive with all of its member state intact at
         // this point. So this notification will still refer to the Alarm that was just missed.
-        //postMissedAlarmNote();
+        postMissedAlarmNote();
     }
 
     @Override
@@ -138,7 +138,7 @@ public class AlarmActivity extends RingtoneActivity<Alarm> {
     @Override
     protected void showAutoSilenced() {
         super.showAutoSilenced();
-        //postMissedAlarmNote();
+        postMissedAlarmNote();
     }
 
     private void postMissedAlarmNote() {

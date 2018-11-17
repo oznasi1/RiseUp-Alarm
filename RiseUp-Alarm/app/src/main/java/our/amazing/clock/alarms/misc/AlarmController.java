@@ -87,6 +87,7 @@ public final class AlarmController {
      * of a PendingIntent is also considered to determine equality of two intents.
      */
     public void scheduleAlarm(Alarm alarm, boolean showSnackbar) {
+        Log.i(TAG, "scheduleAlarm: " +Boolean.toString(alarm.isEnabled()) );
         if (!alarm.isEnabled()) {
             return;
         }
@@ -223,10 +224,10 @@ public final class AlarmController {
     }
 
     public void removeUpcomingAlarmNotification(Alarm a) {
-        Intent intent = new Intent(mAppContext, UpcomingAlarmReceiver.class)
-                .setAction(UpcomingAlarmReceiver.ACTION_CANCEL_NOTIFICATION)
-                .putExtra(UpcomingAlarmReceiver.EXTRA_ALARM, ParcelableUtil.marshall(a));
-        mAppContext.sendBroadcast(intent);
+//        Intent intent = new Intent(mAppContext, UpcomingAlarmReceiver.class)
+//                .setAction(UpcomingAlarmReceiver.ACTION_CANCEL_NOTIFICATION)
+//                .putExtra(UpcomingAlarmReceiver.EXTRA_ALARM, ParcelableUtil.marshall(a));
+//        mAppContext.sendBroadcast(intent);
     }
 
     public void save(final Alarm alarm) {

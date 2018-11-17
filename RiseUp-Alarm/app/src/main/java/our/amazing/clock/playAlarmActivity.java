@@ -13,6 +13,7 @@ import our.amazing.clock.R;
 import our.amazing.clock.alarms.Alarm;
 import our.amazing.clock.alarms.misc.AlarmController;
 import our.amazing.clock.ringtone.AlarmActivity;
+import our.amazing.clock.ringtone.RingtoneActivity;
 import our.amazing.clock.ringtone.playback.AlarmRingtoneService;
 import our.amazing.clock.util.ParcelableUtil;
 
@@ -52,8 +53,10 @@ import java.util.Timer;
 
 import static android.support.constraint.Constraints.TAG;
 import static our.amazing.clock.util.DelayedSnackbarHandler.show;
+import static our.amazing.clock.util.ParcelableUtil.getRingingObject;
 
-public class playAlarmActivity extends AppCompatActivity {
+//        setVolumeControlStream(AudioManager.STREAM_ALARM);
+public class playAlarmActivity extends AppCompatActivity{
     private static final String TAG = "playAlarmActivity";
     public static final String EXTRA_RINGING_OBJECT = "our.amazing.clock.ringtone.extra.RINGING_OBJECT";
     public AlarmController mAlarmController;
@@ -89,6 +92,22 @@ public class playAlarmActivity extends AppCompatActivity {
     private Handler handlerStart;
     private NotificationManager mNotificationManager;
 
+//    @Override
+//    protected void onLeftButtonClick() {
+//        mAlarmController.snoozeAlarm(getRingingObject());
+//        // Can't call dismiss() because we don't want to also call cancelAlarm()! Why? For example,
+//        // we don't want the alarm, if it has no recurrence, to be turned off right now.
+//        stopAndFinish();
+//    }
+//
+//    @Override
+//    protected void onRightButtonClick() {
+//        // TODO do we really need to cancel the intent and alarm?
+//        mAlarmController.cancelAlarm(getRingingObject(), false, true);
+//        stopAndFinish();
+//    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +121,9 @@ public class playAlarmActivity extends AppCompatActivity {
                 addFlagToActivity();
 
                 mAlarmController = new AlarmController(this, null);
+                mAlarmController.removeUpcomingAlarmNotification(getAlarm());
+
+                mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 mFunctions = FirebaseFunctions.getInstance();
 
                 setContentView(R.layout.activity_play_alarm);
@@ -281,6 +303,12 @@ public class playAlarmActivity extends AppCompatActivity {
         }
     }
 
+    private void startAlarmRingtoneService(){
+        Intent intent = new Intent(this, AlarmRingtoneService.class)
+                .putExtra(EXTRA_RINGING_OBJECT, ParcelableUtil.marshall(getAlarm()));
+        startService(intent);
+    }
+
     private void hideYoutubeUiControllers(PlayerUIController uiController) {
         uiController.showUI(false);
     }
@@ -315,7 +343,7 @@ public class playAlarmActivity extends AppCompatActivity {
         dismiss = (ImageView) findViewById(R.id.imageViewDismiss);
         likeBtn = (ImageButton) findViewById(R.id.imageButtonLike);
         unlikeBtn = (ImageButton) findViewById(R.id.imageButtonUnlike);
-        youtubePlayerView = findViewById(R.id.youtube_player_view);
+        youtubePlayerView = (com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView) findViewById(R.id.youtube_player_view);
     }
 
     private void addFlagToActivity() {
@@ -483,8 +511,7 @@ public class playAlarmActivity extends AppCompatActivity {
             mRingtoneLoop.stop();
         }
 
-        Intent i = new Intent(this, AlarmRingtoneService.class);
-        stopService(i);
+        stopAlarmRingtoneService();
         finish();
     }
 
@@ -563,7 +590,7 @@ public class playAlarmActivity extends AppCompatActivity {
             unlikeBtn.setVisibility(View.VISIBLE);
             //rateSong.setVisibility(View.VISIBLE);
 
-            stopService(new Intent(this, AlarmRingtoneService.class));
+            stopAlarmRingtoneService();
 
             Date endDate = new Date();
             int numSeconds = (int) ((endDate.getTime() - mStartDate.getTime()) / 1000);
@@ -580,6 +607,11 @@ public class playAlarmActivity extends AppCompatActivity {
             mRingtoneLoop.stop();
             stopAndFinish();
         }
+    }
+
+    private void stopAlarmRingtoneService() {
+//        Intent i = new Intent(this, AlarmRingtoneService.class);
+//        stopService(i);
     }
 
     private void updateScore(boolean isLike ){
@@ -604,8 +636,7 @@ public class playAlarmActivity extends AppCompatActivity {
     }
 
     protected final void stopAndFinish() {
-        Intent ix = new Intent(this, AlarmRingtoneService.class);
-        stopService(ix);
+    stopAlarmRingtoneService();
         finish();
 
         Alarm alarm = getAlarm();
