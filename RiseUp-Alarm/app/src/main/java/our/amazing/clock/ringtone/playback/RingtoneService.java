@@ -37,7 +37,7 @@ import android.util.Log;
 
 import our.amazing.clock.R;
 import our.amazing.clock.alarms.Alarm;
-import our.amazing.clock.alarms.background.OnBootUpAlarmScheduler;
+//import our.amazing.clock.alarms.background.OnBootUpAlarmScheduler;
 import our.amazing.clock.ringtone.RingtoneActivity;
 import our.amazing.clock.util.LocalBroadcastHelper;
 import our.amazing.clock.util.ParcelableUtil;

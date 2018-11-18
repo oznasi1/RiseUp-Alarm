@@ -24,6 +24,8 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.provider.ContactsContract;
+import android.provider.Settings;
 
 import java.io.IOException;
 
@@ -36,7 +38,7 @@ public final class RingtoneLoop extends  Activity {
 
     private final Context mContext;
     private final AudioManager mAudioManager;
-    private final Uri mUri;
+    private  Uri mUri;
 
     private MediaPlayer mMediaPlayer;
 
@@ -55,15 +57,9 @@ public final class RingtoneLoop extends  Activity {
     }
 
     public void play() {
-//        Intent i = new Intent(mContext,YouTubePlayer.class);
-//        //i.putExtra("hour","16");
-//        mContext.startActivity(i);
-
-
         try {
             mMediaPlayer = new MediaPlayer();
             mMediaPlayer.setDataSource(mContext, mUri);
-            if (mAudioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
                 // "Must call this method before prepare() or prepareAsync() in order
                 // for the target stream type to become effective thereafter."
                 mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
@@ -73,7 +69,7 @@ public final class RingtoneLoop extends  Activity {
                 // MediaPlayer is ready for playback."
                 mMediaPlayer.prepare();
                 mMediaPlayer.start();
-            }
+
         } catch (SecurityException | IOException e) {
             destroyLocalPlayer();
         }

@@ -19,7 +19,6 @@
 
 package our.amazing.clock;
 
-import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -32,13 +31,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
-import our.amazing.clock.R;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import our.amazing.clock.settings.SettingsActivity;
-
-import static our.amazing.clock.MainActivity.REQUEST_THEME_CHANGE;
 
 /**
  * Created by Phillip Hsu on 5/31/2016.
@@ -50,7 +44,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     Toolbar mToolbar;
 
     private Menu mMenu;
-
+    protected ExceptionHandler app;
     @LayoutRes protected abstract int layoutResId();
     @MenuRes   protected abstract int menuResId();
 
@@ -76,7 +70,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             setTheme(R.style.AppTheme_Black);
         }
         // ========================================================================================
+
         setContentView(layoutResId());
+        //app = new ExceptionHandler();
+
         // Direct volume changes to the alarm stream
         setVolumeControlStream(AudioManager.STREAM_ALARM);
         ButterKnife.bind(this);

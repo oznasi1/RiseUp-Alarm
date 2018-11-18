@@ -21,6 +21,7 @@ package our.amazing.clock.alarms.misc;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.job.JobScheduler;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -97,13 +98,16 @@ public final class AlarmController {
         // alarm is updated to recur on a weekday later than the current day.
         removeUpcomingAlarmNotification(alarm);
 
+
         AlarmManager am = (AlarmManager) mAppContext.getSystemService(Context.ALARM_SERVICE);
 
         final long ringAt = alarm.isSnoozed() ? alarm.snoozingUntil() : alarm.ringsAt();
         final PendingIntent alarmIntent = alarmIntent(alarm, false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             PendingIntent showIntent = ContentIntentUtils.create(mAppContext, MainActivity.PAGE_ALARMS, alarm.getId());
+
             AlarmManager.AlarmClockInfo info = new AlarmManager.AlarmClockInfo(ringAt, showIntent);
+
             am.setAlarmClock(info, alarmIntent);
         } else {
             // WAKEUP alarm types wake the CPU up, but NOT the screen;
@@ -114,15 +118,15 @@ public final class AlarmController {
             alarmChanged.putExtra("alarmSet", true/*enabled*/);
             mAppContext.sendBroadcast(alarmChanged);
         }
-
-        final int hoursToNotifyInAdvance = AlarmPreferences.hoursBeforeUpcoming(mAppContext);
-        if (hoursToNotifyInAdvance > 0 || alarm.isSnoozed()) {
-            // If snoozed, upcoming note posted immediately.
-            long upcomingAt = ringAt - HOURS.toMillis(hoursToNotifyInAdvance);
-            // We use a WAKEUP alarm to send the upcoming alarm notification so it goes off even if the
-            // device is asleep. Otherwise, it will not go off until the device is turned back on.
-            am.set(AlarmManager.RTC_WAKEUP, upcomingAt, notifyUpcomingAlarmIntent(alarm, false));
-        }
+//
+//        final int hoursToNotifyInAdvance = AlarmPreferences.hoursBeforeUpcoming(mAppContext);
+//        if (hoursToNotifyInAdvance > 0 || alarm.isSnoozed()) {
+//            // If snoozed, upcoming note posted immediately.
+//            long upcomingAt = ringAt - HOURS.toMillis(hoursToNotifyInAdvance);
+//            // We use a WAKEUP alarm to send the upcoming alarm notification so it goes off even if the
+//            // device is asleep. Otherwise, it will not go off until the device is turned back on.
+//            am.set(AlarmManager.RTC_WAKEUP, upcomingAt, notifyUpcomingAlarmIntent(alarm, false));
+//        }
 
         if (showSnackbar) {
             String message = mAppContext.getString(R.string.alarm_set_for,
@@ -156,11 +160,11 @@ public final class AlarmController {
             }
         }
 
-        pi = notifyUpcomingAlarmIntent(alarm, true);
-        if (pi != null) {
-            am.cancel(pi);
-            pi.cancel();
-        }
+//        pi = notifyUpcomingAlarmIntent(alarm, true);
+//        if (pi != null) {
+//            am.cancel(pi);
+//            pi.cancel();
+//        }
 
         // Does nothing if it's not posted.
         removeUpcomingAlarmNotification(alarm);
@@ -175,7 +179,7 @@ public final class AlarmController {
             long time = alarm.isSnoozed() ? alarm.snoozingUntil() : alarm.ringsAt();
             String msg = mAppContext.getString(R.string.upcoming_alarm_dismissed,
                     TimeFormatUtils.formatTime(mAppContext, time));
-            //showSnackbar(msg);
+            showSnackbar(msg);
         }
         // ------------------------------------------------------------------------------------
 

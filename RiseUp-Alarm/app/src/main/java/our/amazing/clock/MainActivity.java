@@ -43,6 +43,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -57,6 +58,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import io.fabric.sdk.android.Fabric;
 import our.amazing.clock.R;
 
 import our.amazing.clock.alarms.ui.AlarmsFragment;
@@ -89,6 +91,9 @@ public class MainActivity extends BaseActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private Drawable             mAddItemDrawable;
     FirebaseAuth.AuthStateListener mAuthStateListener;
+
+
+
     @Bind(R.id.container)
     ViewPager mViewPager;
 
@@ -109,6 +114,8 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
+        //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         initActivity();
 

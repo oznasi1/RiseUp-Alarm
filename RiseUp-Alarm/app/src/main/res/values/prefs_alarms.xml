@@ -67,31 +67,51 @@
     <!---->
 
 
+    <!--&lt;!&ndash; Upcoming alarm threshold &ndash;&gt;-->
+    <!--<string name="key_notify_me_of_upcoming_alarms">key_notify_me_of_upcoming_alarms</string>-->
+    <!--<string name="title_notify_me_of_upcoming_alarms">Notify me of upcoming alarms</string>-->
+    <!--<string-array name="entries_notify_me_of_upcoming_alarms">-->
+        <!--<item>@string/title_never_before</item>-->
+        <!--<item>@string/title_1_before</item>-->
+        <!--<item>@string/title_2_before</item>-->
+        <!--<item>@string/title_3_before</item>-->
+        <!--<item>@string/title_4_before</item>-->
+        <!--<item>@string/title_5_before</item>-->
+        <!--<item>@string/title_6_before</item>-->
+        <!--<item>@string/title_7_before</item>-->
+        <!--<item>@string/title_8_before</item>-->
+    <!--</string-array>-->
+
+
+
+    <!--&lt;!&ndash; Upcoming alarm threshold &ndash;&gt;-->
+    <!--<string name="key_notify_me_of_upcoming_alarms">key_notify_me_of_upcoming_alarms</string>-->
+    <!--<string name="title_notify_me_of_upcoming_alarms">Notify me of upcoming alarms</string>-->
+    <!--<string-array name="entries_notify_me_of_upcoming_alarms">-->
+        <!--<item>@string/title_never_before</item>-->
+    <!--</string-array>-->
+    <!--<string-array name="values_notify_me_of_upcoming_alarms">-->
+        <!--<item>0</item>-->
+        <!--<item>1</item>-->
+        <!--<item>2</item>-->
+        <!--<item>3</item>-->
+        <!--<item>4</item>-->
+        <!--<item>5</item>-->
+        <!--<item>6</item>-->
+        <!--<item>7</item>-->
+        <!--<item>8</item>-->
+    <!--</string-array>-->
+
 
     <!-- Upcoming alarm threshold -->
     <string name="key_notify_me_of_upcoming_alarms">key_notify_me_of_upcoming_alarms</string>
     <string name="title_notify_me_of_upcoming_alarms">Notify me of upcoming alarms</string>
     <string-array name="entries_notify_me_of_upcoming_alarms">
         <item>@string/title_never_before</item>
-        <item>@string/title_1_before</item>
-        <item>@string/title_2_before</item>
-        <item>@string/title_3_before</item>
-        <item>@string/title_4_before</item>
-        <item>@string/title_5_before</item>
-        <item>@string/title_6_before</item>
-        <item>@string/title_7_before</item>
-        <item>@string/title_8_before</item>
     </string-array>
     <string-array name="values_notify_me_of_upcoming_alarms">
         <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
+
     </string-array>
 
     <!-- First day of week -->

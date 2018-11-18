@@ -37,7 +37,7 @@
             android:dialogTitle="@string/title_theme"
             android:entries="@array/array_theme"
             android:entryValues="@array/array_theme"
-            android:defaultValue="@string/theme_dark"
+            android:defaultValue="@string/theme_black"
             android:summary="%s">
         </ListPreference>
         <Preference android:title="@string/title_system_date_time_settings">
@@ -64,7 +64,7 @@
             android:dialogTitle="@string/title_notify_me_of_upcoming_alarms"
             android:entries="@array/entries_notify_me_of_upcoming_alarms"
             android:entryValues="@array/values_notify_me_of_upcoming_alarms"
-            android:defaultValue="2"
+            android:defaultValue="0"
             android:summary="%s"/>
         <ListPreference
             android:key="@string/key_first_day_of_week"

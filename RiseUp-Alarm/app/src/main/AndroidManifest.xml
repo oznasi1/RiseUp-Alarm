@@ -50,7 +50,6 @@
             </intent-filter>
         </activity>
 
-
         <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -60,6 +59,11 @@
                 android:value="our.amazing.clock.MainActivity" />
         </activity>
 
+
+        <receiver android:name=".alarms.background.PendingAlarmScheduler"
+            android:exported="false" android:enabled="true">
+        </receiver>
+
         <receiver
             android:name=".alarms.background.OnBootUpReceiver">
             <intent-filter>
@@ -67,14 +71,12 @@
             </intent-filter>
         </receiver>
 
-        <service
-            android:name=".alarms.background.OnBootUpAlarmScheduler"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-
-
         <activity
             android:name=".playAlarmActivity"
             android:screenOrientation="portrait" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="30bec33fcfbd6ed33a335db339310e748d717cce" />
     </application>
 
 </manifest>
