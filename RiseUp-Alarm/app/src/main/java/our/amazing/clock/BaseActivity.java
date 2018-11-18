@@ -44,7 +44,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     Toolbar mToolbar;
 
     private Menu mMenu;
-    protected ExceptionHandler app;
     @LayoutRes protected abstract int layoutResId();
     @MenuRes   protected abstract int menuResId();
 

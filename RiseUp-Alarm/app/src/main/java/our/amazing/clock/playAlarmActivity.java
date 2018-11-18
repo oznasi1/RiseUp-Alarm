@@ -90,23 +90,6 @@ public class playAlarmActivity extends AppCompatActivity{
     private Handler handlerBuffer;
     private Runnable runnableStart;
     private Handler handlerStart;
-    private NotificationManager mNotificationManager;
-
-//    @Override
-//    protected void onLeftButtonClick() {
-//        mAlarmController.snoozeAlarm(getRingingObject());
-//        // Can't call dismiss() because we don't want to also call cancelAlarm()! Why? For example,
-//        // we don't want the alarm, if it has no recurrence, to be turned off right now.
-//        stopAndFinish();
-//    }
-//
-//    @Override
-//    protected void onRightButtonClick() {
-//        // TODO do we really need to cancel the intent and alarm?
-//        mAlarmController.cancelAlarm(getRingingObject(), false, true);
-//        stopAndFinish();
-//    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +106,6 @@ public class playAlarmActivity extends AppCompatActivity{
                 mAlarmController = new AlarmController(this, null);
                 mAlarmController.removeUpcomingAlarmNotification(getAlarm());
 
-                mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 mFunctions = FirebaseFunctions.getInstance();
 
                 setContentView(R.layout.activity_play_alarm);
@@ -183,12 +165,7 @@ public class playAlarmActivity extends AppCompatActivity{
                                                     public void run() {
                                                         if (tracker.getState() == PlayerConstants.PlayerState.BUFFERING || tracker.getState() == PlayerConstants.PlayerState.UNKNOWN || tracker.getState() == PlayerConstants.PlayerState.UNSTARTED) {
                                                             isErrorLoading = true;
-                                                            updateUiAccordingToInternetConnecion();
-                                                            if (mRingtoneLoop == null) {
-                                                                mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
-                                                                mRingtoneLoop.play();
-                                                            }
-                                                            addClickLisenersSnoozeAndDismiss();
+                                                            playDefaultRingtone();
                                                         } else {
                                                             if (handlerBuffer != null) {
                                                                 handlerBuffer.removeCallbacks(runnableBuffer);
@@ -215,12 +192,7 @@ public class playAlarmActivity extends AppCompatActivity{
                                         public void onError(@NonNull PlayerConstants.PlayerError error) {
                                             Log.e(TAG, "onError: " + error.toString());
                                             isErrorLoading = true;
-                                            updateUiAccordingToInternetConnecion();
-                                            if (mRingtoneLoop == null) {
-                                                mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
-                                                mRingtoneLoop.play();
-                                            }
-                                            addClickLisenersSnoozeAndDismiss();
+                                           playDefaultRingtone();
                                         }
 
                                         @Override
@@ -247,6 +219,7 @@ public class playAlarmActivity extends AppCompatActivity{
                                         public void onVideoId(@NonNull String videoId) {
 
                                         }
+
                                     });
 
                                     if (!ParcelableUtil.isSnooze()) {
@@ -274,8 +247,6 @@ public class playAlarmActivity extends AppCompatActivity{
                     }
 
                 }, true);
-
-
             } catch (Exception e) {
 
                 try {
@@ -322,16 +293,9 @@ public class playAlarmActivity extends AppCompatActivity{
     }
 
     private void adjustTimeDisplay(){
-//        Alarm a = getAlarm();
-//        String hour  = Integer.toString(a.hour());
-//        String minute = Integer.toString(a.minutes());
-//
-//        timeDisplay.setText(hour+" : "+minute);
-
         DateFormat df = new SimpleDateFormat("HH:mm");
         Date dateobj = new Date();
         timeDisplay.setText(df.format(dateobj));
-
     }
 
     private void bindViewsById() {
@@ -416,11 +380,6 @@ public class playAlarmActivity extends AppCompatActivity{
         }
     }
 
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        youtubePlayerView.release();
-//    }
 
     private void addClickLisenersSnoozeAndDismiss(){
         dismiss.setOnClickListener(new View.OnClickListener(){
@@ -429,7 +388,6 @@ public class playAlarmActivity extends AppCompatActivity{
                 dismissClick();
             }
         });
-
         snooze.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -442,6 +400,8 @@ public class playAlarmActivity extends AppCompatActivity{
     public void onBackPressed(){
 
     }
+
+
 
     private void playDefaultRingtone() {
         updateUiAccordingToInternetConnecion();
@@ -533,8 +493,6 @@ public class playAlarmActivity extends AppCompatActivity{
         if(current.toString().contains("IL")) {
             snooze.setImageResource(R.drawable.snoozesubtitleheb);
             dismiss.setImageResource(R.drawable.dismisssubtitleheb);
-            //rateSong.setText("בבקשה דרג את השיר , על מנת שבפעם הבאה נתאים לך שירים שתאהב יותר");
-
         }
     }
 
