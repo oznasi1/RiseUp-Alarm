@@ -67,16 +67,15 @@ public final class TimePickerDialogController extends DialogFragmentController<B
         boolean isGridStyle = false;
         if (isNumpadStyle || isGridStyle) {
             final String themeLight = mContext.getString(R.string.theme_light);
-            final String themeDark = mContext.getString(R.string.theme_dark);
+            //final String themeDark = mContext.getString(R.string.theme_dark);
             final String themeBlack = mContext.getString(R.string.theme_black);
             String prefTheme = prefs.getString(mContext.getString(R.string.key_theme), themeLight);
             
             final int dialogColorRes;
             if (prefTheme.equals(themeLight)) {
                 dialogColorRes = R.color.alert_dialog_background_color;
-            } else if (prefTheme.equals(themeDark)) {
-                dialogColorRes = R.color.alert_dialog_background_color_inverse;
-            } else if (prefTheme.equals(themeBlack)) {
+            }
+            else if (prefTheme.equals(themeBlack)) {
                 dialogColorRes = R.color.alert_dialog_background_color_black;
             } else {
                 dialogColorRes = 0;

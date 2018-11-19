@@ -91,6 +91,7 @@ public class playAlarmActivity extends AppCompatActivity{
     private Runnable runnableStart;
     private Handler handlerStart;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,6 +159,7 @@ public class playAlarmActivity extends AppCompatActivity{
                                                 mYoutubePlayer.play();
                                             }
                                             if (state == PlayerConstants.PlayerState.PLAYING) {
+                                                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                                                 addClickLisenersSnoozeAndDismiss();
                                             }
                                             if (state == PlayerConstants.PlayerState.BUFFERING || state == PlayerConstants.PlayerState.UNKNOWN || state == PlayerConstants.PlayerState.UNSTARTED) {
@@ -404,6 +406,7 @@ public class playAlarmActivity extends AppCompatActivity{
 
 
     private void playDefaultRingtone() {
+        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         updateUiAccordingToInternetConnecion();
         if (mRingtoneLoop ==null){
             mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
@@ -476,19 +479,16 @@ public class playAlarmActivity extends AppCompatActivity{
     }
 
     private void adjustColor(){
-        final String themeDark = getString(R.string.theme_dark);
+        //final String themeDark = getString(R.string.theme_dark);
         final String themeBlack = getString(R.string.theme_black);
         String theme = PreferenceManager.getDefaultSharedPreferences(this).getString(
                 getString(R.string.key_theme), null);
-        if (themeDark.equals(theme)) {
-            setTheme(R.style.AppTheme_Dark);
-        } else if (themeBlack.equals(theme)) {
+        if(themeBlack.equals(theme)) {
             setTheme(R.style.AppTheme_Black);
         }
     }
 
     private void adjustLocale(){
-
         Locale current = getResources().getConfiguration().locale;
         if(current.toString().contains("IL")) {
             snooze.setImageResource(R.drawable.snoozesubtitleheb);
@@ -601,8 +601,10 @@ public class playAlarmActivity extends AppCompatActivity{
 
         setVolOriginal();
         mAlarmController.cancelAlarm(alarm, false, true);
-        Toast.makeText(getApplicationContext(), R.string.have_nice_day,
-                Toast.LENGTH_SHORT).show();
+        if(!isErrorLoading){
+            Toast.makeText(getApplicationContext(), R.string.have_nice_day,
+                    Toast.LENGTH_SHORT).show();
+        }
 
         ParcelableUtil.setOffOnPlaying();
 

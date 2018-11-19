@@ -12,12 +12,11 @@
     <string name="sunday">ראשון</string>
     <string name="monday">שני</string>
     <string name="title_category_about">אודות</string>
-    <string name="title_alarm_version">"Rise up alarm -  version 1.0.15 "</string>
     <string name="title_timer_vibrate">רטט</string>
     <string name="title_system_date_time_settings">תאריך שעה</string>
-    <string name="theme_light">בהיר</string>
+    <string name="theme_light">שחור וכחול</string>
     <string name="theme_dark">כהה</string>
-    <string name="theme_black">שחור</string>
+    <string name="theme_black">שחור ואדום</string>
     <string name="title_theme">צבע כללי</string>
     <string name="action_settings">הגדרות</string>
     <string name="save">אישור</string>
