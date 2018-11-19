@@ -54,20 +54,25 @@ async function filterGroup(group, user, lastChance) {
   let keeper1 = Object.assign({}, group);
   for (let song in historyGroup) {
     let currHistorySongId = historyGroup[song].songId;
-    let currHistorySongUrl = (historyGroup[song].url != null) ? historyGroup[song].url : await getUrl(currHistorySongId);
+    let currHistorySongUrl =
+      historyGroup[song].url != null
+        ? historyGroup[song].url
+        : await getUrl(currHistorySongId);
     let timeNow = Date.now();
-    let timeToForget = 1000 * 60 * 60 *24 * 7 * 2;// second * 60sec * 60minutes* 24Hours * 7Days * 2Weeks
+    let timeToForget = 1000 * 60 * 60 * 24 * 7 * 3; // second * 60sec * 60minutes* 24Hours * 7Days * 3Weeks
     let isTimePassed = timeNow - historyGroup[song].timestamp > timeToForget;
     for (let songInGroup in group) {
-      if (group[currHistorySongId] != undefined){
+      let isPlayed = group[currHistorySongId] != undefined;
+      let isTimeNotPassed = !isTimePassed;
+      let isSongNotLiked = !historyGroup[song].isLiked;
+      let isSameUrl = group[songInGroup].url === currHistorySongUrl;
+      if (isPlayed && (isTimeNotPassed || isSongNotLiked)) {
         delete group[currHistorySongId];
-
-      }//TODO: change filterin Line 63 by adding check if LIKE and time is not passsed
-      else if(group[songInGroup].url === currHistorySongUrl && !isTimePassed) {
-          delete group[songInGroup];
-        }
+      } else if (isSameUrl && isTimeNotPassed) {
+        delete group[songInGroup];
       }
     }
+  }
   //remove same artist from prev alert
   group = await tryRemoveSameArtist(user, group);
   //no songs left left get the last liked songs
@@ -96,11 +101,15 @@ async function tryAddBaseSongs(user, group) {
     if (!isBaseSongs) {
       let nextGroup = await getNextGroup(null);
       let baseSongsGroup = await filterGroup(nextGroup, user, false);
+      if (Object.keys(baseSongsGroup).length <= 0) {
+        throw new Error("No base songs left!");
+      }
       let nextSong = chooseIndex(baseSongsGroup);
       group[nextSong] = baseSongsGroup[nextSong];
       return group;
     }
   } catch (error) {
+    console.error(error + " " + user);
     return group;
   }
 }
@@ -204,4 +213,3 @@ async function getSongUrl(data, context) {
 }
 
 module.exports = getSongUrl;
-
