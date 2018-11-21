@@ -37,7 +37,7 @@
             android:dialogTitle="@string/title_theme"
             android:entries="@array/array_theme"
             android:entryValues="@array/array_theme"
-            android:defaultValue="@string/theme_black"
+            android:defaultValue="@string/theme_light"
             android:summary="%s">
         </ListPreference>
         <Preference android:title="@string/title_system_date_time_settings">
