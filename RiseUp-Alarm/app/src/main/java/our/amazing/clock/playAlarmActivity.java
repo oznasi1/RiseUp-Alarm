@@ -31,6 +31,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayerView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.functions.FirebaseFunctions;
@@ -57,7 +59,7 @@ import static our.amazing.clock.util.DelayedSnackbarHandler.show;
 import static our.amazing.clock.util.ParcelableUtil.getRingingObject;
 
 //        setVolumeControlStream(AudioManager.STREAM_ALARM);
-public class playAlarmActivity extends AppCompatActivity{
+public class playAlarmActivity extends YouTubeBaseActivity {
     private static final String TAG = "playAlarmActivity";
     public static final String EXTRA_RINGING_OBJECT = "our.amazing.clock.ringtone.extra.RINGING_OBJECT";
     public AlarmController mAlarmController;
@@ -67,7 +69,7 @@ public class playAlarmActivity extends AppCompatActivity{
     private RingtoneLoop mRingtoneLoop;
     private Vibrator mVibrator;
     private ImageView noInternetConnection;
-    private com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView youtubePlayerView;
+    //private com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView youtubePlayerView;
     private YouTubePlayerTracker tracker;
     private ImageButton likeBtn;
     private ImageButton unlikeBtn;
@@ -83,7 +85,10 @@ public class playAlarmActivity extends AppCompatActivity{
     private Boolean isFinish= false;
     private int numOfSecPlayed=0;
     private int count=0;
-    private com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer mYoutubePlayer;
+    private YouTubePlayerView youtubePlayerView;
+    private com.google.android.youtube.player.YouTubePlayer.OnInitializedListener onInitializeListener;
+    private com.google.android.youtube.player.YouTubePlayer mYoutubePlayer;
+    //private com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer mYoutubePlayer;
     private int mOrigionalMediaVolume;
     private boolean isErrorLoading;
     private Runnable runnable;
@@ -118,121 +123,105 @@ public class playAlarmActivity extends AppCompatActivity{
 
                 adjustments();
 
-                PlayerUIController uiController = youtubePlayerView.getPlayerUIController();
-                hideYoutubeUiControllers(uiController);
-
-                getLifecycle().addObserver(youtubePlayerView);
-
-                setStartActivityTimerInErrorCase();
-
-                youtubePlayerView.initialize(new YouTubePlayerInitListener() {
+                onInitializeListener = new com.google.android.youtube.player.YouTubePlayer.OnInitializedListener() {
                     @Override
-                    public void onInitSuccess(@NonNull com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer youTubePlayer) {
-                        if (!isErrorLoading) {
-                            if (handlerStart != null) {
-                                handlerStart.removeCallbacks(runnableStart);
+                    public void onInitializationSuccess(com.google.android.youtube.player.YouTubePlayer.Provider provider, com.google.android.youtube.player.YouTubePlayer youTubePlayer, boolean b) {
+                        mYoutubePlayer = youTubePlayer;
+
+                        mYoutubePlayer.setPlayerStateChangeListener(new com.google.android.youtube.player.YouTubePlayer.PlayerStateChangeListener() {
+                            @Override
+                            public void onLoading() {
                             }
-                            mYoutubePlayer = youTubePlayer;
-                            tracker = new YouTubePlayerTracker();
-                            mYoutubePlayer.addListener(tracker);
 
-                            mYoutubePlayer.addListener(new AbstractYouTubePlayerListener() {
-                                @Override
-                                public void onReady() {
-                                    mYoutubePlayer.addListener(new YouTubePlayerListener() {
-                                        @Override
-                                        public void onReady() {
-                                        }
+                            @Override
+                            public void onLoaded(String s) {
+                            }
 
-                                        @Override
-                                        public void onStateChange(@NonNull PlayerConstants.PlayerState state) {
-                                            if (state == PlayerConstants.PlayerState.ENDED) {
-                                                mYoutubePlayer.play();
-                                            }
-                                            if (state == PlayerConstants.PlayerState.PLAYING) {
-                                                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-                                                addClickLisenersSnoozeAndDismiss();
-                                            }
-                                            if (state == PlayerConstants.PlayerState.BUFFERING || state == PlayerConstants.PlayerState.UNKNOWN || state == PlayerConstants.PlayerState.UNSTARTED) {
-                                                runnableBuffer = new Runnable() {
-                                                    public void run() {
-                                                        if (tracker.getState() == PlayerConstants.PlayerState.BUFFERING || tracker.getState() == PlayerConstants.PlayerState.UNKNOWN || tracker.getState() == PlayerConstants.PlayerState.UNSTARTED) {
-                                                            isErrorLoading = true;// 20 sec still buffer ->error (3)
-                                                            playDefaultRingtone(3);
-                                                        } else {
-                                                            if (handlerBuffer != null) {
-                                                                handlerBuffer.removeCallbacks(runnableBuffer);
-                                                            }
-                                                        }
-                                                    }
-                                                };
+                            @Override
+                            public void onAdStarted() {
 
-                                                handlerBuffer = new android.os.Handler();
-                                                handlerBuffer.postDelayed(runnableBuffer, 15000);
-                                            }
-                                        }
+                            }
 
-                                        @Override
-                                        public void onPlaybackQualityChange(@NonNull PlayerConstants.PlaybackQuality playbackQuality) {
-                                        }
+                            @Override
+                            public void onVideoStarted() {
 
-                                        @Override
-                                        public void onPlaybackRateChange(@NonNull PlayerConstants.PlaybackRate playbackRate) {
-                                        }
+                            }
 
-                                        @Override
-                                        public void onError(@NonNull PlayerConstants.PlayerError error) {
-//                                            Log.e(TAG, "onError: " + error.toString());
-//                                            isErrorLoading = true; //Error YoutubePlayer (4)
-//                                            playDefaultRingtone(4);
-                                        }
+                            @Override
+                            public void onVideoEnded() {
+                                mYoutubePlayer.play();
+                            }
 
-                                        @Override
-                                        public void onApiChange() {
-                                        }
+                            @Override
+                            public void onError(com.google.android.youtube.player.YouTubePlayer.ErrorReason errorReason) {
+                                Log.e(TAG, "onError: ");
+                                isErrorLoading = true;
+                                playDefaultRingtone(0);
+                            }
+                        });
 
-                                        @Override
-                                        public void onCurrentSecond(float second) {
-                                        }
+                        mYoutubePlayer.setPlaybackEventListener(new com.google.android.youtube.player.YouTubePlayer.PlaybackEventListener() {
+                            @Override
+                            public void onPlaying() {
+                                //findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                                addClickLisenersSnoozeAndDismiss();
+                            }
 
-                                        @Override
-                                        public void onVideoDuration(float duration) {
+                            @Override
+                            public void onPaused() {
+                                Log.d(TAG, "onPaused:");
 
-                                        }
+                            }
 
-                                        @Override
-                                        public void onVideoLoadedFraction(float loadedFraction) {
+                            @Override
+                            public void onStopped() {
+                                Log.d(TAG, "onStopped:");
+                                mYoutubePlayer.play();
 
-                                        }
+                            }
 
-                                        @Override
-                                        public void onVideoId(@NonNull String videoId) {
+                            @Override
+                            public void onBuffering(boolean b) {
 
-                                        }
+                            }
 
-                                    });
+                            @Override
+                            public void onSeekTo(int i) {
 
-                                    if (!ParcelableUtil.isSnooze()) {
-                                        getSongUrlFromServer();
-                                    } else {
-                                        ParcelableUtil.setFinishOff();
-                                        restoreDataForSnooze();
-                                        songName.setText(mSongName);
-                                        listen.setVisibility(View.VISIBLE);
-                                        songName.setVisibility(View.VISIBLE);
-                                        if (mUrl == null) {
-                                            getSongUrlFromServer();
-                                        } else {
-                                            mYoutubePlayer.loadVideo(mUrl, 1);
-                                            mStartDate = new Date();
-                                        }
-                                    }
-                                }
-                            });
+                            }
+
+                        });
+
+                        if (!ParcelableUtil.isSnooze()) {
+                            getSongUrlFromServer();
+
+                        } else {
+                            ParcelableUtil.setFinishOff();
+                            restoreDataForSnooze();
+                            songName.setText(mSongName);
+                            listen.setVisibility(View.VISIBLE);
+                            songName.setVisibility(View.VISIBLE);
+                            if (mUrl == null) {
+                                getSongUrlFromServer();
+                            } else {
+                                mYoutubePlayer.loadVideo(mUrl, 1);
+                                mYoutubePlayer.setPlayerStyle(com.google.android.youtube.player.YouTubePlayer.PlayerStyle.CHROMELESS);
+                                mStartDate = new Date();
+                            }
                         }
                     }
 
-                }, false);
+                    @Override
+                    public void onInitializationFailure(com.google.android.youtube.player.YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+                        Log.e(TAG, "onInitializationFailure: ");
+                        isErrorLoading=true;
+                        playDefaultRingtone(0);
+                    }
+
+                };
+
+                String key = getString(R.string.youtube_key);
+                youtubePlayerView.initialize(key, onInitializeListener);
             } catch (Exception e) {
 
                 try {
@@ -267,27 +256,6 @@ public class playAlarmActivity extends AppCompatActivity{
         numOfSecPlayed = ParcelableUtil.getNumSec();
     }
 
-    private void setStartActivityTimerInErrorCase() {
-        runnableStart = new Runnable() {
-            public void run() {
-                isErrorLoading = true; //cant loat at beggining (1)
-                playDefaultRingtone(1);
-            }
-        };
-        handlerStart = new Handler();
-        handlerStart.postDelayed(runnableStart, 30000);
-    }
-
-    private void startAlarmRingtoneService(){
-        Intent intent = new Intent(this, AlarmRingtoneService.class)
-                .putExtra(EXTRA_RINGING_OBJECT, ParcelableUtil.marshall(getAlarm()));
-        startService(intent);
-    }
-
-    private void hideYoutubeUiControllers(PlayerUIController uiController) {
-        uiController.showUI(false);
-    }
-
     private void adjustments() {
         //adjustColor();
         adjustVibrate();
@@ -311,7 +279,7 @@ public class playAlarmActivity extends AppCompatActivity{
         dismiss = (ImageView) findViewById(R.id.imageViewDismiss);
         likeBtn = (ImageButton) findViewById(R.id.imageButtonLike);
         unlikeBtn = (ImageButton) findViewById(R.id.imageButtonUnlike);
-        youtubePlayerView = (com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView) findViewById(R.id.youtube_player_view);
+        youtubePlayerView = (YouTubePlayerView) findViewById(R.id.youtube_player_view);
     }
 
     private void addFlagToActivity() {
@@ -320,7 +288,6 @@ public class playAlarmActivity extends AppCompatActivity{
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 
         getWindow().addFlags(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
@@ -413,7 +380,7 @@ public class playAlarmActivity extends AppCompatActivity{
 
     private void playDefaultRingtone(int num) {
         sendFirebaseLogs(num);
-        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+        //findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         updateUiAccordingToInternetConnecion();
         if (mRingtoneLoop ==null){
             mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
@@ -433,7 +400,7 @@ public class playAlarmActivity extends AppCompatActivity{
             listen.setVisibility(View.VISIBLE);
             songName.setVisibility(View.VISIBLE);
             mYoutubePlayer.loadVideo(mUrl, 1);
-            //mYoutubePlayer.setPlayerStyle(com.google.android.youtube.player.YouTubePlayer.PlayerStyle.CHROMELESS);
+            mYoutubePlayer.setPlayerStyle(com.google.android.youtube.player.YouTubePlayer.PlayerStyle.CHROMELESS);
             mStartDate = new Date();
         }
         catch (Exception e){
