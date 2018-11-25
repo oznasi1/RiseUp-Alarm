@@ -1,15 +1,12 @@
 package our.amazing.clock.util;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import java.util.Timer;
 
 import our.amazing.clock.alarms.Alarm;
-
-import static our.amazing.clock.playAlarmActivity.EXTRA_RINGING_OBJECT;
 
 public final class Utils {
     static String mSongName;

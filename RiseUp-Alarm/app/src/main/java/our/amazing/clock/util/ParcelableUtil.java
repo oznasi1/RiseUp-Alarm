@@ -19,18 +19,8 @@
 
 package our.amazing.clock.util;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import java.util.Timer;
-
-import our.amazing.clock.alarms.Alarm;
-
-import static our.amazing.clock.playAlarmActivity.EXTRA_RINGING_OBJECT;
 
 /**
  * Utilities to marshall and unmarshall a {@code Parcelable} to and from a byte array.

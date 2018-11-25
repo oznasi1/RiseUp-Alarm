@@ -21,7 +21,6 @@ package our.amazing.clock.alarms.misc;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.job.JobScheduler;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -35,7 +34,7 @@ import our.amazing.clock.alarms.Alarm;
 import our.amazing.clock.alarms.background.PendingAlarmScheduler;
 import our.amazing.clock.alarms.background.UpcomingAlarmReceiver;
 import our.amazing.clock.alarms.data.AlarmsTableManager;
-import our.amazing.clock.playAlarmActivity;
+import our.amazing.clock.ringtone.playAlarmActivity;
 import our.amazing.clock.ringtone.AlarmActivity;
 import our.amazing.clock.ringtone.playback.AlarmRingtoneService;
 import our.amazing.clock.util.ContentIntentUtils;
@@ -49,7 +48,6 @@ import static android.app.PendingIntent.FLAG_CANCEL_CURRENT;
 import static android.app.PendingIntent.FLAG_NO_CREATE;
 import static android.app.PendingIntent.getActivity;
 import static our.amazing.clock.util.TimeFormatUtils.formatTime;
-import static java.util.concurrent.TimeUnit.HOURS;
 
 /**
  * Created by Phillip Hsu on 7/10/2016.

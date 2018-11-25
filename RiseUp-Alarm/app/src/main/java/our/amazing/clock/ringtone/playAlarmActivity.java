@@ -1,25 +1,20 @@
-package our.amazing.clock;
+package our.amazing.clock.ringtone;
 
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.media.AudioManager;
-import android.net.sip.SipSession;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 
+import our.amazing.clock.MainActivity;
 import our.amazing.clock.R;
 import our.amazing.clock.alarms.Alarm;
 import our.amazing.clock.alarms.misc.AlarmController;
-import our.amazing.clock.ringtone.AlarmActivity;
-import our.amazing.clock.ringtone.RingtoneActivity;
-import our.amazing.clock.ringtone.playback.AlarmRingtoneService;
 import our.amazing.clock.util.ParcelableUtil;
 
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -37,13 +32,6 @@ import com.google.android.youtube.player.YouTubePlayerView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.PlayerConstants;
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener;
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerInitListener;
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerListener;
-import com.pierfrancescosoffritti.androidyoutubeplayer.ui.PlayerUIController;
-import com.pierfrancescosoffritti.androidyoutubeplayer.utils.YouTubePlayerTracker;
-import com.squareup.okhttp.internal.Util;
 
 import our.amazing.clock.ringtone.playback.RingtoneLoop;
 import our.amazing.clock.util.Utils;
@@ -54,10 +42,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Timer;
-
-import static android.support.constraint.Constraints.TAG;
-import static our.amazing.clock.util.DelayedSnackbarHandler.show;
 
 public class playAlarmActivity extends YouTubeBaseActivity {
     private static final String TAG = "playAlarmActivity";
