@@ -122,7 +122,7 @@ public abstract class RingtoneActivity<T extends Parcelable> extends BaseActivit
             throw new IllegalStateException("Cannot start RingtoneActivity without a ringing object");
         }
         mRingingObject = ParcelableUtil.unmarshall(bytes, getParcelableCreator());
-        ParcelableUtil.saveRingingObject((Alarm) mRingingObject);
+        //ParcelableUtil.saveRingingObject((Alarm) mRingingObject);
 
         sIsAlive = true;
 

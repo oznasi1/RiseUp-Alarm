@@ -128,7 +128,7 @@ public abstract class RingtoneService<T extends Parcelable> extends Service {
                 throw new IllegalStateException("Cannot start RingtoneService without a ringing object");
             }
             mRingingObject = ParcelableUtil.unmarshall(bytes, getParcelableCreator());
-            ParcelableUtil.saveRingingObject((Alarm) mRingingObject);
+            //ParcelableUtil.saveRingingObject((Alarm) mRingingObject);
 
         }
         // Play ringtone, if not already playing

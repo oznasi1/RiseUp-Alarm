@@ -43,8 +43,10 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubeP
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.ui.PlayerUIController;
 import com.pierfrancescosoffritti.androidyoutubeplayer.utils.YouTubePlayerTracker;
+import com.squareup.okhttp.internal.Util;
 
 import our.amazing.clock.ringtone.playback.RingtoneLoop;
+import our.amazing.clock.util.Utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -56,9 +58,7 @@ import java.util.Timer;
 
 import static android.support.constraint.Constraints.TAG;
 import static our.amazing.clock.util.DelayedSnackbarHandler.show;
-import static our.amazing.clock.util.ParcelableUtil.getRingingObject;
 
-//        setVolumeControlStream(AudioManager.STREAM_ALARM);
 public class playAlarmActivity extends YouTubeBaseActivity {
     private static final String TAG = "playAlarmActivity";
     public static final String EXTRA_RINGING_OBJECT = "our.amazing.clock.ringtone.extra.RINGING_OBJECT";
@@ -69,8 +69,6 @@ public class playAlarmActivity extends YouTubeBaseActivity {
     private RingtoneLoop mRingtoneLoop;
     private Vibrator mVibrator;
     private ImageView noInternetConnection;
-    //private com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView youtubePlayerView;
-    private YouTubePlayerTracker tracker;
     private ImageButton likeBtn;
     private ImageButton unlikeBtn;
     private ImageView dismiss;
@@ -88,26 +86,21 @@ public class playAlarmActivity extends YouTubeBaseActivity {
     private YouTubePlayerView youtubePlayerView;
     private com.google.android.youtube.player.YouTubePlayer.OnInitializedListener onInitializeListener;
     private com.google.android.youtube.player.YouTubePlayer mYoutubePlayer;
-    //private com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer mYoutubePlayer;
     private int mOrigionalMediaVolume;
     private boolean isErrorLoading;
     private Runnable runnable;
     private Handler handler;
-    private Runnable runnableBuffer;
-    private Handler handlerBuffer;
-    private Runnable runnableStart;
-    private Handler handlerStart;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!ParcelableUtil.isPlaying()) {
-
+        //the main lock - if there are two alarms to the same time this lock will handle that.
+        if (!Utils.isPlaying()) {
             try {
-                ParcelableUtil.setOnPlaying();
+                Utils.setOnPlaying(); // make the lock on
                 adjustColor();
-                isFinish = ParcelableUtil.isFinished();
+                isFinish = Utils.isFinished();
 
                 addFlagToActivity();
 
@@ -156,21 +149,19 @@ public class playAlarmActivity extends YouTubeBaseActivity {
                             public void onError(com.google.android.youtube.player.YouTubePlayer.ErrorReason errorReason) {
                                 Log.e(TAG, "onError: ");
                                 isErrorLoading = true;
-                                playDefaultRingtone(0);
+                                playDefaultRingtone();
                             }
                         });
 
                         mYoutubePlayer.setPlaybackEventListener(new com.google.android.youtube.player.YouTubePlayer.PlaybackEventListener() {
                             @Override
                             public void onPlaying() {
-                                //findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                                 addClickLisenersSnoozeAndDismiss();
                             }
 
                             @Override
                             public void onPaused() {
                                 Log.d(TAG, "onPaused:");
-
                             }
 
                             @Override
@@ -192,11 +183,13 @@ public class playAlarmActivity extends YouTubeBaseActivity {
 
                         });
 
-                        if (!ParcelableUtil.isSnooze()) {
+                        if (!Utils.isSnooze()) {
+                            //if you got here for the first time (not a snooze) we neet to
+                            //ask the server for a new url
                             getSongUrlFromServer();
-
                         } else {
-                            ParcelableUtil.setFinishOff();
+                            //we are in snooze mode - retrieve all the song details from Utils class
+                            Utils.setFinishOff();
                             restoreDataForSnooze();
                             songName.setText(mSongName);
                             listen.setVisibility(View.VISIBLE);
@@ -215,21 +208,24 @@ public class playAlarmActivity extends YouTubeBaseActivity {
                     public void onInitializationFailure(com.google.android.youtube.player.YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
                         Log.e(TAG, "onInitializationFailure: ");
                         isErrorLoading=true;
-                        playDefaultRingtone(0);
+                        playDefaultRingtone();
                     }
 
                 };
 
                 String key = getString(R.string.youtube_key);
                 youtubePlayerView.initialize(key, onInitializeListener);
-            } catch (Exception e) {
 
+            } catch (Exception e) {
+                //in some cases in older smartphones this activity did not init and crash in "set content view"
+                //so we try again to init the view and play the default ringtone.
+                //if it crash again - we shut down this activity and go back to main activity.
                 try {
                     setContentView(R.layout.activity_play_alarm);
                     bindViewsById();
                     adjustments();
-                    isErrorLoading = true; //try onCreate (5)
-                    playDefaultRingtone(5);
+                    isErrorLoading = true;
+                    playDefaultRingtone();
                 } catch (Exception el) {
                     mAlarmController = new AlarmController(this, null);
                     finish();
@@ -238,6 +234,7 @@ public class playAlarmActivity extends YouTubeBaseActivity {
                     mAlarmController.cancelAlarm(alarm, false, true);
                     Toast.makeText(getApplicationContext(), "an error occoured",
                             Toast.LENGTH_SHORT).show();
+                    Utils.setOffOnPlaying(); // realese the lock
                 }
             }
         } else { // the main lock is locked and we go back to main activity
@@ -250,10 +247,10 @@ public class playAlarmActivity extends YouTubeBaseActivity {
     }
 
     private void restoreDataForSnooze() {
-        mSongName = ParcelableUtil.getSongName();
-        mUrl = ParcelableUtil.getSongUrl();
-        mSongId = ParcelableUtil.getSongId();
-        numOfSecPlayed = ParcelableUtil.getNumSec();
+        mSongName = Utils.getSongName();
+        mUrl = Utils.getSongUrl();
+        mSongId = Utils.getSongId();
+        numOfSecPlayed = Utils.getNumSec();
     }
 
     private void adjustments() {
@@ -288,7 +285,6 @@ public class playAlarmActivity extends YouTubeBaseActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-
         getWindow().addFlags(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
 
@@ -296,16 +292,15 @@ public class playAlarmActivity extends YouTubeBaseActivity {
     public void onPause() {
         super.onPause();
 
-
         Date endDate = new Date();
         int numSeconds = (int) ((endDate.getTime() - mStartDate.getTime()) / 1000); // seconds played until now
         numOfSecPlayed += numSeconds;
 
-        if (ParcelableUtil.isSnooze()) {
-            ParcelableUtil.setFinishOff();
+        if (Utils.isSnooze()) {
+            Utils.setFinishOff();
         }
 
-        //isFinish = ParcelableUtil.isFinished();
+        //isFinish = Utils.isFinished();
         if(mVibrator!=null){
             mVibrator.cancel();
         }
@@ -314,9 +309,10 @@ public class playAlarmActivity extends YouTubeBaseActivity {
 
             runnable = new Runnable() {
                 public void run() {
+                    //if for some reasen this activity was pause it will pop up again in 20 sec
                     Intent i = new Intent(getApplicationContext(),playAlarmActivity.class)
                             .putExtra(AlarmActivity.EXTRA_RINGING_OBJECT, ParcelableUtil.marshall(getAlarm()));
-                    ParcelableUtil.saveForSnooze(mSongName,mUrl,mSongId,numOfSecPlayed);
+                    Utils.saveForSnooze(mSongName,mUrl,mSongId,numOfSecPlayed);
                     if(isErrorLoading){
                         mRingtoneLoop.stop();
                     }
@@ -324,7 +320,7 @@ public class playAlarmActivity extends YouTubeBaseActivity {
                         mVibrator.cancel();
                     }
                     finish();
-                    ParcelableUtil.setOffOnPlaying();
+                    Utils.setOffOnPlaying();
                     startActivity(i);
                 }
             };
@@ -334,7 +330,7 @@ public class playAlarmActivity extends YouTubeBaseActivity {
 
         }
         count++;
-        ParcelableUtil.setFinishOff();
+        Utils.setFinishOff();
 
     }
 
@@ -353,6 +349,7 @@ public class playAlarmActivity extends YouTubeBaseActivity {
 
 
     private void addClickLisenersSnoozeAndDismiss(){
+        //adding listeners to dismiss and snooze only after video is loaded and playing
         dismiss.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -369,18 +366,11 @@ public class playAlarmActivity extends YouTubeBaseActivity {
 
     @Override
     public void onBackPressed(){
-
+        //in this activity we want as much as we can to prevent from the user
+        //to exit
     }
 
-    private void sendFirebaseLogs(int num){
-        Bundle params = new Bundle();
-        params.putString("number", Integer.toString(num));
-        mFirebaseAnalytics.logEvent("error_number", params);
-    }
-
-    private void playDefaultRingtone(int num) {
-        sendFirebaseLogs(num);
-        //findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+    private void playDefaultRingtone() {
         updateUiAccordingToInternetConnecion();
         if (mRingtoneLoop ==null){
             mRingtoneLoop = new RingtoneLoop(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
@@ -405,8 +395,8 @@ public class playAlarmActivity extends YouTubeBaseActivity {
         }
         catch (Exception e){
             Log.e(TAG, "onCompleteUrlSong: we catched"+ e.toString());
-            isErrorLoading = true; // catch in onCreate (2)
-            playDefaultRingtone(2);
+            isErrorLoading = true;
+            playDefaultRingtone();
         }
     }
 
@@ -430,9 +420,9 @@ public class playAlarmActivity extends YouTubeBaseActivity {
     }
 
     public void snoozeClick(){
-        ParcelableUtil.setOffOnPlaying();
+        Utils.setOffOnPlaying();
 
-        ParcelableUtil.setFinishOn();
+        Utils.setFinishOn();
         isFinish = true;
         Alarm alarm = getAlarm();
         if(mVibrator!=null){
@@ -443,7 +433,7 @@ public class playAlarmActivity extends YouTubeBaseActivity {
             Date endDate = new Date();
             int numSeconds = (int) ((endDate.getTime() - mStartDate.getTime()) / 1000);
             numOfSecPlayed +=numSeconds;
-            ParcelableUtil.saveForSnooze(mSongName,mUrl,mSongId,numOfSecPlayed);
+            Utils.saveForSnooze(mSongName,mUrl,mSongId,numOfSecPlayed);
         }
         else{
             mRingtoneLoop.stop();
@@ -472,6 +462,7 @@ public class playAlarmActivity extends YouTubeBaseActivity {
     }
 
     private void adjustVibrate(){
+        //if
         if (getAlarm().vibrates()) {
             mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
             mVibrator.vibrate(new long[] { // apply pattern
@@ -509,9 +500,9 @@ public class playAlarmActivity extends YouTubeBaseActivity {
     }
 
     public void dismissClick() {
-        ParcelableUtil.setFinishOn();
+        Utils.setFinishOn();
         isFinish=true;
-        ParcelableUtil.reset();
+        Utils.reset();
         if(mVibrator!=null){
             mVibrator.cancel();
         }
@@ -558,12 +549,12 @@ public class playAlarmActivity extends YouTubeBaseActivity {
     }
 
     public void onLikeClick(View view) {
-        isFinish = ParcelableUtil.isFinished();
+        isFinish = Utils.isFinished();
         updateScore(true);
     }
 
     public void onUnlikeClick(View view) {
-        isFinish = ParcelableUtil.isFinished();
+        isFinish = Utils.isFinished();
         updateScore(false);
     }
 
@@ -580,11 +571,10 @@ public class playAlarmActivity extends YouTubeBaseActivity {
                     Toast.LENGTH_SHORT).show();
         }
 
-        ParcelableUtil.setOffOnPlaying();
+        Utils.setOffOnPlaying();
 
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(i);
     }
-
 }
 
