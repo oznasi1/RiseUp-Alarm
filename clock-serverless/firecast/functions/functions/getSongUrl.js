@@ -1,29 +1,44 @@
+//Author: Alex Perry
+//Date: 16.10.18
+//getSongUrl:
+// get function: return the next song should be played
+// gets: data: none, context: {authenticated uid}
+"use strict";
 const db = require("./init");
 const functions = require("firebase-functions");
 const getSong = require("./Utils/getSong");
 const chooseIndex = require("./Algorithms/Randomise");
 const rootGroupId = "-1";
 
+//this func is the "pipe" for the algorithm. it manages the decisions making
 async function getNewSongUrl(user) {
   let size;
   let filteredNextGroup;
   try {
+    //get the last like songs by the user
     let lastLikedSongs = await getLastLikedSongs(user);
+    //get the sons of each liked song
     let nextGroup = await getNextGroup(lastLikedSongs);
-    let lastChance = Object.values(nextGroup).every(song => {
-      return song.groupId == rootGroupId;
-    });
+    //check if theres no songs he liked before
+    let lastChance = isAllSongsBase(nextGroup);
+    //filter the group's songs
     filteredNextGroup = await filterGroup(nextGroup, user, lastChance);
     size = Object.keys(filteredNextGroup).length;
+    //in case of no songs in suggestions
     if (size == 0) {
-      nextGroup = await getNextGroup(null);
-      lastChance = Object.values(nextGroup).every(song => {
-        return song.groupId == rootGroupId;
-      });
+      let getBaseGroup = async () => {
+        let baseGroup = await getNextGroup(null);
+        return baseGroup;
+      };
+      nextGroup = await getBaseGroup();
+      lastChance = isAllSongsBase(nextGroup);
       filteredNextGroup = await filterGroup(nextGroup, user, lastChance);
     }
+    //we use a base song to each list to get a chance of diversity
     filteredNextGroup = await tryAddBaseSongs(user, filteredNextGroup);
+    //get the song from the group
     let nextSongId = chooseIndex(filteredNextGroup);
+    //assemble the packet
     let nextSongUrl = filteredNextGroup[nextSongId].url;
     let nexSongTitle =
       filteredNextGroup[nextSongId].title != undefined
@@ -39,58 +54,70 @@ async function getNewSongUrl(user) {
     };
     return res;
   } catch (err) {
-    throw new Error(err + "userId = " + user);
+    throw new Error(err + " userId = " + user);
   }
 }
 
+//check if all og songs are base songs
+function isAllSongsBase(group) {
+  return Object.values(group).every(song => {
+    return song.groupId == rootGroupId;
+  });
+}
+
+//manages the filtering of the songs list
 async function filterGroup(group, user, lastChance) {
-  let songHistoryQuery = db
-    .ref("/users")
-    .child(user)
-    .child("history");
-  let snapshot = await songHistoryQuery.once("value");
-  let historyGroup = snapshot.val();
-  //remove songs that already played
-  let keeper1 = Object.assign({}, group);
-  for (let song in historyGroup) {
-    let currHistorySongId = historyGroup[song].songId;
-    let currHistorySongUrl =
-      historyGroup[song].url != null
-        ? historyGroup[song].url
-        : await getUrl(currHistorySongId);
-    let timeNow = Date.now();
-    let timeToForget = 1000 * 60 * 60 * 24 * 7 * 3; // second * 60sec * 60minutes* 24Hours * 7Days * 3Weeks
-    let isTimePassed = timeNow - historyGroup[song].timestamp > timeToForget;
-    for (let songInGroup in group) {
-      let isPlayed = group[currHistorySongId] != undefined;
-      let isTimeNotPassed = !isTimePassed;
-      let isSongNotLiked = !historyGroup[song].isLiked;
-      let isSameUrl = group[songInGroup].url === currHistorySongUrl;
-      if (isPlayed && (isTimeNotPassed || isSongNotLiked)) {
-        delete group[currHistorySongId];
-      } else if (isSameUrl && isTimeNotPassed) {
-        delete group[songInGroup];
-      }
-    }
-  }
-  //remove same artist from prev alert
-  group = await tryRemoveSameArtist(user, group);
-  //no songs left left get the last liked songs
-  if (Object.keys(group).length === 0 && lastChance) {
-    group = keeper1;
-    let keeper2 = Object.assign({}, group);
+  try {
+    let songHistoryQuery = db
+      .ref("/users")
+      .child(user)
+      .child("history");
+    let snapshot = await songHistoryQuery.once("value");
+    let historyGroup = snapshot.val();
+    let keeper1 = Object.assign({}, group);
     for (let song in historyGroup) {
-      if (historyGroup[song].isLiked != "1") {
-        delete group[historyGroup[song].songId];
+      let currHistorySongId = historyGroup[song].songId;
+      let currHistorySongUrl =
+        historyGroup[song].url != null
+          ? historyGroup[song].url
+          : await getUrl(currHistorySongId);
+      let timeNow = Date.now();
+      let timeToForget = 1000 * 60 * 60 * 24 * 7 * 3; // second * 60sec * 60minutes* 24Hours * 7Days * 3Weeks
+      let isTimePassed = timeNow - historyGroup[song].timestamp > timeToForget;
+      for (let songInGroup in group) {
+        //check if song already in history
+        let isPlayed = (group[currHistorySongId] != undefined);
+        let isTimeNotPassed = !isTimePassed;
+        //check if the user liked the song
+        let isSongNotLiked = !historyGroup[song].isLiked;
+        let isSameUrl = (group[songInGroup].url === currHistorySongUrl);
+        if ((isPlayed || isSameUrl) && (isTimeNotPassed || isSongNotLiked)) {
+          //case of song played and the time passed since or the song was unliked
+          delete group[currHistorySongId];
+        } 
+      }
+    }
+    //remove same artist from prev alert
+    group = await tryRemoveSameArtist(user, group);
+    //no songs left get the last liked songs
+    if (Object.keys(group).length === 0 && lastChance) {
+      group = keeper1;
+      let keeper2 = Object.assign({}, group);
+      for (let song in historyGroup) {
+        if (historyGroup[song].isLiked != "1") {
+          delete group[historyGroup[song].songId];
+        }
+      }
+
+      if (Object.keys(group).length === 0) {
+        group = keeper2;
       }
     }
 
-    if (Object.keys(group).length === 0) {
-      group = keeper2;
-    }
+    return group;
+  } catch (err) {
+    throw err;
   }
-
-  return group;
 }
 //adds base song if there aren't any for diversity
 async function tryAddBaseSongs(user, group) {
@@ -113,6 +140,7 @@ async function tryAddBaseSongs(user, group) {
     return group;
   }
 }
+//removes the songs of the recent song's artist
 async function tryRemoveSameArtist(user, group) {
   try {
     const lastLikedSong = await getLastLikedSong(user);
@@ -125,6 +153,7 @@ async function tryRemoveSameArtist(user, group) {
     return group;
   }
 }
+//return the liked songs from history
 async function getLastLikedSong(user) {
   try {
     let historySongs = await getLastLikedSongs(user);
@@ -143,7 +172,6 @@ async function getNextGroup(lastSongs) {
     for (let i in lastSongs) {
       let nextGroupId = lastSongs[i].songId;
       res = Object.assign({}, res, await getGroup(nextGroupId));
-      //TODO: replace algorithm to dynamic program, save the next group once, and add/remove songs every time
     }
     if (lastSongs == null || Object.keys(res).length == 0) {
       return getGroup(rootGroupId);
@@ -155,7 +183,7 @@ async function getNextGroup(lastSongs) {
     return getGroup(rootGroupId);
   }
 }
-
+//get all the songs with the group id equals groupId
 async function getGroup(groupId) {
   let matchGroupQuery = db
     .ref("songs")
@@ -173,7 +201,7 @@ async function getUrl(songId) {
   let res = await getSong(songId);
   return res.url;
 }
-
+//returns an array of the history liked songs
 async function getLastLikedSongs(user) {
   var likeSongsQuery = db
     .ref("/users")
@@ -188,7 +216,7 @@ async function getLastLikedSongs(user) {
 
     return history;
   } catch (err) {
-    newGroupId = null;
+    let newGroupId = null;
     return newGroupId;
   }
 }
@@ -197,6 +225,9 @@ async function getSongUrl(data, context) {
   var logMsg = {};
   try {
     let user = context.auth.uid;
+    if (!user) {
+      throw new functions.https.HttpsError("NOT AUTHORIZED", "NOT AUTHORIZED");
+    }
     let res = await getNewSongUrl(user);
 
     logMsg = res;

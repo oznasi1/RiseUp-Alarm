@@ -1,8 +1,15 @@
+//Author: Alex Perry
+//Date: 16.10.18
+//updateSongScore:
+// get function: updates the db for users activity after the user voted un/like
+// gets: data: {isLiked}, context: {auth.uid}
+'use strict';
 const db = require("./init");
 const functions = require("firebase-functions");
 const getSong = require("./Utils/getSong");
 const updateUserSongHistory = require("./updateUserSongHistory");
 
+//updating the song/songId 
 async function updateSong(data, context) {
   const songId = data.songId;
   let isLiked = data.isLiked;
@@ -16,6 +23,7 @@ async function updateSong(data, context) {
   return currSong;
 }
 
+//updating the userId/history/currLog
 async function updateUserLog(data, context) {
   const songId = data.songId;
   let uid = context.auth.uid;
@@ -35,13 +43,21 @@ async function updateUserLog(data, context) {
   return { historySongLog, historySongId };
 }
 
+//delay that helps for fault tolerance
 const delayParam = 51 * 1000;
-
+const timePlayedBackup = "10";
 async function updateSongScore(data, context) {
   var logMsg = {};
   try {
     if(data.songId == null){
       throw new Error("songId_NullException");
+    }
+    let user = context.auth.uid;
+    if(!user){
+      throw new functions.https.HttpsError(
+        "NOT AUTHORIZED",
+        "NOT AUTHORIZED"
+      );
     }
     let updates = {};
     let update = async () => {
@@ -52,18 +68,20 @@ async function updateSongScore(data, context) {
         context
       );
       updates[
-        "users/" + context.auth.uid + "/history/" + historySongId
+        "users/" + user + "/history/" + historySongId
       ] = historySongLog;
     };
     try {
       await update();
     } catch (err) {
       try {
+        //delays and invokes again
         const sleep = m => new Promise(r => setTimeout(r, m));
         await sleep(delayParam);
         await update();
       } catch (err) {
-        data["sec"] = "10";
+        //case of lost/delayed packet, invoke the prev synch service here
+        data["sec"] = timePlayedBackup;
         await updateUserSongHistory(data, context);
         await update();
       }
@@ -71,7 +89,7 @@ async function updateSongScore(data, context) {
     await db.ref().update(updates);
     logMsg = updates;
   } catch (err) {
-    logMsg["error"] = err + " uid: " + context.auth.uid;
+    logMsg["error"] = err + " uid: " + user;
     logMsg["reqData"] = data;
     throw new functions.https.HttpsError(
       "Failed to update song score ",

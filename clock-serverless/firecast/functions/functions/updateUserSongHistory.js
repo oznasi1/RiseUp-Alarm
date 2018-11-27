@@ -3,7 +3,8 @@
 //updateUserSongHistory:
 // get function: updates the db for users activity after he played the song
 // and before he un/liked it
-// gets: seconds played, songId
+// gets: data:{seconds played, songId} context: {uid}
+'use strict';
 
 const db = require("./init");
 const functions = require("firebase-functions");
@@ -15,6 +16,12 @@ async function updateUserSongHistory(data, context) {
       throw new Error("songId_NullException");
     }
     let uid = context.auth.uid;
+    if(!uid){
+      throw new functions.https.HttpsError(
+        "NOT AUTHORIZED",
+        "NOT AUTHORIZED"
+      );
+    }
     const update = {
       secondsPlayed: data.sec,
       isRanked: "0",
