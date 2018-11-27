@@ -1,14 +1,17 @@
 const functions = require("firebase-functions");
+const path = require('path')
 
-const getSongUrl = require("C:/Users/Aelxander/Desktop/Project/serverless/RiseUp-Alarm/clock-serverless/firecast/functions/functions/getSongUrl");
+const currPath = path.resolve(path.join(__dirname, '..', 'functions'));
 
-const updateSongScore = require("C:/Users/Aelxander/Desktop/Project/serverless/RiseUp-Alarm/clock-serverless/firecast/functions/functions/updateSongScore");
+const getSongUrl = require(path.join(currPath,"getSongUrl"));
 
-const updateUserSongHistory = require("C:/Users/Aelxander/Desktop/Project/serverless/RiseUp-Alarm/clock-serverless/firecast/functions/functions/updateUserSongHistory");
+const updateSongScore = require(path.join(currPath,"updateSongScore"));
+
+const updateUserSongHistory = require(path.join(currPath,"updateUserSongHistory"));
 
 var user = {
   auth: {
-    uid: null
+    uid: "XUna4YABSHT92mns6Pi5wTHeeDD3"
   },
   timestamp: 1540358107754
 };
@@ -29,7 +32,7 @@ async function runTest() {
     };
     user["timestamp"] = data.timestamp;
     const fs = require("fs");
-    var content= fs.readFileSync("firecast/functions/test/answer.txt", 'utf8');
+    var content= fs.readFileSync("firecast/functions/functions/test/answer.txt", 'utf8');
 
     data["isLiked"] = content;
 
