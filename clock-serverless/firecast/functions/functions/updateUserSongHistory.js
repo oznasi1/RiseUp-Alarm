@@ -1,7 +1,7 @@
 //Author: Alex Perry
 //Date: 16.10.18
 //updateUserSongHistory:
-// get function: updates the db for users activity after he played the song
+// post function: updates the db for users activity after he played the song
 // and before he un/liked it
 // gets: data:{seconds played, songId} context: {uid}
 'use strict';

@@ -1,7 +1,7 @@
 //Author: Alex Perry
 //Date: 16.10.18
 //updateSongScore:
-// get function: updates the db for users activity after the user voted un/like
+// post function: updates the db for users activity after the user voted un/like
 // gets: data: {isLiked}, context: {auth.uid}
 'use strict';
 const db = require("./init");
