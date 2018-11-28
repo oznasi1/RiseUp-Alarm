@@ -1,3 +1,15 @@
+/*
+ * Copyright 2018 Oz Nasi & Alex Perry
+ *
+ * This file is part of Rise Up Alarm.
+ *
+ *This file is responsible of fetching new url request from server
+ * and play the given url with youtube player using the original API.
+ * of course in cases we don't have internet connection whatever reason this activity will
+ * play the default ringtone of the device.
+ */
+
+
 package our.amazing.clock.ringtone;
 
 import android.content.Intent;
@@ -43,8 +55,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class playAlarmActivity extends YouTubeBaseActivity {
-    private static final String TAG = "playAlarmActivity";
+public class PlayAlarmActivity extends YouTubeBaseActivity {
+    private static final String TAG = "PlayAlarmActivity";
     public static final String EXTRA_RINGING_OBJECT = "our.amazing.clock.ringtone.extra.RINGING_OBJECT";
     public AlarmController mAlarmController;
     private AudioManager mAudioManager;
@@ -294,7 +306,7 @@ public class playAlarmActivity extends YouTubeBaseActivity {
             runnable = new Runnable() {
                 public void run() {
                     //if for some reasen this activity was pause it will pop up again in 20 sec
-                    Intent i = new Intent(getApplicationContext(),playAlarmActivity.class)
+                    Intent i = new Intent(getApplicationContext(),PlayAlarmActivity.class)
                             .putExtra(AlarmActivity.EXTRA_RINGING_OBJECT, ParcelableUtil.marshall(getAlarm()));
                     Utils.saveForSnooze(mSongName,mUrl,mSongId,numOfSecPlayed);
                     if(isErrorLoading){
